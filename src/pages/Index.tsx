@@ -43,9 +43,9 @@ const Index = () => {
   const [marketingSep, setMarketingSep] = useState(false);
   const [countrySep, setCountrySep] = useState(false);
 
-  const aiDisabled = aiTagVals.length === 0;
-  const marketingDisabled = marketingVals.length === 0;
-  const countryDisabled = countryVals.length === 0;
+  const aiDisabled = aiTagVals.length < 2;
+  const marketingDisabled = marketingVals.length < 2;
+  const countryDisabled = countryVals.length < 2;
 
   useEffect(() => { if (aiDisabled) setAiTagSep(false); }, [aiDisabled]);
   useEffect(() => { if (marketingDisabled) setMarketingSep(false); }, [marketingDisabled]);
