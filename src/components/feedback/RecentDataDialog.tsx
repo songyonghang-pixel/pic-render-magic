@@ -1,12 +1,23 @@
-import { useMemo, useState, useRef } from "react";
+import { useMemo, useState, useRef, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { SingleSelect } from "./SingleSelect";
+import { MultiSelect } from "./MultiSelect";
+import { CascadeMultiSelect } from "./CascadeMultiSelect";
+
+export interface SeparateFilter {
+  key: string;
+  label: string;
+  type: "multi" | "cascade";
+  options: any[];
+  values: string[];
+}
 
 interface Props {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   timeRange: string; // selected time range from trigger condition
   indicator: string;
+  separateFilters?: SeparateFilter[];
 }
 
 const timeDimensionOptions = [
@@ -42,7 +53,15 @@ function fmtTick(d: Date, dim: string) {
   return `${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }
 
-export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator }: Props) => {
+export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, separateFilters = [] }: Props) => {
+  const [filterVals, setFilterVals] = useState<Record<string, string[]>>({});
+  useEffect(() => {
+    if (open) {
+      const init: Record<string, string[]> = {};
+      separateFilters.forEach((f) => { init[f.key] = f.values; });
+      setFilterVals(init);
+    }
+  }, [open, separateFilters]);
   const cfg = rangeMap[timeRange] ?? rangeMap["10分钟"];
   const [dim, setDim] = useState(cfg.dim);
   const [endTime, setEndTime] = useState(() => {
@@ -141,6 +160,33 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator }: P
           </div>
           <span className="text-[12px] text-[hsl(var(--muted-foreground))]">展示{dimCfg.spanLabel}内每{dim}的数据趋势</span>
         </div>
+
+        {separateFilters.length > 0 && (
+          <div className="flex flex-wrap gap-x-4 gap-y-2 pt-1 border-t border-border pt-3">
+            {separateFilters.map((f) => (
+              <div key={f.key} className="flex items-center gap-2" style={{ minWidth: 300 }}>
+                <span className="text-[13px] text-[hsl(var(--label-text))] shrink-0">{f.label}：</span>
+                <div style={{ width: 220 }}>
+                  {f.type === "cascade" ? (
+                    <CascadeMultiSelect
+                      placeholder="请选择"
+                      options={f.options}
+                      value={filterVals[f.key] ?? []}
+                      onChange={(v) => setFilterVals((prev) => ({ ...prev, [f.key]: v }))}
+                    />
+                  ) : (
+                    <MultiSelect
+                      placeholder="请选择"
+                      options={f.options}
+                      value={filterVals[f.key] ?? []}
+                      onChange={(v) => setFilterVals((prev) => ({ ...prev, [f.key]: v }))}
+                    />
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
 
         <div className="mt-4 border border-border rounded-md p-2 bg-card">
           <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" onMouseMove={onMove} onMouseLeave={() => setHover(null)}>
