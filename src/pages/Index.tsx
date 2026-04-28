@@ -275,20 +275,28 @@ const Index = () => {
           {alertType === "统计" && (
             <Field label=" " labelWidth="w-20">
               <div className="flex items-center gap-3 flex-wrap">
-                <div className="grid grid-cols-4 gap-3 max-w-[1100px] flex-1 min-w-[700px]">
-                  <SingleSelect placeholder="请选择预警指标" options={warningIndicatorOptions} value={statIndicator} onChange={setStatIndicator} />
-                  <SingleSelect placeholder="请选择时间范围" options={timeRangeOptions} value={statTimeRange} onChange={setStatTimeRange} />
-                  <SingleSelect placeholder="请选择运算符" options={compareOperators} />
-                  <input
-                    type="text"
-                    inputMode="numeric"
-                    placeholder="请输入量值"
-                    onInput={(e) => {
-                      const t = e.currentTarget;
-                      t.value = t.value.replace(/[^0-9]/g, "");
-                    }}
-                    className="h-8 px-3 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]"
-                  />
+                <div className="flex items-center gap-3 flex-wrap flex-1 min-w-[700px]">
+                  <div className="w-[180px]"><SingleSelect placeholder="请选择预警指标" options={warningIndicatorOptions} value={statIndicator} onChange={setStatIndicator} /></div>
+                  <div className="w-[180px]"><SingleSelect placeholder="请选择时间范围" options={timeRangeOptions} value={statTimeRange} onChange={setStatTimeRange} /></div>
+                  {showCalcMethod && (
+                    <div className="w-[180px]"><SingleSelect placeholder="请选择计算方式" options={calcMethodOptions} value={calcMethod} onChange={setCalcMethod} /></div>
+                  )}
+                  <div className="w-[180px]"><SingleSelect placeholder="请选择运算符" options={compareOperators} /></div>
+                  <div className="relative w-[180px]">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      placeholder={isPercent ? "请输入百分比值" : "请输入量值"}
+                      onInput={(e) => {
+                        const t = e.currentTarget;
+                        t.value = t.value.replace(/[^0-9]/g, "");
+                      }}
+                      className={`w-full h-8 pl-3 ${isPercent ? "pr-8" : "pr-3"} text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]`}
+                    />
+                    {isPercent && (
+                      <span className="absolute right-0 top-0 h-8 w-7 flex items-center justify-center text-[13px] text-[hsl(var(--label-text))] border-l border-[hsl(var(--field-border))] bg-muted">%</span>
+                    )}
+                  </div>
                 </div>
                 <button
                   disabled={chartDisabled}
