@@ -161,6 +161,33 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, sep
           <span className="text-[12px] text-[hsl(var(--muted-foreground))]">展示{dimCfg.spanLabel}内每{dim}的数据趋势</span>
         </div>
 
+        {separateFilters.length > 0 && (
+          <div className="flex flex-wrap gap-x-4 gap-y-2 pt-1 border-t border-border pt-3">
+            {separateFilters.map((f) => (
+              <div key={f.key} className="flex items-center gap-2" style={{ minWidth: 300 }}>
+                <span className="text-[13px] text-[hsl(var(--label-text))] shrink-0">{f.label}：</span>
+                <div style={{ width: 220 }}>
+                  {f.type === "cascade" ? (
+                    <CascadeMultiSelect
+                      placeholder="请选择"
+                      options={f.options}
+                      value={filterVals[f.key] ?? []}
+                      onChange={(v) => setFilterVals((prev) => ({ ...prev, [f.key]: v }))}
+                    />
+                  ) : (
+                    <MultiSelect
+                      placeholder="请选择"
+                      options={f.options}
+                      value={filterVals[f.key] ?? []}
+                      onChange={(v) => setFilterVals((prev) => ({ ...prev, [f.key]: v }))}
+                    />
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         <div className="mt-4 border border-border rounded-md p-2 bg-card">
           <svg ref={svgRef} viewBox={`0 0 ${W} ${H}`} className="w-full h-auto" onMouseMove={onMove} onMouseLeave={() => setHover(null)}>
             <defs>
