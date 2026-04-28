@@ -11,8 +11,13 @@ const alertTypeOptions = [{ label: "实时" }, { label: "统计" }];
 const feedbackTypeOptions = [{ label: "认知" }, { label: "需求" }, { label: "bug" }, { label: "其他" }];
 const sentimentOptions = [{ label: "正面" }, { label: "负面" }, { label: "无情感" }];
 const alertLevelOptions = [{ label: "S" }, { label: "A" }, { label: "B" }, { label: "C" }, { label: "D" }];
-const warningIndicatorOptions = [{ label: "反馈量" }, { label: "反馈占比" }, { label: "环比变化" }];
-const timeRangeOptions = [{ label: "近1小时" }, { label: "近6小时" }, { label: "近24小时" }, { label: "近7天" }];
+const warningIndicatorOptions = [{ label: "反馈量" }, { label: "AI聚类标签聚类量" }];
+const timeRangeOptions = [
+  { label: "10分钟" }, { label: "20分钟" }, { label: "30分钟" },
+  { label: "1小时" }, { label: "2小时" }, { label: "3小时" },
+  { label: "4小时" }, { label: "5小时" }, { label: "6小时" },
+  { label: "当日" }, { label: "本周" },
+];
 const compareOperators = [{ label: "大于" }, { label: "大于等于" }, { label: "小于" }, { label: "小于等于" }];
 import {
   aiTagOptions,
