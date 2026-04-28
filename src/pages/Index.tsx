@@ -28,7 +28,7 @@ import {
   fanCountOperators,
 } from "@/components/feedback/filterData";
 import { ChevronRight, Plus, Copy } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Index = () => {
   const [fanOp, setFanOp] = useState<string[]>([]);
@@ -43,13 +43,13 @@ const Index = () => {
   const [marketingSep, setMarketingSep] = useState(false);
   const [countrySep, setCountrySep] = useState(false);
 
-  // Auto-uncheck when underlying value cleared
   const aiDisabled = aiTagVals.length === 0;
   const marketingDisabled = marketingVals.length === 0;
   const countryDisabled = countryVals.length === 0;
-  if (aiDisabled && aiTagSep) setAiTagSep(false);
-  if (marketingDisabled && marketingSep) setMarketingSep(false);
-  if (countryDisabled && countrySep) setCountrySep(false);
+
+  useEffect(() => { if (aiDisabled) setAiTagSep(false); }, [aiDisabled]);
+  useEffect(() => { if (marketingDisabled) setMarketingSep(false); }, [marketingDisabled]);
+  useEffect(() => { if (countryDisabled) setCountrySep(false); }, [countryDisabled]);
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))]">
       {/* Breadcrumb */}
