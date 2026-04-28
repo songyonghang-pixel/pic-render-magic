@@ -164,7 +164,20 @@ const Index = () => {
                   <CascadeMultiSelect placeholder="请选择" options={feedbackSourceOptions} />
                 </Field>
                 <Field label="国家/地区" labelWidth="w-20">
-                  <MultiSelect placeholder="请选择国家/地区" options={countryOptions} />
+                  <div className="flex items-center">
+                    <MultiSelect
+                      placeholder="请选择国家/地区"
+                      options={countryOptions}
+                      value={countryVals}
+                      onChange={setCountryVals}
+                    />
+                    <SeparateMonitor
+                      disabled={countryDisabled}
+                      checked={countrySep}
+                      onCheckedChange={setCountrySep}
+                      tooltip="勾选后将对你选择的国家/地区单独进行统计，独立判断是否触发预警条件（相当于一个国家/地区一条独立的预警规则）；不勾选则将选择的所有国家/地区汇统计，判断汇总后的数据是否达到触发条件。"
+                    />
+                  </div>
                 </Field>
                 <div />
               </div>
