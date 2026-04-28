@@ -60,14 +60,20 @@ export const SeparateMonitor = ({
           handleToggle();
         }}
       >
-        <input
-          type="checkbox"
-          disabled={disabled}
-          checked={checked}
-          readOnly
-          className="w-3.5 h-3.5 accent-primary"
-        />
-        <span className="text-[hsl(var(--label-text))]">分别监控</span>
+        <span
+          className={`inline-flex items-center justify-center w-3.5 h-3.5 rounded-[2px] border transition-colors ${
+            checked
+              ? "bg-primary border-primary"
+              : "bg-card border-[hsl(var(--field-border))]"
+          }`}
+        >
+          {checked && (
+            <svg viewBox="0 0 16 16" className="w-3 h-3 text-primary-foreground" fill="none" stroke="currentColor" strokeWidth="3">
+              <polyline points="3,8 7,12 13,4" />
+            </svg>
+          )}
+        </span>
+        <span className={checked ? "text-primary" : "text-[hsl(var(--label-text))]"}>分别监控</span>
       </label>
 
       <div className="relative inline-flex items-center">
