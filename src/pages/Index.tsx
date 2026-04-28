@@ -3,6 +3,9 @@ import { Field, TextInput, SelectInput } from "@/components/feedback/FormField";
 import { MultiSelect } from "@/components/feedback/MultiSelect";
 import { SingleSelect } from "@/components/feedback/SingleSelect";
 import { CascadeMultiSelect } from "@/components/feedback/CascadeMultiSelect";
+import { SeparateMonitor } from "@/components/feedback/SeparateMonitor";
+
+const aiTagLevels = ["一级标签", "二级标签", "三级标签", "四级标签", "五级标签"];
 
 const alertTypeOptions = [{ label: "实时" }, { label: "统计" }];
 const feedbackTypeOptions = [{ label: "认知" }, { label: "需求" }, { label: "bug" }, { label: "其他" }];
@@ -25,11 +28,28 @@ import {
   fanCountOperators,
 } from "@/components/feedback/filterData";
 import { ChevronRight, Plus, Copy } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const Index = () => {
   const [fanOp, setFanOp] = useState<string[]>([]);
   const [alertType, setAlertType] = useState<string>("实时");
+
+  const [aiTagVals, setAiTagVals] = useState<string[]>([]);
+  const [marketingVals, setMarketingVals] = useState<string[]>([]);
+  const [countryVals, setCountryVals] = useState<string[]>([]);
+
+  const [aiTagSep, setAiTagSep] = useState(false);
+  const [aiTagLevel, setAiTagLevel] = useState("二级标签");
+  const [marketingSep, setMarketingSep] = useState(false);
+  const [countrySep, setCountrySep] = useState(false);
+
+  const aiDisabled = aiTagVals.length === 0;
+  const marketingDisabled = marketingVals.length === 0;
+  const countryDisabled = countryVals.length === 0;
+
+  useEffect(() => { if (aiDisabled) setAiTagSep(false); }, [aiDisabled]);
+  useEffect(() => { if (marketingDisabled) setMarketingSep(false); }, [marketingDisabled]);
+  useEffect(() => { if (countryDisabled) setCountrySep(false); }, [countryDisabled]);
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))]">
       {/* Breadcrumb */}
@@ -74,7 +94,24 @@ const Index = () => {
               <label className="w-20 shrink-0 text-right pr-3 text-[13px] font-medium text-[hsl(var(--label-text))] pt-1.5">产品领域</label>
               <div className="flex-1">
                 <Field label="AI标签" labelWidth="w-14">
-                  <CascadeMultiSelect placeholder="请选择" options={aiTagOptions} className="max-w-md" />
+                  <div className="flex items-center max-w-2xl">
+                    <CascadeMultiSelect
+                      placeholder="请选择"
+                      options={aiTagOptions}
+                      className="max-w-md"
+                      value={aiTagVals}
+                      onChange={setAiTagVals}
+                    />
+                    <SeparateMonitor
+                      disabled={aiDisabled}
+                      checked={aiTagSep}
+                      onCheckedChange={setAiTagSep}
+                      tooltip="勾选后将对你选择的AI标签单独进行统计，独立判断是否触发预警条件（相当于一个标签一条独立的预警规则）；不勾选则将选择的所有AI标签汇统计，判断汇总后的数据是否达到触发条件。"
+                      levelOptions={aiTagLevels}
+                      level={aiTagLevel}
+                      onLevelChange={setAiTagLevel}
+                    />
+                  </div>
                 </Field>
               </div>
             </div>
@@ -88,7 +125,20 @@ const Index = () => {
                     <MultiSelect placeholder="请选择品牌" options={brandOptions} />
                   </Field>
                   <Field label="机型营销名" labelWidth="w-20">
-                    <CascadeMultiSelect placeholder="请选择" options={marketingNameOptions} />
+                    <div className="flex items-center">
+                      <CascadeMultiSelect
+                        placeholder="请选择"
+                        options={marketingNameOptions}
+                        value={marketingVals}
+                        onChange={setMarketingVals}
+                      />
+                      <SeparateMonitor
+                        disabled={marketingDisabled}
+                        checked={marketingSep}
+                        onCheckedChange={setMarketingSep}
+                        tooltip="勾选后将对你选择的机型单独进行统计，独立判断是否触发预警条件（相当于一个机型一条独立的预警规则）；不勾选则将选择的所有机型汇统计，判断汇总后的数据是否达到触发条件。"
+                      />
+                    </div>
                   </Field>
                   <Field label="OS版本" labelWidth="w-16">
                     <MultiSelect placeholder="请选择OS版本" options={osVersionOptions} />
@@ -114,7 +164,20 @@ const Index = () => {
                   <CascadeMultiSelect placeholder="请选择" options={feedbackSourceOptions} />
                 </Field>
                 <Field label="国家/地区" labelWidth="w-20">
-                  <MultiSelect placeholder="请选择国家/地区" options={countryOptions} />
+                  <div className="flex items-center">
+                    <MultiSelect
+                      placeholder="请选择国家/地区"
+                      options={countryOptions}
+                      value={countryVals}
+                      onChange={setCountryVals}
+                    />
+                    <SeparateMonitor
+                      disabled={countryDisabled}
+                      checked={countrySep}
+                      onCheckedChange={setCountrySep}
+                      tooltip="勾选后将对你选择的国家/地区单独进行统计，独立判断是否触发预警条件（相当于一个国家/地区一条独立的预警规则）；不勾选则将选择的所有国家/地区汇统计，判断汇总后的数据是否达到触发条件。"
+                    />
+                  </div>
                 </Field>
                 <div />
               </div>
