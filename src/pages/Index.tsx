@@ -52,8 +52,12 @@ const Index = () => {
 
   const [statIndicator, setStatIndicator] = useState<string>("");
   const [statTimeRange, setStatTimeRange] = useState<string>("");
+  const [calcMethod, setCalcMethod] = useState<string>("");
   const [chartOpen, setChartOpen] = useState(false);
   const chartDisabled = !statIndicator || !statTimeRange;
+  const showCalcMethod = statIndicator === "反馈量" && (statTimeRange === "当日" || statTimeRange === "本周");
+  const isPercent = showCalcMethod && (calcMethod === "环比增长" || calcMethod === "较平均值增长率");
+  useEffect(() => { if (!showCalcMethod) setCalcMethod(""); }, [showCalcMethod]);
 
   const aiDisabled = aiTagVals.length < 2;
   const marketingDisabled = marketingVals.length < 2;
