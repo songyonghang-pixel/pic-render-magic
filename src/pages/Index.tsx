@@ -49,6 +49,11 @@ const Index = () => {
   const [marketingSep, setMarketingSep] = useState(false);
   const [countrySep, setCountrySep] = useState(false);
 
+  const [statIndicator, setStatIndicator] = useState<string>("");
+  const [statTimeRange, setStatTimeRange] = useState<string>("");
+  const [chartOpen, setChartOpen] = useState(false);
+  const chartDisabled = !statIndicator || !statTimeRange;
+
   const aiDisabled = aiTagVals.length < 2;
   const marketingDisabled = marketingVals.length < 2;
   const countryDisabled = countryVals.length < 2;
