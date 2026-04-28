@@ -269,24 +269,44 @@ const Index = () => {
           </Field>
           {alertType === "统计" && (
             <Field label=" " labelWidth="w-20">
-              <div className="grid grid-cols-4 gap-3 max-w-[1100px]">
-                <SingleSelect placeholder="请选择预警指标" options={warningIndicatorOptions} />
-                <SingleSelect placeholder="请选择时间范围" options={timeRangeOptions} />
-                <SingleSelect placeholder="请选择运算符" options={compareOperators} />
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  placeholder="请输入量值"
-                  onInput={(e) => {
-                    const t = e.currentTarget;
-                    t.value = t.value.replace(/[^0-9]/g, "");
-                  }}
-                  className="h-8 px-3 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]"
-                />
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="grid grid-cols-4 gap-3 max-w-[1100px] flex-1 min-w-[700px]">
+                  <SingleSelect placeholder="请选择预警指标" options={warningIndicatorOptions} value={statIndicator} onChange={setStatIndicator} />
+                  <SingleSelect placeholder="请选择时间范围" options={timeRangeOptions} value={statTimeRange} onChange={setStatTimeRange} />
+                  <SingleSelect placeholder="请选择运算符" options={compareOperators} />
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="请输入量值"
+                    onInput={(e) => {
+                      const t = e.currentTarget;
+                      t.value = t.value.replace(/[^0-9]/g, "");
+                    }}
+                    className="h-8 px-3 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]"
+                  />
+                </div>
+                <button
+                  disabled={chartDisabled}
+                  onClick={() => setChartOpen(true)}
+                  className={`h-8 px-3 text-[13px] rounded-sm border transition-colors ${
+                    chartDisabled
+                      ? "border-[hsl(var(--field-border))] text-[hsl(var(--placeholder))] bg-muted cursor-not-allowed"
+                      : "border-primary text-primary hover:bg-primary hover:text-primary-foreground cursor-pointer"
+                  }`}
+                >
+                  查看近期数据图
+                </button>
               </div>
             </Field>
           )}
         </Section>
+        <RecentDataDialog
+          open={chartOpen}
+          onOpenChange={setChartOpen}
+          timeRange={statTimeRange}
+          indicator={statIndicator}
+        />
+
 
         {/* 预警通知设置 */}
         <Section title="预警通知设置">
