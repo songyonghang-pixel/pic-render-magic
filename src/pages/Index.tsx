@@ -20,6 +20,7 @@ const timeRangeOptions = [
   { label: "当日" }, { label: "本周" },
 ];
 const compareOperators = [{ label: "大于" }, { label: "大于等于" }, { label: "小于" }, { label: "小于等于" }];
+const calcMethodOptions = [{ label: "值" }, { label: "环比增长" }, { label: "较平均值增长率" }];
 import {
   aiTagOptions,
   brandOptions,
