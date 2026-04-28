@@ -305,6 +305,11 @@ const Index = () => {
           onOpenChange={setChartOpen}
           timeRange={statTimeRange}
           indicator={statIndicator}
+          separateFilters={[
+            ...(aiTagSep ? [{ key: "aiTag", label: "AI标签", type: "cascade" as const, options: aiTagOptions, values: aiTagVals }] : []),
+            ...(marketingSep ? [{ key: "marketing", label: "机型营销名", type: "cascade" as const, options: marketingNameOptions, values: marketingVals }] : []),
+            ...(countrySep ? [{ key: "country", label: "国家/地区", type: "multi" as const, options: countryOptions, values: countryVals }] : []),
+          ]}
         />
 
 
