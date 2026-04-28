@@ -1,8 +1,25 @@
 import { Section } from "@/components/feedback/Section";
 import { Field, TextInput, SelectInput } from "@/components/feedback/FormField";
+import { MultiSelect } from "@/components/feedback/MultiSelect";
+import { CascadeMultiSelect } from "@/components/feedback/CascadeMultiSelect";
+import {
+  aiTagOptions,
+  brandOptions,
+  marketingNameOptions,
+  osVersionOptions,
+  feedbackSourceOptions,
+  countryOptions,
+  defectTypeOptions,
+  domesticExportOptions,
+  socialMediaTypeOptions,
+  warningImportanceOptions,
+  fanCountOperators,
+} from "@/components/feedback/filterData";
 import { ChevronRight, Plus, Copy } from "lucide-react";
+import { useState } from "react";
 
 const Index = () => {
+  const [fanOp, setFanOp] = useState<string[]>([]);
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))]">
       {/* Breadcrumb */}
@@ -39,13 +56,13 @@ const Index = () => {
 
         {/* 预警数据过滤条件 */}
         <Section title="预警数据过滤条件">
-          {/* 产品领域 */}
           <div className="grid grid-cols-1 gap-4">
+            {/* 产品领域 */}
             <div className="flex items-start">
               <label className="w-20 shrink-0 text-right pr-3 text-[13px] font-medium text-[hsl(var(--label-text))] pt-1.5">产品领域</label>
               <div className="flex-1">
                 <Field label="AI标签" labelWidth="w-14">
-                  <SelectInput placeholder="请选择" className="max-w-md" />
+                  <CascadeMultiSelect placeholder="请选择" options={aiTagOptions} className="max-w-md" />
                 </Field>
               </div>
             </div>
@@ -56,18 +73,18 @@ const Index = () => {
               <div className="flex-1 space-y-3">
                 <div className="grid grid-cols-3 gap-4">
                   <Field label="品牌" labelWidth="w-14">
-                    <SelectInput placeholder="请选择品牌" />
+                    <MultiSelect placeholder="请选择品牌" options={brandOptions} />
                   </Field>
                   <Field label="机型营销名" labelWidth="w-20">
-                    <SelectInput placeholder="请选择" />
+                    <CascadeMultiSelect placeholder="请选择" options={marketingNameOptions} />
                   </Field>
                   <Field label="OS版本" labelWidth="w-16">
-                    <SelectInput placeholder="请选择OS版本" />
+                    <MultiSelect placeholder="请选择OS版本" options={osVersionOptions} />
                   </Field>
                 </div>
                 <div className="grid grid-cols-3 gap-4">
                   <Field label="内外销" labelWidth="w-14">
-                    <SelectInput placeholder="请选择内外销" />
+                    <MultiSelect placeholder="请选择内外销" options={domesticExportOptions} />
                   </Field>
                   <Field label="机型" labelWidth="w-20">
                     <TextInput placeholder="请输入机型,如PHY110,多个机型请用逗号隔开" />
@@ -82,10 +99,10 @@ const Index = () => {
               <label className="w-20 shrink-0 text-right pr-3 text-[13px] font-medium text-[hsl(var(--label-text))] pt-1.5">反馈来源</label>
               <div className="flex-1 grid grid-cols-3 gap-4">
                 <Field label="反馈来源" labelWidth="w-20">
-                  <SelectInput placeholder="请选择" />
+                  <CascadeMultiSelect placeholder="请选择" options={feedbackSourceOptions} />
                 </Field>
                 <Field label="国家/地区" labelWidth="w-20">
-                  <SelectInput placeholder="请选择国家/地区" />
+                  <MultiSelect placeholder="请选择国家/地区" options={countryOptions} />
                 </Field>
                 <div />
               </div>
@@ -103,21 +120,33 @@ const Index = () => {
                     <SelectInput placeholder="请选择用户情感" />
                   </Field>
                   <Field label="社媒类型" labelWidth="w-20">
-                    <SelectInput placeholder="请选择社媒类型" />
+                    <MultiSelect placeholder="请选择社媒类型" options={socialMediaTypeOptions} />
                   </Field>
                 </div>
                 <div className="grid grid-cols-3 gap-4">
                   <Field label="粉丝量" labelWidth="w-20">
                     <div className="flex gap-2">
-                      <SelectInput value="运算符" className="w-24" />
-                      <TextInput placeholder="请输入" />
+                      <div className="w-28 shrink-0">
+                        <MultiSelect placeholder="运算符" options={fanCountOperators} value={fanOp} onChange={(v) => setFanOp(v.slice(-1))} />
+                      </div>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
+                        placeholder="请输入"
+                        onInput={(e) => {
+                          const t = e.currentTarget;
+                          t.value = t.value.replace(/[^0-9]/g, "");
+                        }}
+                        className="flex-1 h-8 px-3 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]"
+                      />
                     </div>
                   </Field>
                   <Field label="预警重要度" labelWidth="w-20">
-                    <SelectInput placeholder="请选择预警重要度" />
+                    <MultiSelect placeholder="请选择预警重要度" options={warningImportanceOptions} />
                   </Field>
                   <Field label="不良类型" labelWidth="w-20">
-                    <SelectInput placeholder="请选择不良类型" />
+                    <MultiSelect placeholder="请选择不良类型" options={defectTypeOptions} />
                   </Field>
                 </div>
                 <div className="flex items-center">
