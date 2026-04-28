@@ -4,6 +4,7 @@ import { MultiSelect } from "@/components/feedback/MultiSelect";
 import { SingleSelect } from "@/components/feedback/SingleSelect";
 import { CascadeMultiSelect } from "@/components/feedback/CascadeMultiSelect";
 import { SeparateMonitor } from "@/components/feedback/SeparateMonitor";
+import { RecentDataDialog } from "@/components/feedback/RecentDataDialog";
 
 const aiTagLevels = ["一级标签", "二级标签", "三级标签", "四级标签", "五级标签"];
 
