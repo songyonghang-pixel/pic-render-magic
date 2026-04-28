@@ -4,6 +4,7 @@ import { MultiSelect } from "@/components/feedback/MultiSelect";
 import { SingleSelect } from "@/components/feedback/SingleSelect";
 import { CascadeMultiSelect } from "@/components/feedback/CascadeMultiSelect";
 import { SeparateMonitor } from "@/components/feedback/SeparateMonitor";
+import { RecentDataDialog } from "@/components/feedback/RecentDataDialog";
 
 const aiTagLevels = ["一级标签", "二级标签", "三级标签", "四级标签", "五级标签"];
 
@@ -11,8 +12,13 @@ const alertTypeOptions = [{ label: "实时" }, { label: "统计" }];
 const feedbackTypeOptions = [{ label: "认知" }, { label: "需求" }, { label: "bug" }, { label: "其他" }];
 const sentimentOptions = [{ label: "正面" }, { label: "负面" }, { label: "无情感" }];
 const alertLevelOptions = [{ label: "S" }, { label: "A" }, { label: "B" }, { label: "C" }, { label: "D" }];
-const warningIndicatorOptions = [{ label: "反馈量" }, { label: "反馈占比" }, { label: "环比变化" }];
-const timeRangeOptions = [{ label: "近1小时" }, { label: "近6小时" }, { label: "近24小时" }, { label: "近7天" }];
+const warningIndicatorOptions = [{ label: "反馈量" }, { label: "AI聚类标签聚类量" }];
+const timeRangeOptions = [
+  { label: "10分钟" }, { label: "20分钟" }, { label: "30分钟" },
+  { label: "1小时" }, { label: "2小时" }, { label: "3小时" },
+  { label: "4小时" }, { label: "5小时" }, { label: "6小时" },
+  { label: "当日" }, { label: "本周" },
+];
 const compareOperators = [{ label: "大于" }, { label: "大于等于" }, { label: "小于" }, { label: "小于等于" }];
 import {
   aiTagOptions,
@@ -42,6 +48,11 @@ const Index = () => {
   const [aiTagLevel, setAiTagLevel] = useState("二级标签");
   const [marketingSep, setMarketingSep] = useState(false);
   const [countrySep, setCountrySep] = useState(false);
+
+  const [statIndicator, setStatIndicator] = useState<string>("");
+  const [statTimeRange, setStatTimeRange] = useState<string>("");
+  const [chartOpen, setChartOpen] = useState(false);
+  const chartDisabled = !statIndicator || !statTimeRange;
 
   const aiDisabled = aiTagVals.length < 2;
   const marketingDisabled = marketingVals.length < 2;
@@ -258,24 +269,44 @@ const Index = () => {
           </Field>
           {alertType === "统计" && (
             <Field label=" " labelWidth="w-20">
-              <div className="grid grid-cols-4 gap-3 max-w-[1100px]">
-                <SingleSelect placeholder="请选择预警指标" options={warningIndicatorOptions} />
-                <SingleSelect placeholder="请选择时间范围" options={timeRangeOptions} />
-                <SingleSelect placeholder="请选择运算符" options={compareOperators} />
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  placeholder="请输入量值"
-                  onInput={(e) => {
-                    const t = e.currentTarget;
-                    t.value = t.value.replace(/[^0-9]/g, "");
-                  }}
-                  className="h-8 px-3 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]"
-                />
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="grid grid-cols-4 gap-3 max-w-[1100px] flex-1 min-w-[700px]">
+                  <SingleSelect placeholder="请选择预警指标" options={warningIndicatorOptions} value={statIndicator} onChange={setStatIndicator} />
+                  <SingleSelect placeholder="请选择时间范围" options={timeRangeOptions} value={statTimeRange} onChange={setStatTimeRange} />
+                  <SingleSelect placeholder="请选择运算符" options={compareOperators} />
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    placeholder="请输入量值"
+                    onInput={(e) => {
+                      const t = e.currentTarget;
+                      t.value = t.value.replace(/[^0-9]/g, "");
+                    }}
+                    className="h-8 px-3 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]"
+                  />
+                </div>
+                <button
+                  disabled={chartDisabled}
+                  onClick={() => setChartOpen(true)}
+                  className={`h-8 px-3 text-[13px] rounded-sm border transition-colors ${
+                    chartDisabled
+                      ? "border-[hsl(var(--field-border))] text-[hsl(var(--placeholder))] bg-muted cursor-not-allowed"
+                      : "border-primary text-primary hover:bg-primary hover:text-primary-foreground cursor-pointer"
+                  }`}
+                >
+                  查看近期数据图
+                </button>
               </div>
             </Field>
           )}
         </Section>
+        <RecentDataDialog
+          open={chartOpen}
+          onOpenChange={setChartOpen}
+          timeRange={statTimeRange}
+          indicator={statIndicator}
+        />
+
 
         {/* 预警通知设置 */}
         <Section title="预警通知设置">
