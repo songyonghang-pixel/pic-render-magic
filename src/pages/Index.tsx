@@ -94,7 +94,24 @@ const Index = () => {
               <label className="w-20 shrink-0 text-right pr-3 text-[13px] font-medium text-[hsl(var(--label-text))] pt-1.5">产品领域</label>
               <div className="flex-1">
                 <Field label="AI标签" labelWidth="w-14">
-                  <CascadeMultiSelect placeholder="请选择" options={aiTagOptions} className="max-w-md" />
+                  <div className="flex items-center max-w-2xl">
+                    <CascadeMultiSelect
+                      placeholder="请选择"
+                      options={aiTagOptions}
+                      className="max-w-md"
+                      value={aiTagVals}
+                      onChange={setAiTagVals}
+                    />
+                    <SeparateMonitor
+                      disabled={aiDisabled}
+                      checked={aiTagSep}
+                      onCheckedChange={setAiTagSep}
+                      tooltip="勾选后将对你选择的AI标签单独进行统计，独立判断是否触发预警条件（相当于一个标签一条独立的预警规则）；不勾选则将选择的所有AI标签汇统计，判断汇总后的数据是否达到触发条件。"
+                      levelOptions={aiTagLevels}
+                      level={aiTagLevel}
+                      onLevelChange={setAiTagLevel}
+                    />
+                  </div>
                 </Field>
               </div>
             </div>
@@ -108,7 +125,20 @@ const Index = () => {
                     <MultiSelect placeholder="请选择品牌" options={brandOptions} />
                   </Field>
                   <Field label="机型营销名" labelWidth="w-20">
-                    <CascadeMultiSelect placeholder="请选择" options={marketingNameOptions} />
+                    <div className="flex items-center">
+                      <CascadeMultiSelect
+                        placeholder="请选择"
+                        options={marketingNameOptions}
+                        value={marketingVals}
+                        onChange={setMarketingVals}
+                      />
+                      <SeparateMonitor
+                        disabled={marketingDisabled}
+                        checked={marketingSep}
+                        onCheckedChange={setMarketingSep}
+                        tooltip="勾选后将对你选择的机型单独进行统计，独立判断是否触发预警条件（相当于一个机型一条独立的预警规则）；不勾选则将选择的所有机型汇统计，判断汇总后的数据是否达到触发条件。"
+                      />
+                    </div>
                   </Field>
                   <Field label="OS版本" labelWidth="w-16">
                     <MultiSelect placeholder="请选择OS版本" options={osVersionOptions} />
