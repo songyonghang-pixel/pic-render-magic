@@ -53,7 +53,15 @@ function fmtTick(d: Date, dim: string) {
   return `${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }
 
-export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator }: Props) => {
+export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, separateFilters = [] }: Props) => {
+  const [filterVals, setFilterVals] = useState<Record<string, string[]>>({});
+  useEffect(() => {
+    if (open) {
+      const init: Record<string, string[]> = {};
+      separateFilters.forEach((f) => { init[f.key] = f.values; });
+      setFilterVals(init);
+    }
+  }, [open, separateFilters]);
   const cfg = rangeMap[timeRange] ?? rangeMap["10分钟"];
   const [dim, setDim] = useState(cfg.dim);
   const [endTime, setEndTime] = useState(() => {
