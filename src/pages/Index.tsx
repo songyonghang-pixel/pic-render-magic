@@ -1,7 +1,16 @@
 import { Section } from "@/components/feedback/Section";
 import { Field, TextInput, SelectInput } from "@/components/feedback/FormField";
 import { MultiSelect } from "@/components/feedback/MultiSelect";
+import { SingleSelect } from "@/components/feedback/SingleSelect";
 import { CascadeMultiSelect } from "@/components/feedback/CascadeMultiSelect";
+
+const alertTypeOptions = [{ label: "实时" }, { label: "统计" }];
+const feedbackTypeOptions = [{ label: "认知" }, { label: "需求" }, { label: "bug" }, { label: "其他" }];
+const sentimentOptions = [{ label: "正面" }, { label: "负面" }, { label: "无情感" }];
+const alertLevelOptions = [{ label: "S" }, { label: "A" }, { label: "B" }, { label: "C" }, { label: "D" }];
+const warningIndicatorOptions = [{ label: "反馈量" }, { label: "反馈占比" }, { label: "环比变化" }];
+const timeRangeOptions = [{ label: "近1小时" }, { label: "近6小时" }, { label: "近24小时" }, { label: "近7天" }];
+const compareOperators = [{ label: "大于" }, { label: "大于等于" }, { label: "小于" }, { label: "小于等于" }];
 import {
   aiTagOptions,
   brandOptions,
@@ -20,6 +29,7 @@ import { useState } from "react";
 
 const Index = () => {
   const [fanOp, setFanOp] = useState<string[]>([]);
+  const [alertType, setAlertType] = useState<string>("实时");
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))]">
       {/* Breadcrumb */}
@@ -45,7 +55,9 @@ const Index = () => {
           <div className="flex items-center">
             <Field label="预警类型" required labelWidth="w-20">
               <div className="flex items-center gap-3">
-                <SelectInput value="实时" className="max-w-[200px]" />
+                <div className="max-w-[200px] w-[200px]">
+                  <SingleSelect options={alertTypeOptions} value={alertType} onChange={setAlertType} />
+                </div>
                 <span className="text-[12px] text-[hsl(var(--muted-foreground))]">
                   <span className="text-destructive">*</span> 统计为监控一段时间内的反馈数据或变化，因数据采集及处理，预计会延迟10～20分钟
                 </span>
@@ -114,10 +126,10 @@ const Index = () => {
               <div className="flex-1 space-y-3">
                 <div className="grid grid-cols-3 gap-4">
                   <Field label="反馈类型" labelWidth="w-20">
-                    <SelectInput placeholder="请选择反馈类型" />
+                    <MultiSelect placeholder="请选择反馈类型" options={feedbackTypeOptions} />
                   </Field>
                   <Field label="用户情感" labelWidth="w-20">
-                    <SelectInput placeholder="请选择用户情感" />
+                    <MultiSelect placeholder="请选择用户情感" options={sentimentOptions} />
                   </Field>
                   <Field label="社媒类型" labelWidth="w-20">
                     <MultiSelect placeholder="请选择社媒类型" options={socialMediaTypeOptions} />
@@ -177,8 +189,29 @@ const Index = () => {
         {/* 触发条件设置 */}
         <Section title="触发条件设置">
           <Field label="预警级别" required>
-            <SelectInput placeholder="请选择预警级别" className="max-w-md" />
+            <div className="max-w-md">
+              <SingleSelect placeholder="请选择预警级别" options={alertLevelOptions} />
+            </div>
           </Field>
+          {alertType === "统计" && (
+            <Field label=" " labelWidth="w-20">
+              <div className="grid grid-cols-4 gap-3 max-w-[1100px]">
+                <SingleSelect placeholder="请选择预警指标" options={warningIndicatorOptions} />
+                <SingleSelect placeholder="请选择时间范围" options={timeRangeOptions} />
+                <SingleSelect placeholder="请选择运算符" options={compareOperators} />
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  placeholder="请输入量值"
+                  onInput={(e) => {
+                    const t = e.currentTarget;
+                    t.value = t.value.replace(/[^0-9]/g, "");
+                  }}
+                  className="h-8 px-3 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]"
+                />
+              </div>
+            </Field>
+          )}
         </Section>
 
         {/* 预警通知设置 */}
