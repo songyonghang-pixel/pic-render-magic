@@ -1,12 +1,23 @@
-import { useMemo, useState, useRef } from "react";
+import { useMemo, useState, useRef, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { SingleSelect } from "./SingleSelect";
+import { MultiSelect } from "./MultiSelect";
+import { CascadeMultiSelect } from "./CascadeMultiSelect";
+
+export interface SeparateFilter {
+  key: string;
+  label: string;
+  type: "multi" | "cascade";
+  options: any[];
+  values: string[];
+}
 
 interface Props {
   open: boolean;
   onOpenChange: (v: boolean) => void;
   timeRange: string; // selected time range from trigger condition
   indicator: string;
+  separateFilters?: SeparateFilter[];
 }
 
 const timeDimensionOptions = [
