@@ -3,6 +3,9 @@ import { Field, TextInput, SelectInput } from "@/components/feedback/FormField";
 import { MultiSelect } from "@/components/feedback/MultiSelect";
 import { SingleSelect } from "@/components/feedback/SingleSelect";
 import { CascadeMultiSelect } from "@/components/feedback/CascadeMultiSelect";
+import { SeparateMonitor } from "@/components/feedback/SeparateMonitor";
+
+const aiTagLevels = ["一级标签", "二级标签", "三级标签", "四级标签", "五级标签"];
 
 const alertTypeOptions = [{ label: "实时" }, { label: "统计" }];
 const feedbackTypeOptions = [{ label: "认知" }, { label: "需求" }, { label: "bug" }, { label: "其他" }];
@@ -30,6 +33,23 @@ import { useState } from "react";
 const Index = () => {
   const [fanOp, setFanOp] = useState<string[]>([]);
   const [alertType, setAlertType] = useState<string>("实时");
+
+  const [aiTagVals, setAiTagVals] = useState<string[]>([]);
+  const [marketingVals, setMarketingVals] = useState<string[]>([]);
+  const [countryVals, setCountryVals] = useState<string[]>([]);
+
+  const [aiTagSep, setAiTagSep] = useState(false);
+  const [aiTagLevel, setAiTagLevel] = useState("二级标签");
+  const [marketingSep, setMarketingSep] = useState(false);
+  const [countrySep, setCountrySep] = useState(false);
+
+  // Auto-uncheck when underlying value cleared
+  const aiDisabled = aiTagVals.length === 0;
+  const marketingDisabled = marketingVals.length === 0;
+  const countryDisabled = countryVals.length === 0;
+  if (aiDisabled && aiTagSep) setAiTagSep(false);
+  if (marketingDisabled && marketingSep) setMarketingSep(false);
+  if (countryDisabled && countrySep) setCountrySep(false);
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))]">
       {/* Breadcrumb */}
