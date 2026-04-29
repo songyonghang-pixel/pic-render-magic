@@ -162,6 +162,10 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, sep
             </div>
           </div>
           <span className="text-[12px] text-[hsl(var(--muted-foreground))]">展示{dimCfg.spanLabel}内每{dim}的数据趋势</span>
+          <div className="ml-auto flex items-center gap-2 px-3 py-1 rounded-sm bg-[hsl(var(--primary)/0.08)] border border-[hsl(var(--primary)/0.2)]">
+            <span className="text-[12px] text-[hsl(var(--muted-foreground))]">平均值（每{dim}）：</span>
+            <span className="text-[13px] font-semibold text-primary">{avgV.toFixed(2)}</span>
+          </div>
         </div>
 
         {separateFilters.length > 0 && (
