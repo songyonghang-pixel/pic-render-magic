@@ -63,7 +63,7 @@ const Index = () => {
   const [chartOpen, setChartOpen] = useState(false);
   const chartDisabled = !statIndicator || !statTimeRange;
   const showCalcMethod = statIndicator === "反馈量" && (statTimeRange === "当日" || statTimeRange === "本周");
-  const isPercent = showCalcMethod && (calcMethod === "环比增长" || calcMethod === "较平均值增长率");
+  const isPercent = showCalcMethod && percentCalcMethods.includes(calcMethod);
   useEffect(() => { if (!showCalcMethod) setCalcMethod(""); }, [showCalcMethod]);
 
   const aiDisabled = aiTagVals.length < 2;
