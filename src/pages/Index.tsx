@@ -284,11 +284,13 @@ const Index = () => {
 
         {/* 触发条件设置 */}
         <Section title="触发条件设置">
-          <Field label="预警级别" required>
-            <div className="max-w-md">
-              <SingleSelect placeholder="请选择预警级别" options={alertLevelOptions} />
-            </div>
-          </Field>
+          {alertType !== "统计" && (
+            <Field label="预警级别" required>
+              <div className="max-w-md">
+                <SingleSelect placeholder="请选择预警级别" options={alertLevelOptions} />
+              </div>
+            </Field>
+          )}
           {alertType === "统计" && (
             <div className="space-y-3">
               {statConds.map((cond, idx) => {
