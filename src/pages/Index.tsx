@@ -43,8 +43,10 @@ import {
 } from "@/components/feedback/filterData";
 import { ChevronRight, Plus, Copy, HelpCircle } from "lucide-react";
 import { useState, useEffect } from "react";
+import FeedbackDataAnalysis from "./FeedbackDataAnalysis";
 
 const Index = () => {
+  const [activeTab, setActiveTab] = useState<"alert" | "analysis">("alert");
   const [fanOp, setFanOp] = useState<string[]>([]);
   const [alertType, setAlertType] = useState<string>("实时");
 
