@@ -305,6 +305,11 @@ const Index = () => {
                         <div className="flex-1 h-px bg-border" />
                       </div>
                     )}
+                    <Field label="预警级别" required labelWidth="w-20">
+                      <div className="max-w-md">
+                        <SingleSelect placeholder="请选择预警级别" options={alertLevelOptions} value={cond.level} onChange={(v) => updateCond(cond.id, { level: v })} />
+                      </div>
+                    </Field>
                     <Field label=" " labelWidth="w-20">
                       <div className="flex items-center gap-3 flex-wrap">
                         <div className="flex items-center gap-3 flex-wrap flex-1 min-w-[700px]">
@@ -342,7 +347,6 @@ const Index = () => {
                               <span className="absolute right-0 top-0 h-8 w-7 flex items-center justify-center text-[13px] text-[hsl(var(--label-text))] border-l border-[hsl(var(--field-border))] bg-muted">%</span>
                             )}
                           </div>
-                          <div className="w-[140px]"><SingleSelect placeholder="请选择预警级别" options={alertLevelOptions} value={cond.level} onChange={(v) => updateCond(cond.id, { level: v })} /></div>
                         </div>
                         <button
                           disabled={chartDisabled}
