@@ -52,6 +52,8 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState<"rules" | "alert" | "list" | "analysis">("rules");
   const [fanOp, setFanOp] = useState<string[]>([]);
   const [alertType, setAlertType] = useState<string>("实时");
+  const [ruleName, setRuleName] = useState<string>("");
+  const [ruleNameKey, setRuleNameKey] = useState<number>(0);
 
   const [aiTagVals, setAiTagVals] = useState<string[]>([]);
   const [marketingVals, setMarketingVals] = useState<string[]>([]);
