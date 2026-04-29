@@ -45,9 +45,11 @@ import {
 import { ChevronRight, Plus, Copy, HelpCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 import FeedbackDataAnalysis from "./FeedbackDataAnalysis";
+import AlertRules from "./AlertRules";
+import AlertList from "./AlertList";
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState<"alert" | "analysis">("alert");
+  const [activeTab, setActiveTab] = useState<"rules" | "alert" | "list" | "analysis">("rules");
   const [fanOp, setFanOp] = useState<string[]>([]);
   const [alertType, setAlertType] = useState<string>("实时");
 
@@ -91,7 +93,9 @@ const Index = () => {
       {/* Top tabs */}
       <div className="bg-card border-b border-border px-6 flex items-center gap-6">
         {([
+          { key: "rules", label: "预警规则" },
           { key: "alert", label: "新建预警" },
+          { key: "list", label: "预警列表" },
           { key: "analysis", label: "反馈原声分析" },
         ] as const).map((t) => (
           <button
@@ -110,6 +114,10 @@ const Index = () => {
 
       {activeTab === "analysis" ? (
         <FeedbackDataAnalysis />
+      ) : activeTab === "rules" ? (
+        <AlertRules onCreate={() => setActiveTab("alert")} />
+      ) : activeTab === "list" ? (
+        <AlertList />
       ) : (
         <>
       {/* Breadcrumb */}
