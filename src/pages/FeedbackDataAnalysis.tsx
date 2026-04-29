@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ChevronRight, Download, Table as TableIcon } from "lucide-react";
 import { SingleSelect } from "@/components/feedback/SingleSelect";
 import { AnalysisFilterPanel } from "@/components/feedback/AnalysisFilterPanel";
+import { TrendChartCard } from "@/components/feedback/TrendChartCard";
 import {
   Bar,
   BarChart,
