@@ -57,8 +57,8 @@ const Index = () => {
   const [marketingSep, setMarketingSep] = useState(false);
   const [countrySep, setCountrySep] = useState(false);
 
-  type StatCond = { id: number; indicator: string; timeRange: string; calcMethod: string };
-  const [statConds, setStatConds] = useState<StatCond[]>([{ id: 1, indicator: "", timeRange: "", calcMethod: "" }]);
+  type StatCond = { id: number; indicator: string; timeRange: string; calcMethod: string; level: string };
+  const [statConds, setStatConds] = useState<StatCond[]>([{ id: 1, indicator: "", timeRange: "", calcMethod: "", level: "" }]);
   const [chartOpenId, setChartOpenId] = useState<number | null>(null);
   const updateCond = (id: number, patch: Partial<StatCond>) => {
     setStatConds((prev) => prev.map((c) => {
@@ -71,7 +71,7 @@ const Index = () => {
   };
   const addCond = () => {
     if (statConds.length >= 10) return;
-    setStatConds((prev) => [...prev, { id: Date.now(), indicator: "", timeRange: "", calcMethod: "" }]);
+    setStatConds((prev) => [...prev, { id: Date.now(), indicator: "", timeRange: "", calcMethod: "", level: "" }]);
   };
   const removeCond = (id: number) => setStatConds((prev) => prev.filter((c) => c.id !== id));
   const activeChartCond = statConds.find((c) => c.id === chartOpenId);
@@ -284,11 +284,13 @@ const Index = () => {
 
         {/* 触发条件设置 */}
         <Section title="触发条件设置">
-          <Field label="预警级别" required>
-            <div className="max-w-md">
-              <SingleSelect placeholder="请选择预警级别" options={alertLevelOptions} />
-            </div>
-          </Field>
+          {alertType !== "统计" && (
+            <Field label="预警级别" required>
+              <div className="max-w-md">
+                <SingleSelect placeholder="请选择预警级别" options={alertLevelOptions} />
+              </div>
+            </Field>
+          )}
           {alertType === "统计" && (
             <div className="space-y-3">
               {statConds.map((cond, idx) => {
@@ -340,6 +342,7 @@ const Index = () => {
                               <span className="absolute right-0 top-0 h-8 w-7 flex items-center justify-center text-[13px] text-[hsl(var(--label-text))] border-l border-[hsl(var(--field-border))] bg-muted">%</span>
                             )}
                           </div>
+                          <div className="w-[140px]"><SingleSelect placeholder="请选择预警级别" options={alertLevelOptions} value={cond.level} onChange={(v) => updateCond(cond.id, { level: v })} /></div>
                         </div>
                         <button
                           disabled={chartDisabled}
