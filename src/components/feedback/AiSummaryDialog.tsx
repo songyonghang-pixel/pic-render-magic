@@ -10,9 +10,10 @@ const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/feedback-sum
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  tag?: string | null;
 }
 
-export const AiSummaryDialog = ({ open, onOpenChange }: Props) => {
+export const AiSummaryDialog = ({ open, onOpenChange, tag }: Props) => {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -22,17 +23,17 @@ export const AiSummaryDialog = ({ open, onOpenChange }: Props) => {
   useEffect(() => {
     if (open && !initRef.current) {
       initRef.current = true;
-      void send("总结反馈原声");
+      const initMsg = tag ? `总结反馈原声：「${tag}」` : "总结反馈原声";
+      void send(initMsg);
     }
     if (!open) {
-      // reset on close so next open re-summarizes fresh
       initRef.current = false;
       setMessages([]);
       setInput("");
       setLoading(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open]);
+  }, [open, tag]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
