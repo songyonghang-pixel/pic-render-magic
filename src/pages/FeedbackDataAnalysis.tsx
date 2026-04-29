@@ -24,8 +24,6 @@ import {
 
 const xAxisOptions = ["AI五级标签", "营销机型名", "OS版本", "反馈来源"];
 
-const xAxisOptions = ["AI五级标签", "营销机型名", "OS版本", "反馈来源"];
-
 const barData = [
   { name: "拍照/拍视频体验", value: 10680 },
   { name: "硬件配置", value: 9620 },
