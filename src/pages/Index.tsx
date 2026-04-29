@@ -41,7 +41,7 @@ import {
   warningImportanceOptions,
   fanCountOperators,
 } from "@/components/feedback/filterData";
-import { ChevronRight, Plus, Copy } from "lucide-react";
+import { ChevronRight, Plus, Copy, HelpCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const Index = () => {
