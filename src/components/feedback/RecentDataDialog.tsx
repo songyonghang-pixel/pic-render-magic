@@ -64,6 +64,9 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, sep
   }, [open, separateFilters]);
   const cfg = rangeMap[timeRange] ?? rangeMap["10分钟"];
   const [dim, setDim] = useState(cfg.dim);
+  useEffect(() => {
+    if (open) setDim(cfg.dim);
+  }, [open, timeRange]);
   const [endTime, setEndTime] = useState(() => {
     const d = new Date();
     return fmtDate(d);
