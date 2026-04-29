@@ -71,7 +71,7 @@ const Index = () => {
   };
   const addCond = () => {
     if (statConds.length >= 10) return;
-    setStatConds((prev) => [...prev, { id: Date.now(), indicator: "", timeRange: "", calcMethod: "" }]);
+    setStatConds((prev) => [...prev, { id: Date.now(), indicator: "", timeRange: "", calcMethod: "", level: "" }]);
   };
   const removeCond = (id: number) => setStatConds((prev) => prev.filter((c) => c.id !== id));
   const activeChartCond = statConds.find((c) => c.id === chartOpenId);
