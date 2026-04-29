@@ -110,6 +110,9 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, sep
   const pathD = points.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ");
   const areaD = `${pathD} L${points[points.length - 1]?.x ?? PL},${PT + innerH} L${points[0]?.x ?? PL},${PT + innerH} Z`;
 
+  const avgV = data.length ? data.reduce((s, d) => s + d.v, 0) / data.length : 0;
+  const avgY = PT + innerH - (avgV / maxV) * innerH;
+
   const yTicks = [0, Math.round(maxV / 4), Math.round(maxV / 2), Math.round((maxV * 3) / 4), maxV];
   const xTickIdx = data.length > 8 ? [0, Math.floor(data.length / 4), Math.floor(data.length / 2), Math.floor((data.length * 3) / 4), data.length - 1] : data.map((_, i) => i);
 
@@ -159,6 +162,10 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, sep
             </div>
           </div>
           <span className="text-[12px] text-[hsl(var(--muted-foreground))]">展示{dimCfg.spanLabel}内每{dim}的数据趋势</span>
+          <div className="ml-auto flex items-center gap-2 px-3 py-1 rounded-sm bg-[hsl(var(--primary)/0.08)] border border-[hsl(var(--primary)/0.2)]">
+            <span className="text-[12px] text-[hsl(var(--muted-foreground))]">平均值（每{dim}）：</span>
+            <span className="text-[13px] font-semibold text-primary">{avgV.toFixed(2)}</span>
+          </div>
         </div>
 
         {separateFilters.length > 0 && (
@@ -209,6 +216,9 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, sep
 
             <path d={areaD} fill="url(#areaGrad)" />
             <path d={pathD} fill="none" stroke="hsl(var(--primary))" strokeWidth="2" />
+
+            <line x1={PL} y1={avgY} x2={W - PR} y2={avgY} stroke="hsl(var(--destructive))" strokeDasharray="5 4" strokeWidth="1.5" opacity="0.8" />
+            <text x={W - PR - 4} y={avgY - 4} textAnchor="end" fontSize="11" fill="hsl(var(--destructive))" fontWeight="600">平均值 {avgV.toFixed(2)}</text>
 
             {xTickIdx.map((i) => (
               <text key={i} x={points[i]?.x} y={H - 8} textAnchor="middle" fontSize="11" fill="hsl(var(--muted-foreground))">
