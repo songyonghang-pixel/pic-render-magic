@@ -117,7 +117,7 @@ const Index = () => {
       {activeTab === "analysis" ? (
         <FeedbackDataAnalysis />
       ) : activeTab === "rules" ? (
-        <AlertRules onCreate={() => setActiveTab("alert")} />
+        <AlertRules onCreate={() => setActiveTab("alert")} onCopy={(name, type) => { setRuleName(name); setAlertType(type); setRuleNameKey((k) => k + 1); setActiveTab("alert"); }} />
       ) : activeTab === "list" ? (
         <AlertList onShowAnalysis={() => setActiveTab("analysis")} />
       ) : (
