@@ -97,6 +97,7 @@ export const AlertRules = ({ onCreate, onCopy }: { onCreate: () => void; onCopy?
                   <td className="py-3 px-4 space-x-3">
                     <a className="text-primary cursor-pointer hover:underline">详情</a>
                     <a className="text-primary cursor-pointer hover:underline">编辑</a>
+                    <a className="text-primary cursor-pointer hover:underline" onClick={() => onCopy?.(`副本-${r.name}`, r.type)}>复制</a>
                     <a className="text-primary cursor-pointer hover:underline">删除</a>
                   </td>
                 </tr>
