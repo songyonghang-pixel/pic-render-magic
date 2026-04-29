@@ -57,14 +57,24 @@ const Index = () => {
   const [marketingSep, setMarketingSep] = useState(false);
   const [countrySep, setCountrySep] = useState(false);
 
-  const [statIndicator, setStatIndicator] = useState<string>("");
-  const [statTimeRange, setStatTimeRange] = useState<string>("");
-  const [calcMethod, setCalcMethod] = useState<string>("");
-  const [chartOpen, setChartOpen] = useState(false);
-  const chartDisabled = !statIndicator || !statTimeRange;
-  const showCalcMethod = statIndicator === "反馈量" && (statTimeRange === "当日" || statTimeRange === "本周");
-  const isPercent = showCalcMethod && percentCalcMethods.includes(calcMethod);
-  useEffect(() => { if (!showCalcMethod) setCalcMethod(""); }, [showCalcMethod]);
+  type StatCond = { id: number; indicator: string; timeRange: string; calcMethod: string };
+  const [statConds, setStatConds] = useState<StatCond[]>([{ id: 1, indicator: "", timeRange: "", calcMethod: "" }]);
+  const [chartOpenId, setChartOpenId] = useState<number | null>(null);
+  const updateCond = (id: number, patch: Partial<StatCond>) => {
+    setStatConds((prev) => prev.map((c) => {
+      if (c.id !== id) return c;
+      const next = { ...c, ...patch };
+      const showCalc = next.indicator === "反馈量" && (next.timeRange === "当日" || next.timeRange === "本周");
+      if (!showCalc) next.calcMethod = "";
+      return next;
+    }));
+  };
+  const addCond = () => {
+    if (statConds.length >= 10) return;
+    setStatConds((prev) => [...prev, { id: Date.now(), indicator: "", timeRange: "", calcMethod: "" }]);
+  };
+  const removeCond = (id: number) => setStatConds((prev) => prev.filter((c) => c.id !== id));
+  const activeChartCond = statConds.find((c) => c.id === chartOpenId);
 
   const aiDisabled = aiTagVals.length < 2;
   const marketingDisabled = marketingVals.length < 2;
