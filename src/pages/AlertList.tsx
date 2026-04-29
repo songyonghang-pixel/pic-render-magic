@@ -88,7 +88,7 @@ export const AlertList = () => {
                 </tr>
               </thead>
               <tbody>
-                {rows.map((r) => (
+                {filteredRows.map((r) => (
                   <tr key={r.id} className="border-b border-border">
                     <td className="py-3 px-4 text-[hsl(var(--label-text))] whitespace-nowrap">{r.id}</td>
                     <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.ruleId}</td>
