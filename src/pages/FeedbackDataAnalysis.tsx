@@ -92,37 +92,14 @@ export const FeedbackDataAnalysis = () => {
         <span className="text-[hsl(var(--breadcrumb-active))]">数据分析</span>
       </div>
 
-      {/* Header info card */}
+      {/* Analysis Filter Panel */}
       <div className="px-6 pt-5">
-        <div className="bg-[hsl(var(--accent))] rounded-md px-6 py-5 relative">
-          <div className="space-y-3 text-[13px]">
-            <div className="flex">
-              <span className="w-28 text-[hsl(var(--label-text))]">反馈原声数据：</span>
-              <a className="text-primary cursor-pointer hover:underline">点击查看</a>
-            </div>
-            <div className="flex">
-              <span className="w-28 text-[hsl(var(--label-text))]">分析人：</span>
-              <span className="text-[hsl(var(--label-text))]">宋永航(80261667)</span>
-            </div>
-            <div className="flex">
-              <span className="w-28 text-[hsl(var(--label-text))]">包含反馈数量：</span>
-              <span className="text-[hsl(var(--label-text))]">45892条(按标签可被拆分为45892条,其中AI聚类标签反馈数30072条)</span>
-            </div>
-          </div>
-          <div className="absolute right-6 bottom-5 flex gap-2">
-            <button className="h-8 px-5 text-[13px] rounded-full border border-[hsl(var(--field-border))] text-[hsl(var(--label-text))] bg-card hover:border-primary hover:text-primary transition-colors">
-              保存
-            </button>
-            <button className="h-8 px-5 text-[13px] rounded-full border border-[hsl(var(--field-border))] text-[hsl(var(--placeholder))] bg-muted cursor-not-allowed">
-              分享链接
-            </button>
-          </div>
-        </div>
+        <AnalysisFilterPanel />
       </div>
 
-      {/* Analysis Filter Panel */}
+      {/* Trend chart */}
       <div className="px-6 mt-4">
-        <AnalysisFilterPanel />
+        <TrendChartCard />
       </div>
 
       {/* Chart panel */}
