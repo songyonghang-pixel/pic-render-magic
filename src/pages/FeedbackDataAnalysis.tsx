@@ -83,6 +83,7 @@ export const FeedbackDataAnalysis = () => {
   const [distView, setDistView] = useState<"版本分布" | "机型分布">("版本分布");
   const [selectedTag, setSelectedTag] = useState(clusterTags[0].name);
   const [aiOpen, setAiOpen] = useState(false);
+  const [aiTag, setAiTag] = useState<string | null>(null);
 
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))]">
@@ -329,7 +330,19 @@ export const FeedbackDataAnalysis = () => {
               {tableRows.map((r, i) => (
                 <tr key={i} className="border-b border-border">
                   <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.tag}</td>
-                  <td className="py-3 px-4 text-primary">{r.total}</td>
+                  <td className="py-3 px-4 text-primary">
+                    <div className="flex items-center gap-2">
+                      <span>{r.total}</span>
+                      <button
+                        type="button"
+                        onClick={() => { setAiTag(r.tag); setAiOpen(true); }}
+                        className="inline-flex items-center gap-1 px-2 h-6 rounded-md bg-gradient-to-r from-primary to-[hsl(var(--primary)/0.75)] text-primary-foreground text-[11px] hover:opacity-90 transition-opacity"
+                      >
+                        <Sparkles className="w-3 h-3" />
+                        AI总结
+                      </button>
+                    </div>
+                  </td>
                   <td className={`py-3 px-4 ${r.demand ? "text-primary" : "text-[hsl(var(--label-text))]"}`}>{r.demand}</td>
                   <td className="py-3 px-4 text-primary">{r.bug}</td>
                   <td className={`py-3 px-4 ${r.cognition ? "text-primary" : "text-[hsl(var(--label-text))]"}`}>{r.cognition}</td>
@@ -340,14 +353,6 @@ export const FeedbackDataAnalysis = () => {
           </table>
           <div className="flex justify-end items-center gap-3 mt-4 text-[13px] text-[hsl(var(--label-text))]">
             <span>共 1929 条</span>
-            <button
-              type="button"
-              onClick={() => setAiOpen(true)}
-              className="inline-flex items-center gap-1 px-3 h-7 rounded-md bg-gradient-to-r from-primary to-[hsl(var(--primary)/0.75)] text-primary-foreground text-[12px] hover:opacity-90 transition-opacity"
-            >
-              <Sparkles className="w-3.5 h-3.5" />
-              AI总结
-            </button>
             <div className="w-[90px]">
               <SingleSelect options={[{ label: "10条/页" }, { label: "20条/页" }, { label: "50条/页" }]} value="10条/页" />
             </div>
