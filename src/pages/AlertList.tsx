@@ -19,7 +19,11 @@ const rows = [
   { id: 44260, ruleId: 182, name: "桌面舆情预警监控", cu: "杨柳(80341332)", at: "2026-04-29 18...", level: "S", type: "统计", period: "当日", trigger: "AI聚类标签聚类量 > 100", content: "当日聚类量达 156", notify: "TT群组", tt: "", group: "杨柳(80341332)" },
 ];
 
-export const AlertList = () => {
+interface AlertListProps {
+  onShowAnalysis?: () => void;
+}
+
+export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
   const [subTab, setSubTab] = useState<"实时" | "统计">("实时");
   const filteredRows = rows.filter((r) => r.type === subTab);
   return (
@@ -79,37 +83,103 @@ export const AlertList = () => {
             <button className="h-8 px-4 rounded-md bg-primary text-primary-foreground text-[13px]">导出</button>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full text-[13px] min-w-[1400px]">
-              <thead>
-                <tr className="bg-[hsl(var(--accent))] text-[hsl(var(--label-text))]">
-                  {["预警ID", "规则ID", "规则名称", "创建人员", "预警时间", "预警级别", "预警类型", "统计周期", "触发条件", "预警内容", "通知方式", "TT通知人", "TT群组提及人", "操作"].map((h) => (
-                    <th key={h} className="text-left py-3 px-4 font-medium whitespace-nowrap">{h}</th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {filteredRows.map((r) => (
-                  <tr key={r.id} className="border-b border-border">
-                    <td className="py-3 px-4 text-[hsl(var(--label-text))] whitespace-nowrap">{r.id}</td>
-                    <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.ruleId}</td>
-                    <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.name}</td>
-                    <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.cu}</td>
-                    <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.at}</td>
-                    <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.level}</td>
-                    <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.type}</td>
-                    <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.period}</td>
-                    <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.trigger}</td>
-                    <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.content}</td>
-                    <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.notify}</td>
-                    <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.tt}</td>
-                    <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.group}</td>
-                    <td className="py-3 px-4 whitespace-nowrap">
-                      <a className="text-primary cursor-pointer hover:underline">查看反馈</a>
-                    </td>
+            {subTab === "实时" ? (
+              <table className="w-full text-[13px] min-w-[1400px]">
+                <thead>
+                  <tr className="bg-[hsl(var(--accent))] text-[hsl(var(--label-text))]">
+                    {[
+                      { label: "预警ID" },
+                      { label: "规则ID" },
+                      { label: "规则名称" },
+                      { label: "创建人员" },
+                      { label: "预警时间" },
+                      { label: "预警级别" },
+                      { label: "预警内容", w: "w-[400px]" },
+                      { label: "通知方式" },
+                      { label: "TT通知人" },
+                      { label: "TT群组提及人" },
+                      { label: "操作" },
+                    ].map((h) => (
+                      <th key={h.label} className={`text-left py-3 px-4 font-medium whitespace-nowrap ${h.w ?? ""}`}>{h.label}</th>
+                    ))}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {filteredRows.map((r) => (
+                    <tr key={r.id} className="border-b border-border">
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))] whitespace-nowrap">{r.id}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.ruleId}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.name}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.cu}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.at}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.level}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))] w-[400px]">{r.content}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.notify}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.tt}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.group}</td>
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        <a className="text-primary cursor-pointer hover:underline">查看反馈</a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <table className="w-full text-[13px] min-w-[1800px]">
+                <thead>
+                  <tr className="bg-[hsl(var(--accent))] text-[hsl(var(--label-text))]">
+                    {[
+                      { label: "预警ID" },
+                      { label: "规则ID" },
+                      { label: "规则名称" },
+                      { label: "预警时间" },
+                      { label: "触发条件", w: "w-[280px]" },
+                      { label: "预警内容", w: "w-[400px]" },
+                      { label: "预警级别" },
+                      { label: "统计周期" },
+                      { label: "创建人员" },
+                      { label: "预警类型" },
+                      { label: "通知方式" },
+                      { label: "TT通知人" },
+                      { label: "TT群组提及人" },
+                      { label: "操作" },
+                    ].map((h) => (
+                      <th key={h.label} className={`text-left py-3 px-4 font-medium whitespace-nowrap ${h.w ?? ""}`}>{h.label}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {filteredRows.map((r) => (
+                    <tr key={r.id} className="border-b border-border">
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))] whitespace-nowrap">{r.id}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.ruleId}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.name}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.at}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))] w-[280px]">{r.trigger}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))] w-[400px]">{r.content}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.level}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.period}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.cu}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.type}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.notify}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.tt}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.group}</td>
+                      <td className="py-3 px-4 whitespace-nowrap">
+                        <div className="flex items-center gap-3">
+                          <a className="text-primary cursor-pointer hover:underline">查看反馈</a>
+                          <a
+                            className="text-primary cursor-pointer hover:underline"
+                            onClick={() => onShowAnalysis?.()}
+                          >
+                            反馈趋势
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
           </div>
           <Pagination total={6575} />
         </div>

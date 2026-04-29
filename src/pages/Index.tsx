@@ -117,7 +117,7 @@ const Index = () => {
       ) : activeTab === "rules" ? (
         <AlertRules onCreate={() => setActiveTab("alert")} />
       ) : activeTab === "list" ? (
-        <AlertList />
+        <AlertList onShowAnalysis={() => setActiveTab("analysis")} />
       ) : (
         <>
       {/* Breadcrumb */}
