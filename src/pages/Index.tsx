@@ -87,6 +87,30 @@ const Index = () => {
   useEffect(() => { if (countryDisabled) setCountrySep(false); }, [countryDisabled]);
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))]">
+      {/* Top tabs */}
+      <div className="bg-card border-b border-border px-6 flex items-center gap-6">
+        {([
+          { key: "alert", label: "新建预警" },
+          { key: "analysis", label: "反馈数据分析" },
+        ] as const).map((t) => (
+          <button
+            key={t.key}
+            onClick={() => setActiveTab(t.key)}
+            className={`relative py-3 text-[14px] transition-colors ${
+              activeTab === t.key
+                ? "text-primary font-medium after:content-[''] after:absolute after:left-0 after:right-0 after:-bottom-px after:h-0.5 after:bg-primary"
+                : "text-[hsl(var(--label-text))] hover:text-primary"
+            }`}
+          >
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {activeTab === "analysis" ? (
+        <FeedbackDataAnalysis />
+      ) : (
+        <>
       {/* Breadcrumb */}
       <div className="bg-card border-b border-border px-6 py-3 flex items-center text-[13px] text-[hsl(var(--breadcrumb))]">
         <span>预警监控</span>
