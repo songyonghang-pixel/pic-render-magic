@@ -22,10 +22,7 @@ import {
   AreaChart,
 } from "recharts";
 
-const feedbackTypeOptions = [
-  { label: "需求" }, { label: "bug" }, { label: "认知" }, { label: "其他" },
-];
-const sentimentOptions = [{ label: "正面" }, { label: "负面" }, { label: "无情感" }];
+const xAxisOptions = ["AI五级标签", "营销机型名", "OS版本", "反馈来源"];
 
 const xAxisOptions = ["AI五级标签", "营销机型名", "OS版本", "反馈来源"];
 
