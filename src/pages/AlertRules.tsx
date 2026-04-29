@@ -1,4 +1,5 @@
 import { ChevronRight, Plus } from "lucide-react";
+import { useState } from "react";
 import { SingleSelect } from "@/components/feedback/SingleSelect";
 
 const rows = [
@@ -15,6 +16,8 @@ const rows = [
 ];
 
 export const AlertRules = ({ onCreate }: { onCreate: () => void }) => {
+  const [subTab, setSubTab] = useState<"实时" | "统计">("实时");
+  const filteredRows = rows.filter((r) => r.type === subTab);
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))]">
       <div className="bg-card border-b border-border px-6 py-3 flex items-center text-[13px] text-[hsl(var(--breadcrumb))]">
@@ -25,13 +28,31 @@ export const AlertRules = ({ onCreate }: { onCreate: () => void }) => {
         <span className="text-[hsl(var(--breadcrumb-active))]">查看</span>
       </div>
 
+      {/* Sub tabs */}
+      <div className="px-6 pt-4">
+        <div className="flex items-center gap-6 border-b border-border">
+          {(["实时", "统计"] as const).map((k) => (
+            <button
+              key={k}
+              onClick={() => setSubTab(k)}
+              className={`relative py-2.5 text-[14px] transition-colors ${
+                subTab === k
+                  ? "text-primary font-medium after:content-[''] after:absolute after:left-0 after:right-0 after:-bottom-px after:h-0.5 after:bg-primary"
+                  : "text-[hsl(var(--label-text))] hover:text-primary"
+              }`}
+            >
+              {k}预警
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Filter */}
-      <div className="px-6 pt-5">
+      <div className="px-6 pt-4">
         <div className="bg-[hsl(var(--primary)/0.05)] rounded-md p-5">
           <div className="text-primary font-medium text-[14px] mb-4">筛选</div>
           <div className="grid grid-cols-3 gap-x-8 gap-y-4">
             <Filter label="规则名称"><Input placeholder="请输入规则名称" /></Filter>
-            <Filter label="预警类型"><Select placeholder="请选择预警类型" /></Filter>
             <Filter label="创建时间"><DateRange /></Filter>
             <Filter label="创建人员"><Input placeholder="请输入创建人员" /></Filter>
             <Filter label="状态"><Select placeholder="请选择状态" /></Filter>
@@ -60,7 +81,7 @@ export const AlertRules = ({ onCreate }: { onCreate: () => void }) => {
               </tr>
             </thead>
             <tbody>
-              {rows.map((r) => (
+              {filteredRows.map((r) => (
                 <tr key={r.id} className="border-b border-border">
                   <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.id}</td>
                   <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.name}</td>
