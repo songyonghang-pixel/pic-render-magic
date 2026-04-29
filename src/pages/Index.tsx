@@ -20,7 +20,14 @@ const timeRangeOptions = [
   { label: "当日" }, { label: "本周" },
 ];
 const compareOperators = [{ label: "大于" }, { label: "大于等于" }, { label: "小于" }, { label: "小于等于" }];
-const calcMethodOptions = [{ label: "值" }, { label: "环比增长" }, { label: "较平均值增长率" }];
+const calcMethodOptions = [
+  { label: "值" },
+  { label: "环比增长率" },
+  { label: "环比增量" },
+  { label: "较平均值的增量" },
+  { label: "较平均值的增长率" },
+];
+const percentCalcMethods = ["环比增长率", "较平均值的增长率"];
 import {
   aiTagOptions,
   brandOptions,
@@ -34,7 +41,7 @@ import {
   warningImportanceOptions,
   fanCountOperators,
 } from "@/components/feedback/filterData";
-import { ChevronRight, Plus, Copy } from "lucide-react";
+import { ChevronRight, Plus, Copy, HelpCircle } from "lucide-react";
 import { useState, useEffect } from "react";
 
 const Index = () => {
@@ -56,7 +63,7 @@ const Index = () => {
   const [chartOpen, setChartOpen] = useState(false);
   const chartDisabled = !statIndicator || !statTimeRange;
   const showCalcMethod = statIndicator === "反馈量" && (statTimeRange === "当日" || statTimeRange === "本周");
-  const isPercent = showCalcMethod && (calcMethod === "环比增长" || calcMethod === "较平均值增长率");
+  const isPercent = showCalcMethod && percentCalcMethods.includes(calcMethod);
   useEffect(() => { if (!showCalcMethod) setCalcMethod(""); }, [showCalcMethod]);
 
   const aiDisabled = aiTagVals.length < 2;
@@ -279,7 +286,20 @@ const Index = () => {
                   <div className="w-[180px]"><SingleSelect placeholder="请选择预警指标" options={warningIndicatorOptions} value={statIndicator} onChange={setStatIndicator} /></div>
                   <div className="w-[180px]"><SingleSelect placeholder="请选择时间范围" options={timeRangeOptions} value={statTimeRange} onChange={setStatTimeRange} /></div>
                   {showCalcMethod && (
-                    <div className="w-[180px]"><SingleSelect placeholder="请选择计算方式" options={calcMethodOptions} value={calcMethod} onChange={setCalcMethod} /></div>
+                    <>
+                      <div className="w-[180px]"><SingleSelect placeholder="请选择计算方式" options={calcMethodOptions} value={calcMethod} onChange={setCalcMethod} /></div>
+                      <div className="relative group flex items-center">
+                        <HelpCircle className="w-4 h-4 text-[hsl(var(--placeholder))] cursor-help" />
+                        <div className="absolute left-6 top-1/2 -translate-y-1/2 z-50 hidden group-hover:block w-[360px] p-3 text-[12px] leading-relaxed bg-popover border border-border rounded-md shadow-lg text-[hsl(var(--label-text))]">
+                          <div className="mb-1">当预警指标为"反馈量"，时间范围为当日、本周时，可按反馈变化来设置预警触发条件，计算公式包含如下内容：</div>
+                          <div className="mt-2"><b>值：</b>符合过滤条件和时间范围的反馈量数值</div>
+                          <div><b>环比增长率：</b>当日较昨日的增长百分比，本周较上周的增长百分比</div>
+                          <div><b>环比增量：</b>当日较昨日的增长数量，本周较上周的增长数量</div>
+                          <div><b>较平均值的增量：</b>当日较前30日的日平均值的增长数量，本周较前7周的周平均值的增长数量</div>
+                          <div><b>较平均值的增长率：</b>当日较前30日的日平均值的增长百分比，本周较前7周的周平均值的增长百分比</div>
+                        </div>
+                      </div>
+                    </>
                   )}
                   <div className="w-[180px]"><SingleSelect placeholder="请选择运算符" options={compareOperators} /></div>
                   <div className="relative w-[180px]">
