@@ -109,6 +109,7 @@ export const FeedbackDataAnalysis = () => {
       {/* Chart panel */}
       <div className="px-6 mt-4">
         <div className="bg-card rounded-md px-6 py-5">
+          <div className="text-primary text-[14px] font-medium">分布情况</div>
           {/* X-axis selector */}
           <div className="flex items-center gap-6 mt-5">
             <span className="text-[13px] font-medium text-[hsl(var(--label-text))] shrink-0">横轴</span>
