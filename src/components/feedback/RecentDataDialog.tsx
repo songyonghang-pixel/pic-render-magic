@@ -217,6 +217,9 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, sep
             <path d={areaD} fill="url(#areaGrad)" />
             <path d={pathD} fill="none" stroke="hsl(var(--primary))" strokeWidth="2" />
 
+            <line x1={PL} y1={avgY} x2={W - PR} y2={avgY} stroke="hsl(var(--destructive))" strokeDasharray="5 4" strokeWidth="1.5" opacity="0.8" />
+            <text x={W - PR - 4} y={avgY - 4} textAnchor="end" fontSize="11" fill="hsl(var(--destructive))" fontWeight="600">平均值 {avgV.toFixed(2)}</text>
+
             {xTickIdx.map((i) => (
               <text key={i} x={points[i]?.x} y={H - 8} textAnchor="middle" fontSize="11" fill="hsl(var(--muted-foreground))">
                 {fmtTick(points[i]?.t, dim)}
