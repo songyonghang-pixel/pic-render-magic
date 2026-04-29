@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { ChevronRight, Download, Table as TableIcon } from "lucide-react";
 import { SingleSelect } from "@/components/feedback/SingleSelect";
-import { MultiSelect } from "@/components/feedback/MultiSelect";
-import { marketingNameOptions } from "@/components/feedback/filterData";
 import { AnalysisFilterPanel } from "@/components/feedback/AnalysisFilterPanel";
 import {
   Bar,
