@@ -305,6 +305,11 @@ const Index = () => {
                         <div className="flex-1 h-px bg-border" />
                       </div>
                     )}
+                    <Field label="预警级别" required labelWidth="w-20">
+                      <div className="max-w-md">
+                        <SingleSelect placeholder="请选择预警级别" options={alertLevelOptions} value={cond.level} onChange={(v) => updateCond(cond.id, { level: v })} />
+                      </div>
+                    </Field>
                     <Field label=" " labelWidth="w-20">
                       <div className="flex items-center gap-3 flex-wrap">
                         <div className="flex items-center gap-3 flex-wrap flex-1 min-w-[700px]">
