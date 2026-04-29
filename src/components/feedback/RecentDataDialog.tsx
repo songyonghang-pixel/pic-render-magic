@@ -110,6 +110,9 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, sep
   const pathD = points.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ");
   const areaD = `${pathD} L${points[points.length - 1]?.x ?? PL},${PT + innerH} L${points[0]?.x ?? PL},${PT + innerH} Z`;
 
+  const avgV = data.length ? data.reduce((s, d) => s + d.v, 0) / data.length : 0;
+  const avgY = PT + innerH - (avgV / maxV) * innerH;
+
   const yTicks = [0, Math.round(maxV / 4), Math.round(maxV / 2), Math.round((maxV * 3) / 4), maxV];
   const xTickIdx = data.length > 8 ? [0, Math.floor(data.length / 4), Math.floor(data.length / 2), Math.floor((data.length * 3) / 4), data.length - 1] : data.map((_, i) => i);
 
