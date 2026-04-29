@@ -1,4 +1,5 @@
 import { useMemo, useRef, useState } from "react";
+import { Download } from "lucide-react";
 import { SingleSelect } from "./SingleSelect";
 
 const timeDimensionOptions = [
@@ -100,6 +101,13 @@ export const TrendChartCard = () => {
           <span className="text-[12px] text-[hsl(var(--muted-foreground))]">平均值（每{dim}）：</span>
           <span className="text-[13px] font-semibold text-primary">{avgV.toFixed(2)}</span>
         </div>
+        <button
+          type="button"
+          className="text-primary hover:opacity-80"
+          aria-label="下载"
+        >
+          <Download className="w-5 h-5" />
+        </button>
         <button
           type="button"
           className="px-3 py-1 rounded-sm text-[13px] text-primary border border-[hsl(var(--primary)/0.4)] hover:bg-[hsl(var(--primary)/0.08)] transition-colors"
