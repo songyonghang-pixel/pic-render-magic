@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { ChevronRight, Download, Table as TableIcon } from "lucide-react";
+import { ChevronRight, Download, Sparkles, Table as TableIcon } from "lucide-react";
 import { SingleSelect } from "@/components/feedback/SingleSelect";
 import { AnalysisFilterPanel } from "@/components/feedback/AnalysisFilterPanel";
 import { TrendChartCard } from "@/components/feedback/TrendChartCard";
+import { AiSummaryDialog } from "@/components/feedback/AiSummaryDialog";
 import {
   Bar,
   BarChart,
@@ -81,6 +82,7 @@ export const FeedbackDataAnalysis = () => {
   const [trendDim, setTrendDim] = useState<"日维度" | "周维度" | "月维度">("日维度");
   const [distView, setDistView] = useState<"版本分布" | "机型分布">("版本分布");
   const [selectedTag, setSelectedTag] = useState(clusterTags[0].name);
+  const [aiOpen, setAiOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))]">
@@ -338,6 +340,14 @@ export const FeedbackDataAnalysis = () => {
           </table>
           <div className="flex justify-end items-center gap-3 mt-4 text-[13px] text-[hsl(var(--label-text))]">
             <span>共 1929 条</span>
+            <button
+              type="button"
+              onClick={() => setAiOpen(true)}
+              className="inline-flex items-center gap-1 px-3 h-7 rounded-md bg-gradient-to-r from-primary to-[hsl(var(--primary)/0.75)] text-primary-foreground text-[12px] hover:opacity-90 transition-opacity"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              AI总结
+            </button>
             <div className="w-[90px]">
               <SingleSelect options={[{ label: "10条/页" }, { label: "20条/页" }, { label: "50条/页" }]} value="10条/页" />
             </div>
