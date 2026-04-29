@@ -16,6 +16,8 @@ const rows = [
 ];
 
 export const AlertRules = ({ onCreate }: { onCreate: () => void }) => {
+  const [subTab, setSubTab] = useState<"实时" | "统计">("实时");
+  const filteredRows = rows.filter((r) => r.type === subTab);
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))]">
       <div className="bg-card border-b border-border px-6 py-3 flex items-center text-[13px] text-[hsl(var(--breadcrumb))]">
