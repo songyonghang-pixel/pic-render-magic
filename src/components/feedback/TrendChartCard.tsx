@@ -96,7 +96,6 @@ export const TrendChartCard = () => {
             <SingleSelect options={timeDimensionOptions} value={dim} onChange={setDim} />
           </div>
         </div>
-        <span className="text-[12px] text-[hsl(var(--muted-foreground))]">展示{cfg.spanLabel}内每{dim}的反馈量趋势</span>
         <div className="ml-auto flex items-center gap-2 px-3 py-1 rounded-sm bg-[hsl(var(--primary)/0.08)] border border-[hsl(var(--primary)/0.2)]">
           <span className="text-[12px] text-[hsl(var(--muted-foreground))]">平均值（每{dim}）：</span>
           <span className="text-[13px] font-semibold text-primary">{avgV.toFixed(2)}</span>

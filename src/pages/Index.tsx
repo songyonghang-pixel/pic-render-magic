@@ -5,6 +5,7 @@ import { SingleSelect } from "@/components/feedback/SingleSelect";
 import { CascadeMultiSelect } from "@/components/feedback/CascadeMultiSelect";
 import { SeparateMonitor } from "@/components/feedback/SeparateMonitor";
 import { RecentDataDialog } from "@/components/feedback/RecentDataDialog";
+import { AiClusterTagDialog } from "@/components/feedback/AiClusterTagDialog";
 
 const aiTagLevels = ["一级标签", "二级标签", "三级标签", "四级标签", "五级标签"];
 
@@ -421,17 +422,27 @@ const Index = () => {
             </div>
           )}
         </Section>
-        <RecentDataDialog
-          open={chartOpenId !== null}
-          onOpenChange={(v) => { if (!v) setChartOpenId(null); }}
-          timeRange={activeChartCond?.timeRange ?? ""}
-          indicator={activeChartCond?.indicator ?? ""}
-          separateFilters={[
-            ...(aiTagSep ? [{ key: "aiTag", label: "AI标签", type: "cascade" as const, options: aiTagOptions, values: aiTagVals }] : []),
-            ...(marketingSep ? [{ key: "marketing", label: "机型营销名", type: "cascade" as const, options: marketingNameOptions, values: marketingVals }] : []),
-            ...(countrySep ? [{ key: "country", label: "国家/地区", type: "multi" as const, options: countryOptions, values: countryVals }] : []),
-          ]}
-        />
+        {activeChartCond?.indicator === "AI聚类标签聚类量" && activeChartCond?.timeRange ? (
+          <AiClusterTagDialog
+            open={chartOpenId !== null}
+            onOpenChange={(v) => { if (!v) setChartOpenId(null); }}
+            timeRange={activeChartCond?.timeRange ?? ""}
+            indicator={activeChartCond?.indicator ?? ""}
+          />
+        ) : (
+          <RecentDataDialog
+            open={chartOpenId !== null}
+            onOpenChange={(v) => { if (!v) setChartOpenId(null); }}
+            timeRange={activeChartCond?.timeRange ?? ""}
+            indicator={activeChartCond?.indicator ?? ""}
+            separateFilters={[
+              ...(aiTagSep ? [{ key: "aiTag", label: "AI标签", type: "cascade" as const, options: aiTagOptions, values: aiTagVals }] : []),
+              ...(marketingSep ? [{ key: "marketing", label: "机型营销名", type: "cascade" as const, options: marketingNameOptions, values: marketingVals }] : []),
+              ...(countrySep ? [{ key: "country", label: "国家/地区", type: "multi" as const, options: countryOptions, values: countryVals }] : []),
+            ]}
+          />
+        )}
+
 
 
         {/* 预警通知设置 */}
