@@ -98,9 +98,9 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                       { label: "通知方式" },
                       { label: "TT通知人" },
                       { label: "TT群组提及人" },
-                      { label: "操作" },
+                      { label: "操作", sticky: true },
                     ].map((h) => (
-                      <th key={h.label} className={`text-left py-3 px-4 font-medium whitespace-nowrap ${h.w ?? ""}`}>{h.label}</th>
+                      <th key={h.label} className={`text-left py-3 px-4 font-medium whitespace-nowrap ${h.w ?? ""} ${h.sticky ? "sticky right-0 bg-[hsl(var(--accent))] shadow-[-4px_0_8px_-4px_hsl(var(--border))]" : ""}`}>{h.label}</th>
                     ))}
                   </tr>
                 </thead>
@@ -117,7 +117,7 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.notify}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.tt}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.group}</td>
-                      <td className="py-3 px-4 whitespace-nowrap">
+                      <td className="py-3 px-4 whitespace-nowrap sticky right-0 bg-card shadow-[-4px_0_8px_-4px_hsl(var(--border))]">
                         <a className="text-primary cursor-pointer hover:underline">查看反馈</a>
                       </td>
                     </tr>
@@ -142,9 +142,9 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                       { label: "通知方式" },
                       { label: "TT通知人" },
                       { label: "TT群组提及人" },
-                      { label: "操作" },
+                      { label: "操作", sticky: true },
                     ].map((h) => (
-                      <th key={h.label} className={`text-left py-3 px-4 font-medium whitespace-nowrap ${h.w ?? ""}`}>{h.label}</th>
+                      <th key={h.label} className={`text-left py-3 px-4 font-medium whitespace-nowrap ${h.w ?? ""} ${h.sticky ? "sticky right-0 bg-[hsl(var(--accent))] shadow-[-4px_0_8px_-4px_hsl(var(--border))]" : ""}`}>{h.label}</th>
                     ))}
                   </tr>
                 </thead>
@@ -164,7 +164,7 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.notify}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.tt}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.group}</td>
-                      <td className="py-3 px-4 whitespace-nowrap">
+                      <td className="py-3 px-4 whitespace-nowrap sticky right-0 bg-card shadow-[-4px_0_8px_-4px_hsl(var(--border))]">
                         <div className="flex items-center gap-3">
                           <a className="text-primary cursor-pointer hover:underline">查看反馈</a>
                           <a
