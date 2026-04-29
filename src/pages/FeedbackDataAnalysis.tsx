@@ -311,7 +311,8 @@ export const FeedbackDataAnalysis = () => {
       {/* Table */}
       <div className="px-6 mt-4 pb-10">
         <div className="bg-card rounded-md p-5">
-          <div className="flex justify-end mb-3">
+          <div className="flex justify-between items-center mb-3">
+            <div className="text-primary text-[14px] font-medium">全部AI聚类标签分布</div>
             <a className="text-primary text-[13px] cursor-pointer hover:underline flex items-center gap-1">
               <Download className="w-4 h-4" /> 导出
             </a>
