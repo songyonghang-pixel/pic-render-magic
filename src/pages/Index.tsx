@@ -92,7 +92,7 @@ const Index = () => {
       <div className="bg-card border-b border-border px-6 flex items-center gap-6">
         {([
           { key: "alert", label: "新建预警" },
-          { key: "analysis", label: "反馈数据分析" },
+          { key: "analysis", label: "反馈原声分析" },
         ] as const).map((t) => (
           <button
             key={t.key}
@@ -384,7 +384,7 @@ const Index = () => {
                               : "border-primary text-primary hover:bg-primary hover:text-primary-foreground cursor-pointer"
                           }`}
                         >
-                          查看近期数据图
+                          查看近期基线
                         </button>
                         {statConds.length > 1 && (
                           <button
