@@ -136,7 +136,7 @@ const Index = () => {
         {/* 预警规则名称 */}
         <Section title="预警规则名称">
           <Field label="规则名称" required>
-            <TextInput placeholder="请输入规则名称" className="max-w-xl" />
+            <TextInput key={ruleNameKey} value={ruleName} placeholder="请输入规则名称" className="max-w-xl" />
           </Field>
         </Section>
 
