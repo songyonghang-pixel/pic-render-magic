@@ -368,6 +368,8 @@ export const FeedbackDataAnalysis = () => {
           </div>
         </div>
       </div>
+
+      <AiSummaryDialog open={aiOpen} onOpenChange={setAiOpen} />
     </div>
   );
 };
