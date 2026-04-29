@@ -374,7 +374,7 @@ export const FeedbackDataAnalysis = () => {
         </div>
       </div>
 
-      <AiSummaryDialog open={aiOpen} onOpenChange={setAiOpen} />
+      <AiSummaryDialog open={aiOpen} onOpenChange={setAiOpen} tag={aiTag} />
     </div>
   );
 };

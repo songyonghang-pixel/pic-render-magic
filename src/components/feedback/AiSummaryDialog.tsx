@@ -10,9 +10,10 @@ const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/feedback-sum
 interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  tag?: string | null;
 }
 
-export const AiSummaryDialog = ({ open, onOpenChange }: Props) => {
+export const AiSummaryDialog = ({ open, onOpenChange, tag }: Props) => {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
