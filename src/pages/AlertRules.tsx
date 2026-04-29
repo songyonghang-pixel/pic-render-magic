@@ -15,7 +15,7 @@ const rows = [
   { id: 182, name: "桌面舆情预警监控", type: "统计", ct: "2026-04-27 20:52:58", cu: "杨柳(80341332)", ut: "2026-04-29 11:41:46", uu: "杨柳(80341332)", count: 2, enabled: true },
 ];
 
-export const AlertRules = ({ onCreate }: { onCreate: () => void }) => {
+export const AlertRules = ({ onCreate, onCopy }: { onCreate: () => void; onCopy?: (name: string, type: string) => void }) => {
   const [subTab, setSubTab] = useState<"实时" | "统计">("实时");
   const filteredRows = rows.filter((r) => r.type === subTab);
   return (
@@ -97,6 +97,7 @@ export const AlertRules = ({ onCreate }: { onCreate: () => void }) => {
                   <td className="py-3 px-4 space-x-3">
                     <a className="text-primary cursor-pointer hover:underline">详情</a>
                     <a className="text-primary cursor-pointer hover:underline">编辑</a>
+                    <a className="text-primary cursor-pointer hover:underline" onClick={() => onCopy?.(`副本-${r.name}`, r.type)}>复制</a>
                     <a className="text-primary cursor-pointer hover:underline">删除</a>
                   </td>
                 </tr>

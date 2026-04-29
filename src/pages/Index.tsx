@@ -52,6 +52,8 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState<"rules" | "alert" | "list" | "analysis">("rules");
   const [fanOp, setFanOp] = useState<string[]>([]);
   const [alertType, setAlertType] = useState<string>("实时");
+  const [ruleName, setRuleName] = useState<string>("");
+  const [ruleNameKey, setRuleNameKey] = useState<number>(0);
 
   const [aiTagVals, setAiTagVals] = useState<string[]>([]);
   const [marketingVals, setMarketingVals] = useState<string[]>([]);
@@ -115,7 +117,7 @@ const Index = () => {
       {activeTab === "analysis" ? (
         <FeedbackDataAnalysis />
       ) : activeTab === "rules" ? (
-        <AlertRules onCreate={() => setActiveTab("alert")} />
+        <AlertRules onCreate={() => setActiveTab("alert")} onCopy={(name, type) => { setRuleName(name); setAlertType(type); setRuleNameKey((k) => k + 1); setActiveTab("alert"); }} />
       ) : activeTab === "list" ? (
         <AlertList onShowAnalysis={() => setActiveTab("analysis")} />
       ) : (
@@ -134,7 +136,7 @@ const Index = () => {
         {/* 预警规则名称 */}
         <Section title="预警规则名称">
           <Field label="规则名称" required>
-            <TextInput placeholder="请输入规则名称" className="max-w-xl" />
+            <TextInput key={ruleNameKey} value={ruleName} placeholder="请输入规则名称" className="max-w-xl" />
           </Field>
         </Section>
 
