@@ -102,6 +102,11 @@ export const AiClusterTagDialog = ({ open, onOpenChange, timeRange, indicator }:
           </TooltipProvider>
         </div>
 
+        <div className="flex items-center gap-2 flex-wrap pt-2">
+          <span className="text-[13px] text-[hsl(var(--label-text))]">时间范围：</span>
+          <span className="text-[13px] text-[hsl(var(--label-text))]">{timeRange}</span>
+        </div>
+
         <div className="mt-3 border border-border rounded-md overflow-hidden">
           <table className="w-full text-[13px]">
             <thead className="bg-[hsl(var(--muted))]">
