@@ -342,6 +342,7 @@ const Index = () => {
                               <span className="absolute right-0 top-0 h-8 w-7 flex items-center justify-center text-[13px] text-[hsl(var(--label-text))] border-l border-[hsl(var(--field-border))] bg-muted">%</span>
                             )}
                           </div>
+                          <div className="w-[140px]"><SingleSelect placeholder="请选择预警级别" options={alertLevelOptions} value={cond.level} onChange={(v) => updateCond(cond.id, { level: v })} /></div>
                         </div>
                         <button
                           disabled={chartDisabled}
