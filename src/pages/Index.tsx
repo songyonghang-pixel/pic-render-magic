@@ -57,8 +57,8 @@ const Index = () => {
   const [marketingSep, setMarketingSep] = useState(false);
   const [countrySep, setCountrySep] = useState(false);
 
-  type StatCond = { id: number; indicator: string; timeRange: string; calcMethod: string };
-  const [statConds, setStatConds] = useState<StatCond[]>([{ id: 1, indicator: "", timeRange: "", calcMethod: "" }]);
+  type StatCond = { id: number; indicator: string; timeRange: string; calcMethod: string; level: string };
+  const [statConds, setStatConds] = useState<StatCond[]>([{ id: 1, indicator: "", timeRange: "", calcMethod: "", level: "" }]);
   const [chartOpenId, setChartOpenId] = useState<number | null>(null);
   const updateCond = (id: number, patch: Partial<StatCond>) => {
     setStatConds((prev) => prev.map((c) => {
