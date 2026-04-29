@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { ChevronRight, Download, Table as TableIcon } from "lucide-react";
 import { SingleSelect } from "@/components/feedback/SingleSelect";
-import { MultiSelect } from "@/components/feedback/MultiSelect";
-import { marketingNameOptions } from "@/components/feedback/filterData";
+import { AnalysisFilterPanel } from "@/components/feedback/AnalysisFilterPanel";
 import {
   Bar,
   BarChart,
@@ -20,11 +19,6 @@ import {
   Area,
   AreaChart,
 } from "recharts";
-
-const feedbackTypeOptions = [
-  { label: "需求" }, { label: "bug" }, { label: "认知" }, { label: "其他" },
-];
-const sentimentOptions = [{ label: "正面" }, { label: "负面" }, { label: "无情感" }];
 
 const xAxisOptions = ["AI五级标签", "营销机型名", "OS版本", "反馈来源"];
 
@@ -126,36 +120,14 @@ export const FeedbackDataAnalysis = () => {
         </div>
       </div>
 
-      {/* Filter row */}
+      {/* Analysis Filter Panel */}
+      <div className="px-6 mt-4">
+        <AnalysisFilterPanel />
+      </div>
+
+      {/* Chart panel */}
       <div className="px-6 mt-4">
         <div className="bg-card rounded-md px-6 py-5">
-          <div className="flex items-center gap-6 flex-wrap">
-            <span className="text-[13px] font-medium text-[hsl(var(--label-text))] shrink-0">过滤条件</span>
-            <div className="flex items-center gap-2">
-              <span className="text-[13px] text-[hsl(var(--label-text))]">反馈类型</span>
-              <div className="w-[200px]">
-                <MultiSelect placeholder="请选择反馈类型" options={feedbackTypeOptions} />
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[13px] text-[hsl(var(--label-text))]">情感</span>
-              <div className="w-[200px]">
-                <MultiSelect placeholder="请选择类型" options={sentimentOptions} />
-              </div>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-[13px] text-[hsl(var(--label-text))]">机型营销名</span>
-              <div className="w-[220px]">
-                <MultiSelect placeholder="请选择机型营销名" options={marketingNameOptions} />
-              </div>
-            </div>
-            <div className="ml-auto">
-              <button className="h-8 px-6 text-[13px] bg-primary text-primary-foreground rounded-full hover:opacity-90 transition-opacity">
-                查询
-              </button>
-            </div>
-          </div>
-
           {/* X-axis selector */}
           <div className="flex items-center gap-6 mt-5">
             <span className="text-[13px] font-medium text-[hsl(var(--label-text))] shrink-0">横轴</span>
