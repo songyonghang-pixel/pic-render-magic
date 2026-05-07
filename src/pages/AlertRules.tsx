@@ -61,6 +61,7 @@ export const AlertRules = ({ onCreate, onCopy }: { onCreate: () => void; onCopy?
           <div className="border-t border-border mt-5 pt-4 flex justify-end gap-2">
             <button className="h-8 px-5 rounded-md bg-primary text-primary-foreground text-[13px]">查询</button>
             <button className="h-8 px-5 rounded-md bg-card border border-[hsl(var(--field-border))] text-[13px] text-[hsl(var(--label-text))]">重置</button>
+            <button onClick={() => toast("已复制该筛选条件的分享链接")} className="h-8 px-5 rounded-md bg-card border border-[hsl(var(--field-border))] text-[13px] text-[hsl(var(--label-text))]">分享链接</button>
           </div>
         </div>
       </div>
