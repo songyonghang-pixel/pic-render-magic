@@ -64,24 +64,47 @@ const Index = () => {
   const [marketingSep, setMarketingSep] = useState(false);
   const [countrySep, setCountrySep] = useState(false);
 
-  type StatCond = { id: number; indicator: string; timeRange: string; calcMethod: string; level: string };
-  const [statConds, setStatConds] = useState<StatCond[]>([{ id: 1, indicator: "", timeRange: "", calcMethod: "", level: "" }]);
-  const [chartOpenId, setChartOpenId] = useState<number | null>(null);
-  const updateCond = (id: number, patch: Partial<StatCond>) => {
+  type SubCond = { id: number; indicator: string; timeRange: string; calcMethod: string };
+  type StatCond = { id: number; level: string; subs: SubCond[] };
+  const [statConds, setStatConds] = useState<StatCond[]>([{ id: 1, level: "", subs: [{ id: 1, indicator: "", timeRange: "", calcMethod: "" }] }]);
+  const [chartOpenId, setChartOpenId] = useState<{ condId: number; subId: number } | null>(null);
+  const updateCondLevel = (id: number, level: string) => {
+    setStatConds((prev) => prev.map((c) => c.id === id ? { ...c, level } : c));
+  };
+  const updateSub = (condId: number, subId: number, patch: Partial<SubCond>) => {
     setStatConds((prev) => prev.map((c) => {
-      if (c.id !== id) return c;
-      const next = { ...c, ...patch };
-      const showCalc = next.indicator === "反馈量" && (next.timeRange === "当日" || next.timeRange === "本周");
-      if (!showCalc) next.calcMethod = "";
-      return next;
+      if (c.id !== condId) return c;
+      return {
+        ...c,
+        subs: c.subs.map((s) => {
+          if (s.id !== subId) return s;
+          const next = { ...s, ...patch };
+          const showCalc = next.indicator === "反馈量" && (next.timeRange === "当日" || next.timeRange === "本周");
+          if (!showCalc) next.calcMethod = "";
+          return next;
+        }),
+      };
     }));
   };
   const addCond = () => {
     if (statConds.length >= 10) return;
-    setStatConds((prev) => [...prev, { id: Date.now(), indicator: "", timeRange: "", calcMethod: "", level: "" }]);
+    setStatConds((prev) => [...prev, { id: Date.now(), level: "", subs: [{ id: Date.now() + 1, indicator: "", timeRange: "", calcMethod: "" }] }]);
   };
   const removeCond = (id: number) => setStatConds((prev) => prev.filter((c) => c.id !== id));
-  const activeChartCond = statConds.find((c) => c.id === chartOpenId);
+  const addSub = (condId: number) => {
+    setStatConds((prev) => prev.map((c) => {
+      if (c.id !== condId || c.subs.length >= 10) return c;
+      return { ...c, subs: [...c.subs, { id: Date.now(), indicator: "", timeRange: "", calcMethod: "" }] };
+    }));
+  };
+  const removeSub = (condId: number, subId: number) => {
+    setStatConds((prev) => prev.map((c) => c.id !== condId ? c : { ...c, subs: c.subs.filter((s) => s.id !== subId) }));
+  };
+  const activeChartCond = (() => {
+    if (!chartOpenId) return undefined;
+    const c = statConds.find((x) => x.id === chartOpenId.condId);
+    return c?.subs.find((s) => s.id === chartOpenId.subId);
+  })();
 
   const aiDisabled = aiTagVals.length < 2;
   const marketingDisabled = marketingVals.length < 2;
