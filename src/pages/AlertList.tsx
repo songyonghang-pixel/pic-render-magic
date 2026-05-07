@@ -1,5 +1,6 @@
 import { ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { SingleSelect } from "@/components/feedback/SingleSelect";
 import { Pagination } from "./AlertRules";
 
