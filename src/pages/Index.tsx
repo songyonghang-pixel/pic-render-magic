@@ -42,7 +42,7 @@ import {
   warningImportanceOptions,
   fanCountOperators,
 } from "@/components/feedback/filterData";
-import { ChevronRight, Plus, Copy, HelpCircle } from "lucide-react";
+import { ChevronRight, Plus, Copy, HelpCircle, Trash2 } from "lucide-react";
 import { useState, useEffect } from "react";
 import FeedbackDataAnalysis from "./FeedbackDataAnalysis";
 import AlertRules from "./AlertRules";
