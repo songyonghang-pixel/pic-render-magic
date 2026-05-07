@@ -115,7 +115,11 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.cu}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.at}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.level}</td>
-                      <td className="py-3 px-4 text-[hsl(var(--label-text))] w-[400px]">{r.content}</td>
+                      <td className="py-3 px-4 text-[hsl(var(--label-text))] w-[400px]">
+                        {r.content.includes("手机投屏") ? (
+                          <a href="https://www.douyin.com/video/7637124802519709032" target="_blank" rel="noopener noreferrer" className="text-primary cursor-pointer hover:underline">{r.content}</a>
+                        ) : r.content}
+                      </td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.notify}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.tt}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.group}</td>
@@ -174,6 +178,12 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                             onClick={() => onShowAnalysis?.()}
                           >
                             反馈趋势
+                          </a>
+                          <a
+                            className="text-primary cursor-pointer hover:underline"
+                            onClick={() => window.open(r.name.includes("16.1设置L3舆情预警") ? "/reports/ai-generating.html" : "/reports/feedback_analysis_report_2026-05-07.html", "_blank")}
+                          >
+                            AI总结
                           </a>
                         </div>
                       </td>

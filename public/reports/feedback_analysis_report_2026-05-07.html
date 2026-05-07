@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>反馈原声分析报告</title>
+<style>
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;background:#f6f8fb;color:#1f2937;margin:0;padding:24px;}
+.container{max-width:1160px;margin:0 auto;}
+h1{margin:0 0 8px;font-size:28px;}
+.meta{color:#6b7280;margin-bottom:18px;}
+.card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px;box-shadow:0 1px 2px rgba(0,0,0,.03);margin-bottom:16px;}
+.kpis{display:flex;gap:12px;flex-wrap:wrap;}
+.kpi{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:12px 14px;min-width:180px;}
+.kpi b{font-size:22px;display:block;margin-top:4px;}
+table{width:100%;border-collapse:collapse;font-size:14px;}
+th,td{border-bottom:1px solid #eef2f7;padding:10px 8px;text-align:left;vertical-align:top;}
+th{background:#f8fafc;color:#374151;font-weight:600;}
+.pie-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;}
+.pie-wrap{display:flex;gap:16px;align-items:center;}
+.legend{list-style:none;margin:0;padding:0;max-height:230px;overflow:auto;font-size:13px;}
+.legend li{display:flex;align-items:center;margin-bottom:6px;}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:8px;flex:0 0 10px;}
+ul{margin:6px 0 0 18px;}
+@media (max-width:980px){.pie-grid{grid-template-columns:1fr;} .pie-wrap{flex-direction:column;align-items:flex-start;}}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>反馈原声数据分析报告</h1>
+  <div class="meta">数据文件：/Users/80261667/Downloads/feedback_summary_data_2026-05-07 20-10-00.xlsx<br/>生成时间：2026-05-07 20:19:56</div>
+
+  <section class="card">
+    <h2>数据概览</h2>
+    <div class="kpis">
+      <div class="kpi">总反馈数<b>59</b></div>
+      <div class="kpi">含“反馈原声”条数<b>59</b></div>
+      <div class="kpi">负面反馈数<b>22</b></div>
+      <div class="kpi">负面占比<b>37.3%</b></div>
+    </div>
+  </section>
+
+  <section class="card"><h2>1) 原声与整体用户观点分布（基于“反馈原声”）</h2><table><thead><tr><th>观点</th><th>数量</th><th>占比</th><th>原声示例</th></tr></thead><tbody><tr><td>希望增加人文滤镜/影像功能</td><td>56</td><td>94.9%</td><td>x9u 怎么没有人文滤镜了[哭惹R]；oppp findx9u为啥滤镜中没有了人文滤镜？拍摄界面没有了柔光选项？@ColorOS陈希 @OPPO周意保 ​​</td></tr>
+<tr><td>其他体验问题</td><td>2</td><td>3.4%</td><td>#OPPO Find X9 Ultra# 大师没有人文模式，就算有参数也导入不进去；大师模式 人文怎么没了
+x9s pro
+x9就有啊
+后期有可能补回来吗？[汗]</td></tr>
+<tr><td>系统升级与版本问题</td><td>1</td><td>1.7%</td><td>又是你呢
+工号804
+感觉这个拍照有点发黄  或者说偏暖色调
+左边那个闪记目前按一次   可不可以设置按2次或者次   就可以多设置一个功能  比如截屏 之类
+在吗在吗
+51不放假啊
+对焦感觉还可以优化一下
+8U的人文模式大家觉得很适合扫街...</td></tr></tbody></table></section>
+
+  <section class="card">
+    <h2>2) 分布饼图</h2>
+    <div class="pie-grid">
+      <section class="card"><h2>机型分布</h2><div class="pie-wrap"><svg width="240" height="240" viewBox="0 0 220 220" aria-label="机型分布饼图"><path d="M 110 110 L 110.000 28.000 A 82 82 0 1 1 31.491 86.327 Z" fill="#3b82f6"></path><path d="M 110 110 L 31.491 86.327 A 82 82 0 0 1 76.117 35.328 Z" fill="#10b981"></path><path d="M 110 110 L 76.117 35.328 A 82 82 0 0 1 101.284 28.465 Z" fill="#f59e0b"></path><path d="M 110 110 L 101.284 28.465 A 82 82 0 0 1 110.000 28.000 Z" fill="#ef4444"></path><circle cx="110" cy="110" r="40" fill="#fff"></circle><text x="110" y="105" text-anchor="middle" font-size="12" fill="#6b7280">总计</text><text x="110" y="122" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">59</text></svg><ul class="legend"><li><span class="dot" style="background:#3b82f6"></span>CPH2841：47（79.7%）</li><li><span class="dot" style="background:#10b981"></span>PMA110：8（13.6%）</li><li><span class="dot" style="background:#f59e0b"></span>PME110：3（5.1%）</li><li><span class="dot" style="background:#ef4444"></span>未知：1（1.7%）</li></ul></div></section>
+      <section class="card"><h2>OS版本分布</h2><div class="pie-wrap"><svg width="240" height="240" viewBox="0 0 220 220" aria-label="OS版本分布饼图"><path d="M 110 110 L 110.000 28.000 A 82 82 0 1 1 36.256 145.859 Z" fill="#3b82f6"></path><path d="M 110 110 L 36.256 145.859 A 82 82 0 0 1 29.420 94.806 Z" fill="#10b981"></path><path d="M 110 110 L 29.420 94.806 A 82 82 0 0 1 54.378 49.749 Z" fill="#f59e0b"></path><path d="M 110 110 L 54.378 49.749 A 82 82 0 0 1 76.117 35.328 Z" fill="#ef4444"></path><path d="M 110 110 L 76.117 35.328 A 82 82 0 0 1 101.284 28.465 Z" fill="#8b5cf6"></path><path d="M 110 110 L 101.284 28.465 A 82 82 0 0 1 110.000 28.000 Z" fill="#06b6d4"></path><circle cx="110" cy="110" r="40" fill="#fff"></circle><text x="110" y="105" text-anchor="middle" font-size="12" fill="#6b7280">总计</text><text x="110" y="122" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">59</text></svg><ul class="legend"><li><span class="dot" style="background:#3b82f6"></span>未知：40（67.8%）</li><li><span class="dot" style="background:#10b981"></span>V16.1.0：6（10.2%）</li><li><span class="dot" style="background:#f59e0b"></span>16.1.0：6（10.2%）</li><li><span class="dot" style="background:#ef4444"></span>0：3（5.1%）</li><li><span class="dot" style="background:#8b5cf6"></span>14.0.0：3（5.1%）</li><li><span class="dot" style="background:#06b6d4"></span>V16.0.0：1（1.7%）</li></ul></div></section>
+      <section class="card"><h2>情感分布</h2><div class="pie-wrap"><svg width="240" height="240" viewBox="0 0 220 220" aria-label="情感分布饼图"><path d="M 110 110 L 110.000 28.000 A 82 82 0 0 1 155.330 178.332 Z" fill="#3b82f6"></path><path d="M 110 110 L 155.330 178.332 A 82 82 0 0 1 29.420 94.806 Z" fill="#10b981"></path><path d="M 110 110 L 29.420 94.806 A 82 82 0 0 1 110.000 28.000 Z" fill="#f59e0b"></path><circle cx="110" cy="110" r="40" fill="#fff"></circle><text x="110" y="105" text-anchor="middle" font-size="12" fill="#6b7280">总计</text><text x="110" y="122" text-anchor="middle" font-size="14" font-weight="700" fill="#111827">59</text></svg><ul class="legend"><li><span class="dot" style="background:#3b82f6"></span>无情感：24（40.7%）</li><li><span class="dot" style="background:#10b981"></span>负面：22（37.3%）</li><li><span class="dot" style="background:#f59e0b"></span>未标注：13（22.0%）</li></ul></div></section>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>3) 建议优化的点</h2>
+    <ul><li>优先处理“人文滤镜/柔光”等高频影像诉求，明确是否回补、替代路径和预计版本。</li><li>对高占比机型（如 CPH2841）建立专项回访与灰度观察，避免问题扩散。</li><li>完善 OS 版本字段采集（当前未知占比高），便于定位版本相关问题。</li><li>将负面反馈按渠道（微博/小红书等）做二次拆分，形成“问题-机型-渠道”闭环看板。</li><li>负面占比较高，建议每周跟踪TOP问题处置进度并同步外部答复口径。</li></ul>
+  </section>
+</div>
+</body>
+</html>
