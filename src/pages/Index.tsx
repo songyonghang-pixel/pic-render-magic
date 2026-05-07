@@ -354,9 +354,6 @@ const Index = () => {
           {alertType === "统计" && (
             <div className="space-y-3">
               {statConds.map((cond, idx) => {
-                const showCalcMethod = cond.indicator === "反馈量" && (cond.timeRange === "当日" || cond.timeRange === "本周");
-                const isPercent = showCalcMethod && percentCalcMethods.includes(cond.calcMethod);
-                const chartDisabled = !cond.indicator || !cond.timeRange;
                 return (
                   <div key={cond.id}>
                     {idx > 0 && (
@@ -365,70 +362,102 @@ const Index = () => {
                         <div className="flex-1 h-px bg-border" />
                       </div>
                     )}
-                    <Field label="预警级别" required labelWidth="w-20">
-                      <div className="max-w-md">
-                        <SingleSelect placeholder="请选择预警级别" options={alertLevelOptions} value={cond.level} onChange={(v) => updateCond(cond.id, { level: v })} />
-                      </div>
-                    </Field>
-                    <Field label=" " labelWidth="w-20">
-                      <div className="flex items-center gap-3 flex-wrap">
-                        <div className="flex items-center gap-3 flex-wrap flex-1 min-w-[700px]">
-                          <div className="w-[180px]"><SingleSelect placeholder="请选择预警指标" options={warningIndicatorOptions} value={cond.indicator} onChange={(v) => updateCond(cond.id, { indicator: v })} /></div>
-                          <div className="w-[180px]"><SingleSelect placeholder="请选择时间范围" options={timeRangeOptions} value={cond.timeRange} onChange={(v) => updateCond(cond.id, { timeRange: v })} /></div>
-                          {showCalcMethod && (
-                            <>
-                              <div className="w-[180px]"><SingleSelect placeholder="请选择计算方式" options={calcMethodOptions} value={cond.calcMethod} onChange={(v) => updateCond(cond.id, { calcMethod: v })} /></div>
-                              <div className="relative group flex items-center">
-                                <HelpCircle className="w-4 h-4 text-[hsl(var(--placeholder))] cursor-help" />
-                                <div className="absolute left-6 top-1/2 -translate-y-1/2 z-50 hidden group-hover:block w-[360px] p-3 text-[12px] leading-relaxed bg-popover border border-border rounded-md shadow-lg text-[hsl(var(--label-text))]">
-                                  <div className="mb-1">当预警指标为"反馈量"，时间范围为当日、本周时，可按反馈变化来设置预警触发条件，计算公式包含如下内容：</div>
-                                  <div className="mt-2"><b>值：</b>符合过滤条件和时间范围的反馈量数值</div>
-                                  <div><b>环比增长率：</b>当日较昨日的增长百分比，本周较上周的增长百分比</div>
-                                  <div><b>环比增量：</b>当日较昨日的增长数量，本周较上周的增长数量</div>
-                                  <div><b>较平均值的增量：</b>当日较前30日的日平均值的增长数量，本周较前7周的周平均值的增长数量</div>
-                                  <div><b>较平均值的增长率：</b>当日较前30日的日平均值的增长百分比，本周较前7周的周平均值的增长百分比</div>
-                                </div>
-                              </div>
-                            </>
-                          )}
-                          <div className="w-[180px]"><SingleSelect placeholder="请选择运算符" options={compareOperators} /></div>
-                          <div className="relative w-[180px]">
-                            <input
-                              type="text"
-                              inputMode="numeric"
-                              placeholder={isPercent ? "请输入百分比值" : "请输入量值"}
-                              onInput={(e) => {
-                                const t = e.currentTarget;
-                                t.value = t.value.replace(/[^0-9]/g, "");
-                              }}
-                              className={`w-full h-8 pl-3 ${isPercent ? "pr-8" : "pr-3"} text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]`}
-                            />
-                            {isPercent && (
-                              <span className="absolute right-0 top-0 h-8 w-7 flex items-center justify-center text-[13px] text-[hsl(var(--label-text))] border-l border-[hsl(var(--field-border))] bg-muted">%</span>
-                            )}
+                    <div className="flex items-start gap-2">
+                      <div className="flex-1">
+                        <Field label="预警级别" required labelWidth="w-20">
+                          <div className="max-w-md">
+                            <SingleSelect placeholder="请选择预警级别" options={alertLevelOptions} value={cond.level} onChange={(v) => updateCondLevel(cond.id, v)} />
                           </div>
-                        </div>
-                        <button
-                          disabled={chartDisabled}
-                          onClick={() => setChartOpenId(cond.id)}
-                          className={`h-8 px-3 text-[13px] rounded-sm border transition-colors ${
-                            chartDisabled
-                              ? "border-[hsl(var(--field-border))] text-[hsl(var(--placeholder))] bg-muted cursor-not-allowed"
-                              : "border-primary text-primary hover:bg-primary hover:text-primary-foreground cursor-pointer"
-                          }`}
-                        >
-                          查看近期基线
-                        </button>
-                        {statConds.length > 1 && (
-                          <button
-                            onClick={() => removeCond(cond.id)}
-                            className="h-8 px-3 text-[13px] rounded-sm border border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground transition-colors"
-                          >
-                            删除条件
-                          </button>
-                        )}
+                        </Field>
+                        {cond.subs.map((sub, subIdx) => {
+                          const showCalcMethod = sub.indicator === "反馈量" && (sub.timeRange === "当日" || sub.timeRange === "本周");
+                          const isPercent = showCalcMethod && percentCalcMethods.includes(sub.calcMethod);
+                          const chartDisabled = !sub.indicator || !sub.timeRange;
+                          return (
+                            <Field key={sub.id} label={subIdx === 0 ? " " : "且"} labelWidth="w-20">
+                              <div className="flex items-center gap-3 flex-wrap">
+                                <div className="flex items-center gap-3 flex-wrap flex-1 min-w-[700px]">
+                                  <div className="w-[180px]"><SingleSelect placeholder="请选择预警指标" options={warningIndicatorOptions} value={sub.indicator} onChange={(v) => updateSub(cond.id, sub.id, { indicator: v })} /></div>
+                                  <div className="w-[180px]"><SingleSelect placeholder="请选择时间范围" options={timeRangeOptions} value={sub.timeRange} onChange={(v) => updateSub(cond.id, sub.id, { timeRange: v })} /></div>
+                                  {showCalcMethod && (
+                                    <>
+                                      <div className="w-[180px]"><SingleSelect placeholder="请选择计算方式" options={calcMethodOptions} value={sub.calcMethod} onChange={(v) => updateSub(cond.id, sub.id, { calcMethod: v })} /></div>
+                                      <div className="relative group flex items-center">
+                                        <HelpCircle className="w-4 h-4 text-[hsl(var(--placeholder))] cursor-help" />
+                                        <div className="absolute left-6 top-1/2 -translate-y-1/2 z-50 hidden group-hover:block w-[360px] p-3 text-[12px] leading-relaxed bg-popover border border-border rounded-md shadow-lg text-[hsl(var(--label-text))]">
+                                          <div className="mb-1">当预警指标为"反馈量"，时间范围为当日、本周时，可按反馈变化来设置预警触发条件，计算公式包含如下内容：</div>
+                                          <div className="mt-2"><b>值：</b>符合过滤条件和时间范围的反馈量数值</div>
+                                          <div><b>环比增长率：</b>当日较昨日的增长百分比，本周较上周的增长百分比</div>
+                                          <div><b>环比增量：</b>当日较昨日的增长数量，本周较上周的增长数量</div>
+                                          <div><b>较平均值的增量：</b>当日较前30日的日平均值的增长数量，本周较前7周的周平均值的增长数量</div>
+                                          <div><b>较平均值的增长率：</b>当日较前30日的日平均值的增长百分比，本周较前7周的周平均值的增长百分比</div>
+                                        </div>
+                                      </div>
+                                    </>
+                                  )}
+                                  <div className="w-[180px]"><SingleSelect placeholder="请选择运算符" options={compareOperators} /></div>
+                                  <div className="relative w-[180px]">
+                                    <input
+                                      type="text"
+                                      inputMode="numeric"
+                                      placeholder={isPercent ? "请输入百分比值" : "请输入量值"}
+                                      onInput={(e) => {
+                                        const t = e.currentTarget;
+                                        t.value = t.value.replace(/[^0-9]/g, "");
+                                      }}
+                                      className={`w-full h-8 pl-3 ${isPercent ? "pr-8" : "pr-3"} text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]`}
+                                    />
+                                    {isPercent && (
+                                      <span className="absolute right-0 top-0 h-8 w-7 flex items-center justify-center text-[13px] text-[hsl(var(--label-text))] border-l border-[hsl(var(--field-border))] bg-muted">%</span>
+                                    )}
+                                  </div>
+                                </div>
+                                <button
+                                  disabled={chartDisabled}
+                                  onClick={() => setChartOpenId({ condId: cond.id, subId: sub.id })}
+                                  className={`h-8 px-3 text-[13px] rounded-sm border transition-colors ${
+                                    chartDisabled
+                                      ? "border-[hsl(var(--field-border))] text-[hsl(var(--placeholder))] bg-muted cursor-not-allowed"
+                                      : "border-primary text-primary hover:bg-primary hover:text-primary-foreground cursor-pointer"
+                                  }`}
+                                >
+                                  查看近期基线
+                                </button>
+                                <button
+                                  disabled={cond.subs.length >= 10}
+                                  onClick={() => addSub(cond.id)}
+                                  className={`h-8 px-3 text-[13px] rounded-sm border transition-colors ${
+                                    cond.subs.length >= 10
+                                      ? "border-[hsl(var(--field-border))] text-[hsl(var(--placeholder))] bg-muted cursor-not-allowed"
+                                      : "border-primary text-primary hover:bg-primary hover:text-primary-foreground cursor-pointer"
+                                  }`}
+                                  title={cond.subs.length >= 10 ? "一个预警条件最多支持10个且的条件" : ""}
+                                >
+                                  增加条件（且）
+                                </button>
+                                {cond.subs.length > 1 && (
+                                  <button
+                                    onClick={() => removeSub(cond.id, sub.id)}
+                                    className="h-8 w-8 flex items-center justify-center rounded-sm border border-[hsl(var(--field-border))] text-[hsl(var(--placeholder))] hover:border-destructive hover:text-destructive transition-colors"
+                                    title="删除条件"
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </button>
+                                )}
+                              </div>
+                            </Field>
+                          );
+                        })}
                       </div>
-                    </Field>
+                      {statConds.length > 1 && (
+                        <button
+                          onClick={() => removeCond(cond.id)}
+                          className="mt-1 h-8 px-3 text-[13px] rounded-sm border border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground transition-colors"
+                        >
+                          删除该级别
+                        </button>
+                      )}
+                    </div>
                   </div>
                 );
               })}
