@@ -415,8 +415,8 @@ const Input = ({ placeholder }: { placeholder: string }) => (
   <input placeholder={placeholder} className="h-8 w-full px-3 text-[13px] rounded-md border border-[hsl(var(--field-border))] bg-card focus:border-primary focus:outline-none placeholder:text-[hsl(var(--placeholder))]" />
 );
 
-const Select = ({ placeholder }: { placeholder: string }) => (
-  <div className="h-8"><SingleSelect options={[]} value="" placeholder={placeholder} /></div>
+const Select = ({ placeholder, options = [] }: { placeholder: string; options?: string[] }) => (
+  <div className="h-8"><SingleSelect options={options.map((v) => ({ label: v, value: v }))} value="" placeholder={placeholder} /></div>
 );
 
 const DateRange = () => (
