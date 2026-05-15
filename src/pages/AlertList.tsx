@@ -285,11 +285,13 @@ const StatusCells = ({ r }: { r: Row }) => {
           <a className="text-primary cursor-pointer hover:underline" onClick={() => toast(`打开诺亚单：${r.noahId}`)}>{r.noahId}</a>
         ) : ""}
       </td>
+      <td className={`py-3 px-4 whitespace-nowrap ${r.accuracy === "不准确" ? "text-destructive" : "text-[hsl(var(--label-text))]"}`}>{r.accuracy}</td>
+      <td className="py-3 px-4 text-[hsl(var(--label-text))] max-w-[200px] truncate" title={r.inaccurateReason}>{r.inaccurateReason}</td>
     </>
   );
 };
 
-const ActionLinks = ({ r, onHandle, onClose }: { r: Row; onHandle: () => void; onClose: () => void }) => {
+const ActionLinks = ({ r, onHandle, onClose, onInaccurate }: { r: Row; onHandle: () => void; onClose: () => void; onInaccurate: () => void }) => {
   const canHandle = r.status === "待处理" || r.status === "处理中";
   return (
     <div className="flex items-center gap-3">
@@ -300,6 +302,7 @@ const ActionLinks = ({ r, onHandle, onClose }: { r: Row; onHandle: () => void; o
         处理
       </a>
       <a className="text-primary cursor-pointer hover:underline" onClick={onClose}>关闭</a>
+      <a className="text-primary cursor-pointer hover:underline" onClick={onInaccurate}>预警不准</a>
     </div>
   );
 };
