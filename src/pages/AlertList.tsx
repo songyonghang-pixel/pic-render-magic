@@ -283,6 +283,7 @@ const StatusCells = ({ r }: { r: Row }) => {
       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.handler}</td>
       <td className="py-3 px-4 text-[hsl(var(--label-text))] max-w-[200px] truncate" title={r.remark}>{r.remark}</td>
       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{closeReasonText}</td>
+      <td className="py-3 px-4 text-[hsl(var(--label-text))] max-w-[200px] truncate" title={r.closeDesc}>{r.closeDesc}</td>
       <td className="py-3 px-4">
         {r.noahId ? (
           <a className="text-primary cursor-pointer hover:underline" onClick={() => toast(`打开诺亚单：${r.noahId}`)}>{r.noahId}</a>
