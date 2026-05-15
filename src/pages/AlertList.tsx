@@ -11,9 +11,10 @@ interface Row {
   id: number; ruleId: number; name: string; cu: string; at: string; level: string;
   type: string; period: string; trigger: string; content: string; notify: string; tt: string; group: string;
   status: Status; priority: string; handler: string; remark: string; closeReason: string; closeReasonOther: string; noahId: string;
+  accuracy: "未反馈" | "不准确"; inaccurateReason: string;
 }
 
-const initialRows: Row[] = [
+const rawRows = [
   { id: 44355, ruleId: 101, name: "【外销】【最高...", cu: "宋永航(802616...)", at: "2026-04-29 22...", level: "S", type: "实时", period: "", trigger: "", content: "手机投屏 Minh...", notify: "TT群组", tt: "", group: "宋永航(802616...)", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
   { id: 44348, ruleId: 101, name: "【外销】【最高...", cu: "宋永航(802616...)", at: "2026-04-29 22...", level: "S", type: "实时", period: "", trigger: "", content: "The user, Divya...", notify: "TT群组", tt: "", group: "宋永航(802616...)", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
   { id: 44316, ruleId: 44, name: "【快应用卡片...", cu: "徐跃泽(802470...)", at: "2026-04-29 21...", level: "B", type: "实时", period: "", trigger: "", content: "升级系统后卡...", notify: "TT", tt: "徐跃泽(802470...)", group: "", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
@@ -28,6 +29,7 @@ const initialRows: Row[] = [
   { id: 44275, ruleId: 204, name: "UI动效_16.1多彩引擎舆情...", cu: "游皓翔(80397472)", at: "2026-04-29 19...", level: "B", type: "统计", period: "30分钟", trigger: "反馈量 > 20", content: "30分钟内反馈量达 25", notify: "TT", tt: "游皓翔(80397472)", group: "", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
   { id: 44260, ruleId: 182, name: "桌面舆情预警监控", cu: "杨柳(80341332)", at: "2026-04-29 18...", level: "S", type: "统计", period: "当日", trigger: "AI聚类标签聚类量 > 100", content: "当日聚类量达 156", notify: "TT群组", tt: "", group: "杨柳(80341332)", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
 ];
+const initialRows: Row[] = rawRows.map((r) => ({ ...r, accuracy: "未反馈", inaccurateReason: "" } as Row));
 
 interface AlertListProps {
   onShowAnalysis?: () => void;
@@ -42,6 +44,7 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
   const [data, setData] = useState<Row[]>(initialRows);
   const [handleTarget, setHandleTarget] = useState<Row | null>(null);
   const [closeTarget, setCloseTarget] = useState<Row | null>(null);
+  const [inaccurateTarget, setInaccurateTarget] = useState<Row | null>(null);
 
   const filteredRows = data.filter((r) => r.type === subTab);
 
@@ -97,6 +100,8 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
             <Filter label="处理备注"><Input placeholder="请输入处理备注" /></Filter>
             <Filter label="关闭原因"><Select placeholder="请选择关闭原因" /></Filter>
             <Filter label="诺亚ID"><Input placeholder="请输入诺亚ID" /></Filter>
+            <Filter label="预警准确性"><Select placeholder="请选择预警准确性" options={["不准确", "未反馈"]} /></Filter>
+            <Filter label="预警不准说明"><Input placeholder="请输入预警不准说明" /></Filter>
           </div>
           <div className="border-t border-border mt-5 pt-4 flex justify-end gap-2">
             <button className="h-8 px-5 rounded-md bg-primary text-primary-foreground text-[13px]">查询</button>
@@ -134,6 +139,8 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                       { label: "处理备注" },
                       { label: "关闭原因" },
                       { label: "诺亚ID" },
+                      { label: "预警准确性" },
+                      { label: "预警不准说明" },
                       { label: "操作", sticky: true },
                     ].map((h) => (
                       <th key={h.label} className={`text-left py-3 px-4 font-medium whitespace-nowrap ${h.w ?? ""} ${h.sticky ? "sticky right-0 bg-[hsl(var(--accent))] shadow-[-4px_0_8px_-4px_hsl(var(--border))]" : ""}`}>{h.label}</th>
@@ -161,7 +168,7 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                       <td className="py-3 px-4 whitespace-nowrap sticky right-0 bg-card shadow-[-4px_0_8px_-4px_hsl(var(--border))]">
                         <div className="flex items-center gap-3">
                           <a className="text-primary cursor-pointer hover:underline">查看反馈</a>
-                          <ActionLinks r={r} onHandle={() => setHandleTarget(r)} onClose={() => setCloseTarget(r)} />
+                          <ActionLinks r={r} onHandle={() => setHandleTarget(r)} onClose={() => setCloseTarget(r)} onInaccurate={() => setInaccurateTarget(r)} />
                         </div>
                       </td>
                     </tr>
@@ -192,6 +199,8 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                       { label: "处理备注" },
                       { label: "关闭原因" },
                       { label: "诺亚ID" },
+                      { label: "预警准确性" },
+                      { label: "预警不准说明" },
                       { label: "操作", sticky: true },
                     ].map((h) => (
                       <th key={h.label} className={`text-left py-3 px-4 font-medium whitespace-nowrap ${h.w ?? ""} ${h.sticky ? "sticky right-0 bg-[hsl(var(--accent))] shadow-[-4px_0_8px_-4px_hsl(var(--border))]" : ""}`}>{h.label}</th>
@@ -220,7 +229,7 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                           <a className="text-primary cursor-pointer hover:underline">查看反馈</a>
                           <a className="text-primary cursor-pointer hover:underline" onClick={() => onShowAnalysis?.()}>反馈趋势</a>
                           <a className="text-primary cursor-pointer hover:underline" onClick={() => window.open(r.name.includes("16.1设置L3舆情预警") ? "/reports/ai-generating.html" : "/reports/feedback_analysis_report_2026-05-07.html", "_blank")}>AI总结</a>
-                          <ActionLinks r={r} onHandle={() => setHandleTarget(r)} onClose={() => setCloseTarget(r)} />
+                          <ActionLinks r={r} onHandle={() => setHandleTarget(r)} onClose={() => setCloseTarget(r)} onInaccurate={() => setInaccurateTarget(r)} />
                         </div>
                       </td>
                     </tr>
@@ -249,6 +258,14 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
           setCloseTarget(null);
         }}
       />
+      <InaccurateDialog
+        row={inaccurateTarget}
+        onClose={() => setInaccurateTarget(null)}
+        onConfirm={(reason) => {
+          if (inaccurateTarget) updateRow(inaccurateTarget.id, { accuracy: "不准确", inaccurateReason: reason });
+          setInaccurateTarget(null);
+        }}
+      />
     </div>
   );
 };
@@ -268,11 +285,13 @@ const StatusCells = ({ r }: { r: Row }) => {
           <a className="text-primary cursor-pointer hover:underline" onClick={() => toast(`打开诺亚单：${r.noahId}`)}>{r.noahId}</a>
         ) : ""}
       </td>
+      <td className={`py-3 px-4 whitespace-nowrap ${r.accuracy === "不准确" ? "text-destructive" : "text-[hsl(var(--label-text))]"}`}>{r.accuracy}</td>
+      <td className="py-3 px-4 text-[hsl(var(--label-text))] max-w-[200px] truncate" title={r.inaccurateReason}>{r.inaccurateReason}</td>
     </>
   );
 };
 
-const ActionLinks = ({ r, onHandle, onClose }: { r: Row; onHandle: () => void; onClose: () => void }) => {
+const ActionLinks = ({ r, onHandle, onClose, onInaccurate }: { r: Row; onHandle: () => void; onClose: () => void; onInaccurate: () => void }) => {
   const canHandle = r.status === "待处理" || r.status === "处理中";
   return (
     <div className="flex items-center gap-3">
@@ -283,6 +302,7 @@ const ActionLinks = ({ r, onHandle, onClose }: { r: Row; onHandle: () => void; o
         处理
       </a>
       <a className="text-primary cursor-pointer hover:underline" onClick={onClose}>关闭</a>
+      <a className="text-primary cursor-pointer hover:underline" onClick={onInaccurate}>预警不准</a>
     </div>
   );
 };
@@ -393,6 +413,39 @@ const CloseDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: ()
   );
 };
 
+const InaccurateDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: () => void; onConfirm: (reason: string) => void }) => {
+  const [reason, setReason] = useState("");
+  const open = !!row;
+  const handleConfirm = () => {
+    if (!reason.trim()) { toast.error("请输入预警不准说明"); return; }
+    onConfirm(reason.trim());
+  };
+  return (
+    <Dialog open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
+      <DialogContent
+        className="max-w-[480px]"
+        onOpenAutoFocus={() => { if (row) setReason(row.inaccurateReason); }}
+      >
+        <DialogHeader><DialogTitle>预警不准</DialogTitle></DialogHeader>
+        <div className="space-y-4 py-2">
+          <FormRow label={<span><span className="text-destructive">*</span> 预警不准说明</span>}>
+            <textarea
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              placeholder="请输入预警不准说明"
+              className="w-full min-h-[100px] px-3 py-2 text-[13px] rounded-md border border-[hsl(var(--field-border))] bg-card placeholder:text-[hsl(var(--placeholder))] focus:border-primary focus:outline-none"
+            />
+          </FormRow>
+        </div>
+        <DialogFooter>
+          <button onClick={onClose} className="h-8 px-5 rounded-md bg-card border border-[hsl(var(--field-border))] text-[13px] text-[hsl(var(--label-text))]">取消</button>
+          <button onClick={handleConfirm} className="h-8 px-5 rounded-md bg-primary text-primary-foreground text-[13px]">确认</button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 const FormRow = ({ label, children }: { label: React.ReactNode; children: React.ReactNode }) => (
   <div className="flex items-start gap-3">
     <label className="text-[13px] text-[hsl(var(--label-text))] w-[90px] text-right shrink-0 pt-1.5">{label}</label>
@@ -411,8 +464,8 @@ const Input = ({ placeholder }: { placeholder: string }) => (
   <input placeholder={placeholder} className="h-8 w-full px-3 text-[13px] rounded-md border border-[hsl(var(--field-border))] bg-card focus:border-primary focus:outline-none placeholder:text-[hsl(var(--placeholder))]" />
 );
 
-const Select = ({ placeholder }: { placeholder: string }) => (
-  <div className="h-8"><SingleSelect options={[]} value="" placeholder={placeholder} /></div>
+const Select = ({ placeholder, options = [] }: { placeholder: string; options?: string[] }) => (
+  <div className="h-8"><SingleSelect options={options.map((v) => ({ label: v, value: v }))} value="" placeholder={placeholder} /></div>
 );
 
 const DateRange = () => (
