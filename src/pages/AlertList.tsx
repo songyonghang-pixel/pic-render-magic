@@ -285,19 +285,16 @@ const HandleDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: (
   const [priority, setPriority] = useState("");
   const [handler, setHandler] = useState("");
   const [remark, setRemark] = useState("");
+  const [noahId, setNoahId] = useState("");
 
-  // sync when row changes
   const open = !!row;
-  if (row && priority === "" && handler === "" && remark === "" && (row.priority || row.handler || row.remark)) {
-    // initialize once per open
-  }
 
   return (
     <Dialog open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
       <DialogContent
         className="max-w-[480px]"
         onOpenAutoFocus={() => {
-          if (row) { setPriority(row.priority); setHandler(row.handler); setRemark(row.remark); }
+          if (row) { setPriority(row.priority); setHandler(row.handler); setRemark(row.remark); setNoahId(row.noahId); }
         }}
       >
         <DialogHeader><DialogTitle>处理预警</DialogTitle></DialogHeader>
@@ -316,10 +313,19 @@ const HandleDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: (
               className="w-full min-h-[80px] px-3 py-2 text-[13px] rounded-md border border-[hsl(var(--field-border))] bg-card placeholder:text-[hsl(var(--placeholder))] focus:border-primary focus:outline-none"
             />
           </FormRow>
+          <FormRow label="诺亚ID">
+            <input
+              value={noahId}
+              onChange={(e) => setNoahId(e.target.value.replace(/\D/g, ""))}
+              inputMode="numeric"
+              placeholder="请输入诺亚ID（仅数字）"
+              className="w-full h-8 px-3 text-[13px] rounded-md border border-[hsl(var(--field-border))] bg-card placeholder:text-[hsl(var(--placeholder))] focus:border-primary focus:outline-none"
+            />
+          </FormRow>
         </div>
         <DialogFooter>
           <button onClick={onClose} className="h-8 px-5 rounded-md bg-card border border-[hsl(var(--field-border))] text-[13px] text-[hsl(var(--label-text))]">取消</button>
-          <button onClick={() => onConfirm({ priority, handler, remark })} className="h-8 px-5 rounded-md bg-primary text-primary-foreground text-[13px]">确认</button>
+          <button onClick={() => onConfirm({ priority, handler, remark, noahId })} className="h-8 px-5 rounded-md bg-primary text-primary-foreground text-[13px]">确认</button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
