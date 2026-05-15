@@ -139,6 +139,7 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                       { label: "处理人" },
                       { label: "处理备注" },
                       { label: "关闭原因" },
+                      { label: "关闭描述" },
                       { label: "诺亚ID" },
                       { label: "预警准确性" },
                       { label: "预警不准说明" },
