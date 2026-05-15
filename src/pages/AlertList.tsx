@@ -29,7 +29,7 @@ const rawRows = [
   { id: 44275, ruleId: 204, name: "UI动效_16.1多彩引擎舆情...", cu: "游皓翔(80397472)", at: "2026-04-29 19...", level: "B", type: "统计", period: "30分钟", trigger: "反馈量 > 20", content: "30分钟内反馈量达 25", notify: "TT", tt: "游皓翔(80397472)", group: "", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
   { id: 44260, ruleId: 182, name: "桌面舆情预警监控", cu: "杨柳(80341332)", at: "2026-04-29 18...", level: "S", type: "统计", period: "当日", trigger: "AI聚类标签聚类量 > 100", content: "当日聚类量达 156", notify: "TT群组", tt: "", group: "杨柳(80341332)", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
 ];
-const initialRows: Row[] = rawRows.map((r) => ({ ...r, accuracy: "未反馈", inaccurateReason: "" } as Row));
+const initialRows: Row[] = rawRows.map((r) => ({ ...r, closeDesc: "", accuracy: "未反馈", inaccurateReason: "" } as Row));
 
 interface AlertListProps {
   onShowAnalysis?: () => void;
