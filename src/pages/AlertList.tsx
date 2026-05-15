@@ -229,7 +229,7 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                           <a className="text-primary cursor-pointer hover:underline">查看反馈</a>
                           <a className="text-primary cursor-pointer hover:underline" onClick={() => onShowAnalysis?.()}>反馈趋势</a>
                           <a className="text-primary cursor-pointer hover:underline" onClick={() => window.open(r.name.includes("16.1设置L3舆情预警") ? "/reports/ai-generating.html" : "/reports/feedback_analysis_report_2026-05-07.html", "_blank")}>AI总结</a>
-                          <ActionLinks r={r} onHandle={() => setHandleTarget(r)} onClose={() => setCloseTarget(r)} />
+                          <ActionLinks r={r} onHandle={() => setHandleTarget(r)} onClose={() => setCloseTarget(r)} onInaccurate={() => setInaccurateTarget(r)} />
                         </div>
                       </td>
                     </tr>
