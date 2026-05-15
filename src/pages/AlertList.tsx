@@ -365,6 +365,7 @@ const HandleDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: (
 const CloseDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: () => void; onConfirm: (patch: Partial<Row>) => void }) => {
   const [reason, setReason] = useState("");
   const [reasonOther, setReasonOther] = useState("");
+  const [closeDesc, setCloseDesc] = useState("");
   const [noahId, setNoahId] = useState("");
 
   const open = !!row;
@@ -372,7 +373,7 @@ const CloseDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: ()
   const handleConfirm = () => {
     if (!reason) { toast.error("请选择关闭原因"); return; }
     if (reason === "其他问题" && !reasonOther.trim()) { toast.error("请输入其他问题描述"); return; }
-    onConfirm({ closeReason: reason, closeReasonOther: reasonOther, noahId });
+    onConfirm({ closeReason: reason, closeReasonOther: reasonOther, closeDesc, noahId });
   };
 
   return (
@@ -380,7 +381,7 @@ const CloseDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: ()
       <DialogContent
         className="max-w-[480px]"
         onOpenAutoFocus={() => {
-          if (row) { setReason(row.closeReason); setReasonOther(row.closeReasonOther); setNoahId(row.noahId); }
+          if (row) { setReason(row.closeReason); setReasonOther(row.closeReasonOther); setCloseDesc(row.closeDesc); setNoahId(row.noahId); }
         }}
       >
         <DialogHeader><DialogTitle>关闭预警</DialogTitle></DialogHeader>
@@ -398,6 +399,14 @@ const CloseDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: ()
               />
             </FormRow>
           )}
+          <FormRow label="关闭描述">
+            <textarea
+              value={closeDesc}
+              onChange={(e) => setCloseDesc(e.target.value)}
+              placeholder="请输入关闭描述"
+              className="w-full min-h-[80px] px-3 py-2 text-[13px] rounded-md border border-[hsl(var(--field-border))] bg-card placeholder:text-[hsl(var(--placeholder))] focus:border-primary focus:outline-none"
+            />
+          </FormRow>
           <FormRow label="诺亚ID">
             <input
               value={noahId}
