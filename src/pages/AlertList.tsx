@@ -372,8 +372,7 @@ const CloseDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: ()
 
   const handleConfirm = () => {
     if (!reason) { toast.error("请选择关闭原因"); return; }
-    if (reason === "其他问题" && !reasonOther.trim()) { toast.error("请输入其他问题描述"); return; }
-    onConfirm({ closeReason: reason, closeReasonOther: reasonOther, closeDesc, noahId });
+    onConfirm({ closeReason: reason, closeReasonOther: "", closeDesc, noahId });
   };
 
   return (
@@ -389,16 +388,6 @@ const CloseDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: ()
           <FormRow label={<span><span className="text-destructive">*</span> 关闭原因</span>}>
             <SingleSelect options={CLOSE_REASON_OPTS.map((v) => ({ label: v, value: v }))} value={reason} onChange={setReason} placeholder="请选择关闭原因" />
           </FormRow>
-          {reason === "其他问题" && (
-            <FormRow label="问题描述">
-              <input
-                value={reasonOther}
-                onChange={(e) => setReasonOther(e.target.value)}
-                placeholder="请输入问题描述"
-                className="w-full h-8 px-3 text-[13px] rounded-md border border-[hsl(var(--field-border))] bg-card placeholder:text-[hsl(var(--placeholder))] focus:border-primary focus:outline-none"
-              />
-            </FormRow>
-          )}
           <FormRow label="关闭描述">
             <textarea
               value={closeDesc}
