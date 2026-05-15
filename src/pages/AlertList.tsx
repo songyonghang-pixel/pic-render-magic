@@ -91,6 +91,12 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
             <Filter label="TT通知人"><Input placeholder="请输入TT通知人" /></Filter>
             <Filter label="规则ID"><Select placeholder="请选择规则ID" /></Filter>
             <Filter label="预警ID"><Input placeholder="请输入预警ID" /></Filter>
+            <Filter label="处理状态"><Select placeholder="请选择处理状态" /></Filter>
+            <Filter label="处理优先级"><Select placeholder="请选择处理优先级" /></Filter>
+            <Filter label="处理人"><Select placeholder="请选择处理人" /></Filter>
+            <Filter label="处理备注"><Input placeholder="请输入处理备注" /></Filter>
+            <Filter label="关闭原因"><Select placeholder="请选择关闭原因" /></Filter>
+            <Filter label="诺亚ID"><Input placeholder="请输入诺亚ID" /></Filter>
           </div>
           <div className="border-t border-border mt-5 pt-4 flex justify-end gap-2">
             <button className="h-8 px-5 rounded-md bg-primary text-primary-foreground text-[13px]">查询</button>
