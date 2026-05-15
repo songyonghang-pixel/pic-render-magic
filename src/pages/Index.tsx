@@ -116,7 +116,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))]">
       {/* Top tabs */}
-      <div className="bg-card border-b border-border px-6 flex items-center gap-6">
+      <div className="bg-card border-b border-border px-6 flex items-center gap-6 sticky top-0 z-30">
         {([
           { key: "rules", label: "预警规则" },
           { key: "alert", label: "新建预警" },
