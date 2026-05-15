@@ -3,30 +3,52 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { SingleSelect } from "@/components/feedback/SingleSelect";
 import { Pagination } from "./AlertRules";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
-const rows = [
-  { id: 44355, ruleId: 101, name: "【外销】【最高...", cu: "宋永航(802616...)", at: "2026-04-29 22...", level: "S", type: "实时", period: "", trigger: "", content: "手机投屏 Minh...", notify: "TT群组", tt: "", group: "宋永航(802616...)" },
-  { id: 44348, ruleId: 101, name: "【外销】【最高...", cu: "宋永航(802616...)", at: "2026-04-29 22...", level: "S", type: "实时", period: "", trigger: "", content: "The user, Divya...", notify: "TT群组", tt: "", group: "宋永航(802616...)" },
-  { id: 44316, ruleId: 44, name: "【快应用卡片...", cu: "徐跃泽(802470...)", at: "2026-04-29 21...", level: "B", type: "实时", period: "", trigger: "", content: "升级系统后卡...", notify: "TT", tt: "徐跃泽(802470...)", group: "" },
-  { id: 44315, ruleId: 101, name: "【外销】【最高...", cu: "宋永航(802616...)", at: "2026-04-29 21...", level: "S", type: "实时", period: "", trigger: "", content: "手机投屏 ม่งเข้...", notify: "TT群组", tt: "", group: "宋永航(802616...)" },
-  { id: 44303, ruleId: 101, name: "【外销】【最高...", cu: "宋永航(802616...)", at: "2026-04-29 21...", level: "S", type: "实时", period: "", trigger: "", content: "Opt-in problem...", notify: "TT群组", tt: "", group: "宋永航(802616...)" },
-  { id: 44301, ruleId: 63, name: "OTA升级失败...", cu: "王兴会(802570...)", at: "2026-04-29 21...", level: "S", type: "实时", period: "", trigger: "", content: "虽然电池很耐...", notify: "TT", tt: "王兴会(802570...)", group: "" },
-  { id: 44300, ruleId: 63, name: "OTA升级失败...", cu: "王兴会(802570...)", at: "2026-04-29 21...", level: "S", type: "实时", period: "", trigger: "", content: "OPPO X8 Ultra...", notify: "TT", tt: "王兴会(802570...)", group: "" },
-  { id: 44293, ruleId: 90, name: "高重要度社媒...", cu: "刘承旭(W9088...)", at: "2026-04-29 21...", level: "A", type: "实时", period: "", trigger: "", content: "Oneplus 10...", notify: "TT", tt: "刘承旭(W9088...)", group: "" },
-  { id: 44292, ruleId: 90, name: "高重要度社媒...", cu: "刘承旭(W9088...)", at: "2026-04-29 21...", level: "A", type: "实时", period: "", trigger: "", content: "OnePlus is rolli...", notify: "TT", tt: "刘承旭(W9088...)", group: "" },
-  { id: 44288, ruleId: 90, name: "高重要度社媒...", cu: "刘承旭(W9088...)", at: "2026-04-29 21...", level: "A", type: "实时", period: "", trigger: "", content: "Đi vào rừng m...", notify: "TT", tt: "刘承旭(W9088...)", group: "" },
-  { id: 44280, ruleId: 209, name: "16.1设置L3舆情预警", cu: "叶春(80200542)", at: "2026-04-29 20...", level: "A", type: "统计", period: "1小时", trigger: "反馈量 > 50", content: "1小时内反馈量达 78", notify: "TT群组", tt: "", group: "叶春(80200542)" },
-  { id: 44275, ruleId: 204, name: "UI动效_16.1多彩引擎舆情...", cu: "游皓翔(80397472)", at: "2026-04-29 19...", level: "B", type: "统计", period: "30分钟", trigger: "反馈量 > 20", content: "30分钟内反馈量达 25", notify: "TT", tt: "游皓翔(80397472)", group: "" },
-  { id: 44260, ruleId: 182, name: "桌面舆情预警监控", cu: "杨柳(80341332)", at: "2026-04-29 18...", level: "S", type: "统计", period: "当日", trigger: "AI聚类标签聚类量 > 100", content: "当日聚类量达 156", notify: "TT群组", tt: "", group: "杨柳(80341332)" },
+type Status = "待处理" | "处理中" | "已关闭";
+
+interface Row {
+  id: number; ruleId: number; name: string; cu: string; at: string; level: string;
+  type: string; period: string; trigger: string; content: string; notify: string; tt: string; group: string;
+  status: Status; priority: string; handler: string; remark: string; closeReason: string; closeReasonOther: string; noahId: string;
+}
+
+const initialRows: Row[] = [
+  { id: 44355, ruleId: 101, name: "【外销】【最高...", cu: "宋永航(802616...)", at: "2026-04-29 22...", level: "S", type: "实时", period: "", trigger: "", content: "手机投屏 Minh...", notify: "TT群组", tt: "", group: "宋永航(802616...)", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
+  { id: 44348, ruleId: 101, name: "【外销】【最高...", cu: "宋永航(802616...)", at: "2026-04-29 22...", level: "S", type: "实时", period: "", trigger: "", content: "The user, Divya...", notify: "TT群组", tt: "", group: "宋永航(802616...)", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
+  { id: 44316, ruleId: 44, name: "【快应用卡片...", cu: "徐跃泽(802470...)", at: "2026-04-29 21...", level: "B", type: "实时", period: "", trigger: "", content: "升级系统后卡...", notify: "TT", tt: "徐跃泽(802470...)", group: "", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
+  { id: 44315, ruleId: 101, name: "【外销】【最高...", cu: "宋永航(802616...)", at: "2026-04-29 21...", level: "S", type: "实时", period: "", trigger: "", content: "手机投屏 ม่งเข้...", notify: "TT群组", tt: "", group: "宋永航(802616...)", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
+  { id: 44303, ruleId: 101, name: "【外销】【最高...", cu: "宋永航(802616...)", at: "2026-04-29 21...", level: "S", type: "实时", period: "", trigger: "", content: "Opt-in problem...", notify: "TT群组", tt: "", group: "宋永航(802616...)", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
+  { id: 44301, ruleId: 63, name: "OTA升级失败...", cu: "王兴会(802570...)", at: "2026-04-29 21...", level: "S", type: "实时", period: "", trigger: "", content: "虽然电池很耐...", notify: "TT", tt: "王兴会(802570...)", group: "", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
+  { id: 44300, ruleId: 63, name: "OTA升级失败...", cu: "王兴会(802570...)", at: "2026-04-29 21...", level: "S", type: "实时", period: "", trigger: "", content: "OPPO X8 Ultra...", notify: "TT", tt: "王兴会(802570...)", group: "", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
+  { id: 44293, ruleId: 90, name: "高重要度社媒...", cu: "刘承旭(W9088...)", at: "2026-04-29 21...", level: "A", type: "实时", period: "", trigger: "", content: "Oneplus 10...", notify: "TT", tt: "刘承旭(W9088...)", group: "", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
+  { id: 44292, ruleId: 90, name: "高重要度社媒...", cu: "刘承旭(W9088...)", at: "2026-04-29 21...", level: "A", type: "实时", period: "", trigger: "", content: "OnePlus is rolli...", notify: "TT", tt: "刘承旭(W9088...)", group: "", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
+  { id: 44288, ruleId: 90, name: "高重要度社媒...", cu: "刘承旭(W9088...)", at: "2026-04-29 21...", level: "A", type: "实时", period: "", trigger: "", content: "Đi vào rừng m...", notify: "TT", tt: "刘承旭(W9088...)", group: "", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
+  { id: 44280, ruleId: 209, name: "16.1设置L3舆情预警", cu: "叶春(80200542)", at: "2026-04-29 20...", level: "A", type: "统计", period: "1小时", trigger: "反馈量 > 50", content: "1小时内反馈量达 78", notify: "TT群组", tt: "", group: "叶春(80200542)", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
+  { id: 44275, ruleId: 204, name: "UI动效_16.1多彩引擎舆情...", cu: "游皓翔(80397472)", at: "2026-04-29 19...", level: "B", type: "统计", period: "30分钟", trigger: "反馈量 > 20", content: "30分钟内反馈量达 25", notify: "TT", tt: "游皓翔(80397472)", group: "", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
+  { id: 44260, ruleId: 182, name: "桌面舆情预警监控", cu: "杨柳(80341332)", at: "2026-04-29 18...", level: "S", type: "统计", period: "当日", trigger: "AI聚类标签聚类量 > 100", content: "当日聚类量达 156", notify: "TT群组", tt: "", group: "杨柳(80341332)", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
 ];
 
 interface AlertListProps {
   onShowAnalysis?: () => void;
 }
 
+const PRIORITY_OPTS = ["P0", "P1", "P2", "P3"];
+const HANDLER_OPTS = ["宋永航(80261667)", "叶春(80200542)", "杨柳(80341332)", "游皓翔(80397472)", "王兴会(80257000)"];
+const CLOSE_REASON_OPTS = ["非问题", "已建单跟进", "已知问题", "已解决", "其他问题"];
+
 export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
   const [subTab, setSubTab] = useState<"实时" | "统计">("实时");
-  const filteredRows = rows.filter((r) => r.type === subTab);
+  const [data, setData] = useState<Row[]>(initialRows);
+  const [handleTarget, setHandleTarget] = useState<Row | null>(null);
+  const [closeTarget, setCloseTarget] = useState<Row | null>(null);
+
+  const filteredRows = data.filter((r) => r.type === subTab);
+
+  const updateRow = (id: number, patch: Partial<Row>) => {
+    setData((prev) => prev.map((r) => (r.id === id ? { ...r, ...patch } : r)));
+  };
+
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))]">
       <div className="bg-card border-b border-border px-6 py-3 flex items-center text-[13px] text-[hsl(var(--breadcrumb))]">
@@ -86,7 +108,7 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
           </div>
           <div className="overflow-x-auto">
             {subTab === "实时" ? (
-              <table className="w-full text-[13px] min-w-[1400px]">
+              <table className="w-full text-[13px] min-w-[2200px]">
                 <thead>
                   <tr className="bg-[hsl(var(--accent))] text-[hsl(var(--label-text))]">
                     {[
@@ -100,6 +122,12 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                       { label: "通知方式" },
                       { label: "TT通知人" },
                       { label: "TT群组提及人" },
+                      { label: "处理状态" },
+                      { label: "处理优先级" },
+                      { label: "处理人" },
+                      { label: "处理备注" },
+                      { label: "关闭原因" },
+                      { label: "诺亚ID" },
                       { label: "操作", sticky: true },
                     ].map((h) => (
                       <th key={h.label} className={`text-left py-3 px-4 font-medium whitespace-nowrap ${h.w ?? ""} ${h.sticky ? "sticky right-0 bg-[hsl(var(--accent))] shadow-[-4px_0_8px_-4px_hsl(var(--border))]" : ""}`}>{h.label}</th>
@@ -123,15 +151,16 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.notify}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.tt}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.group}</td>
+                      <StatusCells r={r} />
                       <td className="py-3 px-4 whitespace-nowrap sticky right-0 bg-card shadow-[-4px_0_8px_-4px_hsl(var(--border))]">
-                        <a className="text-primary cursor-pointer hover:underline">查看反馈</a>
+                        <ActionLinks r={r} onHandle={() => setHandleTarget(r)} onClose={() => setCloseTarget(r)} />
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
             ) : (
-              <table className="w-full text-[13px] min-w-[1800px]">
+              <table className="w-full text-[13px] min-w-[2600px]">
                 <thead>
                   <tr className="bg-[hsl(var(--accent))] text-[hsl(var(--label-text))]">
                     {[
@@ -148,6 +177,12 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                       { label: "通知方式" },
                       { label: "TT通知人" },
                       { label: "TT群组提及人" },
+                      { label: "处理状态" },
+                      { label: "处理优先级" },
+                      { label: "处理人" },
+                      { label: "处理备注" },
+                      { label: "关闭原因" },
+                      { label: "诺亚ID" },
                       { label: "操作", sticky: true },
                     ].map((h) => (
                       <th key={h.label} className={`text-left py-3 px-4 font-medium whitespace-nowrap ${h.w ?? ""} ${h.sticky ? "sticky right-0 bg-[hsl(var(--accent))] shadow-[-4px_0_8px_-4px_hsl(var(--border))]" : ""}`}>{h.label}</th>
@@ -170,21 +205,13 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.notify}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.tt}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.group}</td>
+                      <StatusCells r={r} />
                       <td className="py-3 px-4 whitespace-nowrap sticky right-0 bg-card shadow-[-4px_0_8px_-4px_hsl(var(--border))]">
                         <div className="flex items-center gap-3">
                           <a className="text-primary cursor-pointer hover:underline">查看反馈</a>
-                          <a
-                            className="text-primary cursor-pointer hover:underline"
-                            onClick={() => onShowAnalysis?.()}
-                          >
-                            反馈趋势
-                          </a>
-                          <a
-                            className="text-primary cursor-pointer hover:underline"
-                            onClick={() => window.open(r.name.includes("16.1设置L3舆情预警") ? "/reports/ai-generating.html" : "/reports/feedback_analysis_report_2026-05-07.html", "_blank")}
-                          >
-                            AI总结
-                          </a>
+                          <a className="text-primary cursor-pointer hover:underline" onClick={() => onShowAnalysis?.()}>反馈趋势</a>
+                          <a className="text-primary cursor-pointer hover:underline" onClick={() => window.open(r.name.includes("16.1设置L3舆情预警") ? "/reports/ai-generating.html" : "/reports/feedback_analysis_report_2026-05-07.html", "_blank")}>AI总结</a>
+                          <ActionLinks r={r} onHandle={() => setHandleTarget(r)} onClose={() => setCloseTarget(r)} />
                         </div>
                       </td>
                     </tr>
@@ -196,9 +223,167 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
           <Pagination total={6575} />
         </div>
       </div>
+
+      <HandleDialog
+        row={handleTarget}
+        onClose={() => setHandleTarget(null)}
+        onConfirm={(patch) => {
+          if (handleTarget) updateRow(handleTarget.id, { ...patch, status: "处理中" });
+          setHandleTarget(null);
+        }}
+      />
+      <CloseDialog
+        row={closeTarget}
+        onClose={() => setCloseTarget(null)}
+        onConfirm={(patch) => {
+          if (closeTarget) updateRow(closeTarget.id, { ...patch, status: "已关闭" });
+          setCloseTarget(null);
+        }}
+      />
     </div>
   );
 };
+
+const StatusCells = ({ r }: { r: Row }) => {
+  const statusColor = r.status === "待处理" ? "text-[hsl(var(--label-text))]" : r.status === "处理中" ? "text-[#f59e0b]" : "text-[hsl(var(--label-text)/0.6)]";
+  const closeReasonText = r.closeReason === "其他问题" && r.closeReasonOther ? `其他问题：${r.closeReasonOther}` : r.closeReason;
+  return (
+    <>
+      <td className={`py-3 px-4 whitespace-nowrap ${statusColor}`}>{r.status}</td>
+      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.priority}</td>
+      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.handler}</td>
+      <td className="py-3 px-4 text-[hsl(var(--label-text))] max-w-[200px] truncate" title={r.remark}>{r.remark}</td>
+      <td className="py-3 px-4 text-[hsl(var(--label-text))]">{closeReasonText}</td>
+      <td className="py-3 px-4">
+        {r.noahId ? (
+          <a className="text-primary cursor-pointer hover:underline" onClick={() => toast(`打开诺亚单：${r.noahId}`)}>{r.noahId}</a>
+        ) : ""}
+      </td>
+    </>
+  );
+};
+
+const ActionLinks = ({ r, onHandle, onClose }: { r: Row; onHandle: () => void; onClose: () => void }) => {
+  const canHandle = r.status === "待处理" || r.status === "处理中";
+  return (
+    <div className="flex items-center gap-3">
+      <a
+        className={canHandle ? "text-primary cursor-pointer hover:underline" : "text-[hsl(var(--label-text)/0.4)] cursor-not-allowed"}
+        onClick={canHandle ? onHandle : undefined}
+      >
+        处理
+      </a>
+      <a className="text-primary cursor-pointer hover:underline" onClick={onClose}>关闭</a>
+    </div>
+  );
+};
+
+const HandleDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: () => void; onConfirm: (patch: Partial<Row>) => void }) => {
+  const [priority, setPriority] = useState("");
+  const [handler, setHandler] = useState("");
+  const [remark, setRemark] = useState("");
+
+  // sync when row changes
+  const open = !!row;
+  if (row && priority === "" && handler === "" && remark === "" && (row.priority || row.handler || row.remark)) {
+    // initialize once per open
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
+      <DialogContent
+        className="max-w-[480px]"
+        onOpenAutoFocus={() => {
+          if (row) { setPriority(row.priority); setHandler(row.handler); setRemark(row.remark); }
+        }}
+      >
+        <DialogHeader><DialogTitle>处理预警</DialogTitle></DialogHeader>
+        <div className="space-y-4 py-2">
+          <FormRow label="处理优先级">
+            <SingleSelect options={PRIORITY_OPTS.map((v) => ({ label: v, value: v }))} value={priority} onChange={setPriority} placeholder="请选择处理优先级" />
+          </FormRow>
+          <FormRow label="处理人">
+            <SingleSelect options={HANDLER_OPTS.map((v) => ({ label: v, value: v }))} value={handler} onChange={setHandler} placeholder="请选择处理人" />
+          </FormRow>
+          <FormRow label="处理备注">
+            <textarea
+              value={remark}
+              onChange={(e) => setRemark(e.target.value)}
+              placeholder="请输入处理备注"
+              className="w-full min-h-[80px] px-3 py-2 text-[13px] rounded-md border border-[hsl(var(--field-border))] bg-card placeholder:text-[hsl(var(--placeholder))] focus:border-primary focus:outline-none"
+            />
+          </FormRow>
+        </div>
+        <DialogFooter>
+          <button onClick={onClose} className="h-8 px-5 rounded-md bg-card border border-[hsl(var(--field-border))] text-[13px] text-[hsl(var(--label-text))]">取消</button>
+          <button onClick={() => onConfirm({ priority, handler, remark })} className="h-8 px-5 rounded-md bg-primary text-primary-foreground text-[13px]">确认</button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const CloseDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: () => void; onConfirm: (patch: Partial<Row>) => void }) => {
+  const [reason, setReason] = useState("");
+  const [reasonOther, setReasonOther] = useState("");
+  const [noahId, setNoahId] = useState("");
+
+  const open = !!row;
+
+  const handleConfirm = () => {
+    if (!reason) { toast.error("请选择关闭原因"); return; }
+    if (reason === "其他问题" && !reasonOther.trim()) { toast.error("请输入其他问题描述"); return; }
+    onConfirm({ closeReason: reason, closeReasonOther: reasonOther, noahId });
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
+      <DialogContent
+        className="max-w-[480px]"
+        onOpenAutoFocus={() => {
+          if (row) { setReason(row.closeReason); setReasonOther(row.closeReasonOther); setNoahId(row.noahId); }
+        }}
+      >
+        <DialogHeader><DialogTitle>关闭预警</DialogTitle></DialogHeader>
+        <div className="space-y-4 py-2">
+          <FormRow label={<span><span className="text-destructive">*</span> 关闭原因</span>}>
+            <SingleSelect options={CLOSE_REASON_OPTS.map((v) => ({ label: v, value: v }))} value={reason} onChange={setReason} placeholder="请选择关闭原因" />
+          </FormRow>
+          {reason === "其他问题" && (
+            <FormRow label="问题描述">
+              <input
+                value={reasonOther}
+                onChange={(e) => setReasonOther(e.target.value)}
+                placeholder="请输入问题描述"
+                className="w-full h-8 px-3 text-[13px] rounded-md border border-[hsl(var(--field-border))] bg-card placeholder:text-[hsl(var(--placeholder))] focus:border-primary focus:outline-none"
+              />
+            </FormRow>
+          )}
+          <FormRow label="诺亚ID">
+            <input
+              value={noahId}
+              onChange={(e) => setNoahId(e.target.value.replace(/\D/g, ""))}
+              inputMode="numeric"
+              placeholder="请输入诺亚ID（仅数字）"
+              className="w-full h-8 px-3 text-[13px] rounded-md border border-[hsl(var(--field-border))] bg-card placeholder:text-[hsl(var(--placeholder))] focus:border-primary focus:outline-none"
+            />
+          </FormRow>
+        </div>
+        <DialogFooter>
+          <button onClick={onClose} className="h-8 px-5 rounded-md bg-card border border-[hsl(var(--field-border))] text-[13px] text-[hsl(var(--label-text))]">取消</button>
+          <button onClick={handleConfirm} className="h-8 px-5 rounded-md bg-primary text-primary-foreground text-[13px]">确认</button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+const FormRow = ({ label, children }: { label: React.ReactNode; children: React.ReactNode }) => (
+  <div className="flex items-start gap-3">
+    <label className="text-[13px] text-[hsl(var(--label-text))] w-[90px] text-right shrink-0 pt-1.5">{label}</label>
+    <div className="flex-1">{children}</div>
+  </div>
+);
 
 const Filter = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <div className="flex items-center gap-3">
