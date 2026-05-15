@@ -14,8 +14,7 @@ interface Row {
   accuracy: "未反馈" | "不准确"; inaccurateReason: string;
 }
 
-const initialRows: Row[] = ([
-  // @ts-expect-error fill defaults below
+const rawRows = [
   { id: 44355, ruleId: 101, name: "【外销】【最高...", cu: "宋永航(802616...)", at: "2026-04-29 22...", level: "S", type: "实时", period: "", trigger: "", content: "手机投屏 Minh...", notify: "TT群组", tt: "", group: "宋永航(802616...)", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
   { id: 44348, ruleId: 101, name: "【外销】【最高...", cu: "宋永航(802616...)", at: "2026-04-29 22...", level: "S", type: "实时", period: "", trigger: "", content: "The user, Divya...", notify: "TT群组", tt: "", group: "宋永航(802616...)", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
   { id: 44316, ruleId: 44, name: "【快应用卡片...", cu: "徐跃泽(802470...)", at: "2026-04-29 21...", level: "B", type: "实时", period: "", trigger: "", content: "升级系统后卡...", notify: "TT", tt: "徐跃泽(802470...)", group: "", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
