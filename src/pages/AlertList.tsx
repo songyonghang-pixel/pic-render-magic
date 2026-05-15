@@ -258,6 +258,14 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
           setCloseTarget(null);
         }}
       />
+      <InaccurateDialog
+        row={inaccurateTarget}
+        onClose={() => setInaccurateTarget(null)}
+        onConfirm={(reason) => {
+          if (inaccurateTarget) updateRow(inaccurateTarget.id, { accuracy: "不准确", inaccurateReason: reason });
+          setInaccurateTarget(null);
+        }}
+      />
     </div>
   );
 };
