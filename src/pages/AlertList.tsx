@@ -44,6 +44,7 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
   const [data, setData] = useState<Row[]>(initialRows);
   const [handleTarget, setHandleTarget] = useState<Row | null>(null);
   const [closeTarget, setCloseTarget] = useState<Row | null>(null);
+  const [inaccurateTarget, setInaccurateTarget] = useState<Row | null>(null);
 
   const filteredRows = data.filter((r) => r.type === subTab);
 
