@@ -413,6 +413,39 @@ const CloseDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: ()
   );
 };
 
+const InaccurateDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: () => void; onConfirm: (reason: string) => void }) => {
+  const [reason, setReason] = useState("");
+  const open = !!row;
+  const handleConfirm = () => {
+    if (!reason.trim()) { toast.error("请输入预警不准说明"); return; }
+    onConfirm(reason.trim());
+  };
+  return (
+    <Dialog open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
+      <DialogContent
+        className="max-w-[480px]"
+        onOpenAutoFocus={() => { if (row) setReason(row.inaccurateReason); }}
+      >
+        <DialogHeader><DialogTitle>预警不准</DialogTitle></DialogHeader>
+        <div className="space-y-4 py-2">
+          <FormRow label={<span><span className="text-destructive">*</span> 预警不准说明</span>}>
+            <textarea
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              placeholder="请输入预警不准说明"
+              className="w-full min-h-[100px] px-3 py-2 text-[13px] rounded-md border border-[hsl(var(--field-border))] bg-card placeholder:text-[hsl(var(--placeholder))] focus:border-primary focus:outline-none"
+            />
+          </FormRow>
+        </div>
+        <DialogFooter>
+          <button onClick={onClose} className="h-8 px-5 rounded-md bg-card border border-[hsl(var(--field-border))] text-[13px] text-[hsl(var(--label-text))]">取消</button>
+          <button onClick={handleConfirm} className="h-8 px-5 rounded-md bg-primary text-primary-foreground text-[13px]">确认</button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
 const FormRow = ({ label, children }: { label: React.ReactNode; children: React.ReactNode }) => (
   <div className="flex items-start gap-3">
     <label className="text-[13px] text-[hsl(var(--label-text))] w-[90px] text-right shrink-0 pt-1.5">{label}</label>
