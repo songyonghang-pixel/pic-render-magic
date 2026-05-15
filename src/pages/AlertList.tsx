@@ -199,6 +199,8 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                       { label: "处理备注" },
                       { label: "关闭原因" },
                       { label: "诺亚ID" },
+                      { label: "预警准确性" },
+                      { label: "预警不准说明" },
                       { label: "操作", sticky: true },
                     ].map((h) => (
                       <th key={h.label} className={`text-left py-3 px-4 font-medium whitespace-nowrap ${h.w ?? ""} ${h.sticky ? "sticky right-0 bg-[hsl(var(--accent))] shadow-[-4px_0_8px_-4px_hsl(var(--border))]" : ""}`}>{h.label}</th>
