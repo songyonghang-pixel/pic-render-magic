@@ -10,7 +10,7 @@ type Status = "待处理" | "处理中" | "已关闭";
 interface Row {
   id: number; ruleId: number; name: string; cu: string; at: string; level: string;
   type: string; period: string; trigger: string; content: string; notify: string; tt: string; group: string;
-  status: Status; priority: string; handler: string; remark: string; closeReason: string; closeReasonOther: string; noahId: string;
+  status: Status; priority: string; handler: string; remark: string; closeReason: string; closeReasonOther: string; closeDesc: string; noahId: string;
   accuracy: "未反馈" | "不准确"; inaccurateReason: string;
 }
 
@@ -29,7 +29,7 @@ const rawRows = [
   { id: 44275, ruleId: 204, name: "UI动效_16.1多彩引擎舆情...", cu: "游皓翔(80397472)", at: "2026-04-29 19...", level: "B", type: "统计", period: "30分钟", trigger: "反馈量 > 20", content: "30分钟内反馈量达 25", notify: "TT", tt: "游皓翔(80397472)", group: "", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
   { id: 44260, ruleId: 182, name: "桌面舆情预警监控", cu: "杨柳(80341332)", at: "2026-04-29 18...", level: "S", type: "统计", period: "当日", trigger: "AI聚类标签聚类量 > 100", content: "当日聚类量达 156", notify: "TT群组", tt: "", group: "杨柳(80341332)", status: "待处理", priority: "", handler: "", remark: "", closeReason: "", closeReasonOther: "", noahId: "" },
 ];
-const initialRows: Row[] = rawRows.map((r) => ({ ...r, accuracy: "未反馈", inaccurateReason: "" } as Row));
+const initialRows: Row[] = rawRows.map((r) => ({ ...r, closeDesc: "", accuracy: "未反馈", inaccurateReason: "" } as Row));
 
 interface AlertListProps {
   onShowAnalysis?: () => void;
@@ -99,6 +99,7 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
             <Filter label="处理人"><Select placeholder="请选择处理人" /></Filter>
             <Filter label="处理备注"><Input placeholder="请输入处理备注" /></Filter>
             <Filter label="关闭原因"><Select placeholder="请选择关闭原因" /></Filter>
+            <Filter label="关闭描述"><Input placeholder="请输入关闭描述" /></Filter>
             <Filter label="诺亚ID"><Input placeholder="请输入诺亚ID" /></Filter>
             <Filter label="预警准确性"><Select placeholder="请选择预警准确性" options={["不准确", "未反馈"]} /></Filter>
             <Filter label="预警不准说明"><Input placeholder="请输入预警不准说明" /></Filter>
@@ -138,6 +139,7 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                       { label: "处理人" },
                       { label: "处理备注" },
                       { label: "关闭原因" },
+                      { label: "关闭描述" },
                       { label: "诺亚ID" },
                       { label: "预警准确性" },
                       { label: "预警不准说明" },
@@ -198,6 +200,7 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                       { label: "处理人" },
                       { label: "处理备注" },
                       { label: "关闭原因" },
+                      { label: "关闭描述" },
                       { label: "诺亚ID" },
                       { label: "预警准确性" },
                       { label: "预警不准说明" },
@@ -280,6 +283,7 @@ const StatusCells = ({ r }: { r: Row }) => {
       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.handler}</td>
       <td className="py-3 px-4 text-[hsl(var(--label-text))] max-w-[200px] truncate" title={r.remark}>{r.remark}</td>
       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{closeReasonText}</td>
+      <td className="py-3 px-4 text-[hsl(var(--label-text))] max-w-[200px] truncate" title={r.closeDesc}>{r.closeDesc}</td>
       <td className="py-3 px-4">
         {r.noahId ? (
           <a className="text-primary cursor-pointer hover:underline" onClick={() => toast(`打开诺亚单：${r.noahId}`)}>{r.noahId}</a>
@@ -361,6 +365,7 @@ const HandleDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: (
 const CloseDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: () => void; onConfirm: (patch: Partial<Row>) => void }) => {
   const [reason, setReason] = useState("");
   const [reasonOther, setReasonOther] = useState("");
+  const [closeDesc, setCloseDesc] = useState("");
   const [noahId, setNoahId] = useState("");
 
   const open = !!row;
@@ -368,7 +373,7 @@ const CloseDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: ()
   const handleConfirm = () => {
     if (!reason) { toast.error("请选择关闭原因"); return; }
     if (reason === "其他问题" && !reasonOther.trim()) { toast.error("请输入其他问题描述"); return; }
-    onConfirm({ closeReason: reason, closeReasonOther: reasonOther, noahId });
+    onConfirm({ closeReason: reason, closeReasonOther: reasonOther, closeDesc, noahId });
   };
 
   return (
@@ -376,7 +381,7 @@ const CloseDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: ()
       <DialogContent
         className="max-w-[480px]"
         onOpenAutoFocus={() => {
-          if (row) { setReason(row.closeReason); setReasonOther(row.closeReasonOther); setNoahId(row.noahId); }
+          if (row) { setReason(row.closeReason); setReasonOther(row.closeReasonOther); setCloseDesc(row.closeDesc); setNoahId(row.noahId); }
         }}
       >
         <DialogHeader><DialogTitle>关闭预警</DialogTitle></DialogHeader>
@@ -394,6 +399,14 @@ const CloseDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: ()
               />
             </FormRow>
           )}
+          <FormRow label="关闭描述">
+            <textarea
+              value={closeDesc}
+              onChange={(e) => setCloseDesc(e.target.value)}
+              placeholder="请输入关闭描述"
+              className="w-full min-h-[80px] px-3 py-2 text-[13px] rounded-md border border-[hsl(var(--field-border))] bg-card placeholder:text-[hsl(var(--placeholder))] focus:border-primary focus:outline-none"
+            />
+          </FormRow>
           <FormRow label="诺亚ID">
             <input
               value={noahId}
