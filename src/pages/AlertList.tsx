@@ -99,6 +99,7 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
             <Filter label="处理人"><Select placeholder="请选择处理人" /></Filter>
             <Filter label="处理备注"><Input placeholder="请输入处理备注" /></Filter>
             <Filter label="关闭原因"><Select placeholder="请选择关闭原因" /></Filter>
+            <Filter label="关闭描述"><Input placeholder="请输入关闭描述" /></Filter>
             <Filter label="诺亚ID"><Input placeholder="请输入诺亚ID" /></Filter>
             <Filter label="预警准确性"><Select placeholder="请选择预警准确性" options={["不准确", "未反馈"]} /></Filter>
             <Filter label="预警不准说明"><Input placeholder="请输入预警不准说明" /></Filter>
