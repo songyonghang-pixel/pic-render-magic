@@ -75,7 +75,7 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, ale
   const lockEndMode =
     alertType === "统计" &&
     indicator === "反馈量" &&
-    (timeRange === "10分钟" || timeRange === "20分钟" || timeRange === "30分钟");
+    (dim === "10分钟" || dim === "20分钟" || dim === "30分钟");
 
   const [endTime, setEndTime] = useState(() => fmtDate(new Date()));
   const [startTime, setStartTime] = useState(() => {
