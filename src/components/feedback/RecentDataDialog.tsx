@@ -191,9 +191,11 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, ale
               type="datetime-local"
               value={endTime.replace(" ", "T")}
               readOnly={lockEndMode}
+              disabled={lockEndMode}
               onChange={!lockEndMode ? (e) => onEndChange(e.target.value) : undefined}
-              className="h-8 px-2 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm"
+              className={`h-8 px-2 text-[13px] border border-[hsl(var(--field-border))] rounded-sm ${lockEndMode ? "bg-muted text-[hsl(var(--muted-foreground))] cursor-not-allowed opacity-60" : "bg-card"}`}
             />
+
             {lockEndMode && (
               <HoverCard openDelay={100}>
                 <HoverCardTrigger asChild>
