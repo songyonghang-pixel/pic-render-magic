@@ -182,16 +182,28 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, ale
             <input
               type="datetime-local"
               value={startTime.replace(" ", "T")}
-              readOnly
+              readOnly={!lockEndMode}
+              onChange={lockEndMode ? (e) => onStartChange(e.target.value) : undefined}
               className="h-8 px-2 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm"
             />
             <span className="text-[13px]">至</span>
             <input
               type="datetime-local"
               value={endTime.replace(" ", "T")}
-              onChange={(e) => setEndTime(e.target.value.replace("T", " "))}
+              readOnly={lockEndMode}
+              onChange={!lockEndMode ? (e) => onEndChange(e.target.value) : undefined}
               className="h-8 px-2 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm"
             />
+            {lockEndMode && (
+              <HoverCard openDelay={100}>
+                <HoverCardTrigger asChild>
+                  <Info className="w-4 h-4 text-[hsl(var(--muted-foreground))] cursor-help" />
+                </HoverCardTrigger>
+                <HoverCardContent side="top" className="w-auto max-w-xs text-[12px]">
+                  时间维度为30分钟内时，最长可展示前24小时的基线数据，你可切换反馈开始时间做调整
+                </HoverCardContent>
+              </HoverCard>
+            )}
           </div>
           <div className="flex items-center gap-2">
             <span className="text-[13px] text-[hsl(var(--label-text))]">时间维度：</span>
