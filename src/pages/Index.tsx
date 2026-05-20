@@ -497,6 +497,7 @@ const Index = () => {
             onOpenChange={(v) => { if (!v) setChartOpenId(null); }}
             timeRange={activeChartCond?.timeRange ?? ""}
             indicator={activeChartCond?.indicator ?? ""}
+            alertType={alertType}
             separateFilters={[
               ...(aiTagSep ? [{ key: "aiTag", label: "AI标签", type: "cascade" as const, options: aiTagOptions, values: aiTagVals }] : []),
               ...(marketingSep ? [{ key: "marketing", label: "机型营销名", type: "cascade" as const, options: marketingNameOptions, values: marketingVals }] : []),
