@@ -205,7 +205,9 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, ale
                   <Info className="w-4 h-4 text-[hsl(var(--muted-foreground))] cursor-help" />
                 </HoverCardTrigger>
                 <HoverCardContent side="top" className="w-auto max-w-xs text-[12px]">
-                  时间维度为30分钟内时，最长可展示前24小时的基线数据，你可切换反馈开始时间做调整
+                  {is1to6Hour
+                    ? "时间维度为1～6小时，最长可展示前14天的基线数据，你可切换反馈开始时间做调整"
+                    : "时间维度为30分钟内时，最长可展示前24小时的基线数据，你可切换反馈开始时间做调整"}
                 </HoverCardContent>
               </HoverCard>
             )}
