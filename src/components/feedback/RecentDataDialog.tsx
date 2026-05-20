@@ -35,12 +35,12 @@ const rangeMap: Record<string, { dim: string; spanLabel: string; points: number;
   "10分钟": { dim: "10分钟", spanLabel: "前24小时", points: 144, stepMs: 10 * 60 * 1000 },
   "20分钟": { dim: "20分钟", spanLabel: "前24小时", points: 72, stepMs: 20 * 60 * 1000 },
   "30分钟": { dim: "30分钟", spanLabel: "前24小时", points: 48, stepMs: 30 * 60 * 1000 },
-  "1小时":  { dim: "1小时",  spanLabel: "前24小时", points: 24, stepMs: 60 * 60 * 1000 },
-  "2小时":  { dim: "2小时",  spanLabel: "前24小时", points: 12, stepMs: 2 * 60 * 60 * 1000 },
-  "3小时":  { dim: "3小时",  spanLabel: "前3天",   points: 24, stepMs: 3 * 60 * 60 * 1000 },
-  "4小时":  { dim: "4小时",  spanLabel: "前3天",   points: 18, stepMs: 4 * 60 * 60 * 1000 },
-  "5小时":  { dim: "5小时",  spanLabel: "前3天",   points: 14, stepMs: 5 * 60 * 60 * 1000 },
-  "6小时":  { dim: "6小时",  spanLabel: "前3天",   points: 12, stepMs: 6 * 60 * 60 * 1000 },
+  "1小时":  { dim: "1小时",  spanLabel: "前14天",   points: 336, stepMs: 60 * 60 * 1000 },
+  "2小时":  { dim: "2小时",  spanLabel: "前14天",   points: 168, stepMs: 2 * 60 * 60 * 1000 },
+  "3小时":  { dim: "3小时",  spanLabel: "前14天",   points: 112, stepMs: 3 * 60 * 60 * 1000 },
+  "4小时":  { dim: "4小时",  spanLabel: "前14天",   points: 84,  stepMs: 4 * 60 * 60 * 1000 },
+  "5小时":  { dim: "5小时",  spanLabel: "前14天",   points: 67,  stepMs: 5 * 60 * 60 * 1000 },
+  "6小时":  { dim: "6小时",  spanLabel: "前14天",   points: 56,  stepMs: 6 * 60 * 60 * 1000 },
   "当日":   { dim: "日",      spanLabel: "前10天",  points: 10, stepMs: 24 * 60 * 60 * 1000 },
   "本周":   { dim: "周",      spanLabel: "前10周",  points: 10, stepMs: 7 * 24 * 60 * 60 * 1000 },
 };
@@ -71,11 +71,14 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, ale
     if (open) setDim(cfg.dim);
   }, [open, timeRange]);
 
-  // Special mode: 统计 + 反馈量 + (10/20/30分钟) — end time is locked, user adjusts start time, end = start + 24h
-  const lockEndMode =
-    alertType === "统计" &&
-    indicator === "反馈量" &&
-    (dim === "10分钟" || dim === "20分钟" || dim === "30分钟");
+  // Lock-end modes for 统计 + 反馈量:
+  //  - sub-hour dims (10/20/30分钟) -> end = start + 1 day
+  //  - 1-6小时 dims -> end = start + 14 days
+  const isSubHour = dim === "10分钟" || dim === "20分钟" || dim === "30分钟";
+  const is1to6Hour = dim === "1小时" || dim === "2小时" || dim === "3小时" || dim === "4小时" || dim === "5小时" || dim === "6小时";
+  const statFeedback = alertType === "统计" && indicator === "反馈量";
+  const lockEndMode = statFeedback && (isSubHour || is1to6Hour);
+  const lockOffsetDays = is1to6Hour ? 14 : 1;
 
   const [endTime, setEndTime] = useState(() => fmtDate(new Date()));
   const [startTime, setStartTime] = useState(() => {
@@ -98,7 +101,7 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, ale
     setStartTime(s);
     if (lockEndMode) {
       const d = new Date(s.replace(" ", "T"));
-      d.setDate(d.getDate() + 1);
+      d.setDate(d.getDate() + lockOffsetDays);
       setEndTime(fmtDate(d));
     }
   };
@@ -202,7 +205,9 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, ale
                   <Info className="w-4 h-4 text-[hsl(var(--muted-foreground))] cursor-help" />
                 </HoverCardTrigger>
                 <HoverCardContent side="top" className="w-auto max-w-xs text-[12px]">
-                  时间维度为30分钟内时，最长可展示前24小时的基线数据，你可切换反馈开始时间做调整
+                  {is1to6Hour
+                    ? "时间维度为1～6小时，最长可展示前14天的基线数据，你可切换反馈开始时间做调整"
+                    : "时间维度为30分钟内时，最长可展示前24小时的基线数据，你可切换反馈开始时间做调整"}
                 </HoverCardContent>
               </HoverCard>
             )}
