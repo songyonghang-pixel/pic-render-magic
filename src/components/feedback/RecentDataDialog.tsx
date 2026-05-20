@@ -56,7 +56,7 @@ function fmtTick(d: Date, dim: string) {
   return `${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }
 
-export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, separateFilters = [] }: Props) => {
+export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, alertType, separateFilters = [] }: Props) => {
   const [filterVals, setFilterVals] = useState<Record<string, string[]>>({});
   useEffect(() => {
     if (open) {
@@ -70,15 +70,47 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, sep
   useEffect(() => {
     if (open) setDim(cfg.dim);
   }, [open, timeRange]);
-  const [endTime, setEndTime] = useState(() => {
+
+  // Special mode: 统计 + 反馈量 + (10/20/30分钟) — end time is locked, user adjusts start time, end = start + 24h
+  const lockEndMode =
+    alertType === "统计" &&
+    indicator === "反馈量" &&
+    (timeRange === "10分钟" || timeRange === "20分钟" || timeRange === "30分钟");
+
+  const [endTime, setEndTime] = useState(() => fmtDate(new Date()));
+  const [startTime, setStartTime] = useState(() => {
     const d = new Date();
-    return fmtDate(d);
-  });
-  const startTime = useMemo(() => {
-    const d = new Date(endTime.replace(" ", "T"));
     d.setDate(d.getDate() - 1);
     return fmtDate(d);
-  }, [endTime]);
+  });
+  useEffect(() => {
+    if (open) {
+      const e = new Date();
+      const s = new Date(e);
+      s.setDate(s.getDate() - 1);
+      setEndTime(fmtDate(e));
+      setStartTime(fmtDate(s));
+    }
+  }, [open]);
+
+  const onStartChange = (v: string) => {
+    const s = v.replace("T", " ");
+    setStartTime(s);
+    if (lockEndMode) {
+      const d = new Date(s.replace(" ", "T"));
+      d.setDate(d.getDate() + 1);
+      setEndTime(fmtDate(d));
+    }
+  };
+  const onEndChange = (v: string) => {
+    const e = v.replace("T", " ");
+    setEndTime(e);
+    if (!lockEndMode) {
+      const d = new Date(e.replace(" ", "T"));
+      d.setDate(d.getDate() - 1);
+      setStartTime(fmtDate(d));
+    }
+  };
 
   // Generate mock data based on dim
   const dimCfg = useMemo(() => {
