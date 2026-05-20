@@ -90,7 +90,17 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, ale
     if (open) {
       const e = new Date();
       const s = new Date(e);
-      s.setDate(s.getDate() - 1);
+      let offsetDays = 1;
+      if (statFeedback) {
+        if (timeRange === "1小时" || timeRange === "2小时" || timeRange === "3小时" || timeRange === "4小时" || timeRange === "5小时" || timeRange === "6小时") {
+          offsetDays = 14;
+        } else if (timeRange === "当日") {
+          offsetDays = 30;
+        } else if (timeRange === "本周") {
+          offsetDays = 70;
+        }
+      }
+      s.setDate(s.getDate() - offsetDays);
       setEndTime(fmtDate(e));
       setStartTime(fmtDate(s));
     }
