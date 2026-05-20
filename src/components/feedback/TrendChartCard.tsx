@@ -14,16 +14,20 @@ const dimMap: Record<string, { spanLabel: string; points: number; stepMs: number
   "10分钟": { spanLabel: "前24小时", points: 144, stepMs: 10 * 60 * 1000 },
   "20分钟": { spanLabel: "前24小时", points: 72, stepMs: 20 * 60 * 1000 },
   "30分钟": { spanLabel: "前24小时", points: 48, stepMs: 30 * 60 * 1000 },
-  "1小时":  { spanLabel: "前24小时", points: 24, stepMs: 60 * 60 * 1000 },
-  "2小时":  { spanLabel: "前24小时", points: 12, stepMs: 2 * 60 * 60 * 1000 },
-  "3小时":  { spanLabel: "前3天",   points: 24, stepMs: 3 * 60 * 60 * 1000 },
-  "4小时":  { spanLabel: "前3天",   points: 18, stepMs: 4 * 60 * 60 * 1000 },
-  "5小时":  { spanLabel: "前3天",   points: 14, stepMs: 5 * 60 * 60 * 1000 },
-  "6小时":  { spanLabel: "前3天",   points: 12, stepMs: 6 * 60 * 60 * 1000 },
+  "1小时":  { spanLabel: "前14天",  points: 336, stepMs: 60 * 60 * 1000 },
+  "2小时":  { spanLabel: "前14天",  points: 168, stepMs: 2 * 60 * 60 * 1000 },
+  "3小时":  { spanLabel: "前14天",  points: 112, stepMs: 3 * 60 * 60 * 1000 },
+  "4小时":  { spanLabel: "前14天",  points: 84,  stepMs: 4 * 60 * 60 * 1000 },
+  "5小时":  { spanLabel: "前14天",  points: 67,  stepMs: 5 * 60 * 60 * 1000 },
+  "6小时":  { spanLabel: "前14天",  points: 56,  stepMs: 6 * 60 * 60 * 1000 },
   "日":     { spanLabel: "前30天",  points: 30, stepMs: 24 * 60 * 60 * 1000 },
   "周":     { spanLabel: "前12周",  points: 12, stepMs: 7 * 24 * 60 * 60 * 1000 },
   "月":     { spanLabel: "前12月",  points: 12, stepMs: 30 * 24 * 60 * 60 * 1000 },
 };
+
+const isSubHour = (d: string) => d === "10分钟" || d === "20分钟" || d === "30分钟";
+const is1to6Hour = (d: string) =>
+  d === "1小时" || d === "2小时" || d === "3小时" || d === "4小时" || d === "5小时" || d === "6小时";
 
 function fmtTick(d: Date, dim: string) {
   const p = (n: number) => String(n).padStart(2, "0");
