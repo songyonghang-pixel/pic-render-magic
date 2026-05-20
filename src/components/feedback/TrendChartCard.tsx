@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from "react";
-import { Download } from "lucide-react";
+import { Download, Info } from "lucide-react";
 import { SingleSelect } from "./SingleSelect";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 const timeDimensionOptions = [
   { label: "10分钟" }, { label: "20分钟" }, { label: "30分钟" },
