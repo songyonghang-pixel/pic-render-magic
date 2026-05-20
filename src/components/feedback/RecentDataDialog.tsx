@@ -224,9 +224,13 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, ale
           </div>
           <div className="flex items-center gap-2">
             <span className="text-[13px] text-[hsl(var(--label-text))]">时间维度：</span>
-            <div className="w-32">
-              <SingleSelect options={timeDimensionOptions} value={dim} onChange={setDim} />
-            </div>
+            {statFeedback ? (
+              <span className="text-[13px] text-[hsl(var(--label-text))]">{dim}</span>
+            ) : (
+              <div className="w-32">
+                <SingleSelect options={timeDimensionOptions} value={dim} onChange={setDim} />
+              </div>
+            )}
           </div>
           <span className="text-[12px] text-[hsl(var(--muted-foreground))]">展示{dimCfg.spanLabel}内每{dim}的数据趋势</span>
           <div className="ml-auto flex items-center gap-2 px-3 py-1 rounded-sm bg-[hsl(var(--primary)/0.08)] border border-[hsl(var(--primary)/0.2)]">
