@@ -1,6 +1,7 @@
 import { useMemo, useRef, useState } from "react";
-import { Download } from "lucide-react";
+import { Download, Info } from "lucide-react";
 import { SingleSelect } from "./SingleSelect";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 
 const timeDimensionOptions = [
   { label: "10分钟" }, { label: "20分钟" }, { label: "30分钟" },
@@ -96,6 +97,16 @@ export const TrendChartCard = () => {
           <div className="w-32">
             <SingleSelect options={timeDimensionOptions} value={dim} onChange={setDim} />
           </div>
+          {(dim === "10分钟" || dim === "20分钟" || dim === "30分钟") && (
+            <HoverCard openDelay={100}>
+              <HoverCardTrigger asChild>
+                <Info className="w-4 h-4 text-[hsl(var(--muted-foreground))] cursor-help" />
+              </HoverCardTrigger>
+              <HoverCardContent side="top" className="w-auto max-w-xs text-[12px]">
+                时间维度为30分钟内时，最长可展示反馈时间的结束时间点往前24小时的数据
+              </HoverCardContent>
+            </HoverCard>
+          )}
         </div>
         <div className="ml-auto flex items-center gap-2 px-3 py-1 rounded-sm bg-[hsl(var(--primary)/0.08)] border border-[hsl(var(--primary)/0.2)]">
           <span className="text-[12px] text-[hsl(var(--muted-foreground))]">平均值（每{dim}）：</span>
