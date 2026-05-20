@@ -19,6 +19,7 @@ interface Props {
   onOpenChange: (v: boolean) => void;
   timeRange: string; // selected time range from trigger condition
   indicator: string;
+  alertType?: string;
   separateFilters?: SeparateFilter[];
 }
 
