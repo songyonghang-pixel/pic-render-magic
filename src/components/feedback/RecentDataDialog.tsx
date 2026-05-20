@@ -71,11 +71,14 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, ale
     if (open) setDim(cfg.dim);
   }, [open, timeRange]);
 
-  // Special mode: 统计 + 反馈量 + (10/20/30分钟) — end time is locked, user adjusts start time, end = start + 24h
-  const lockEndMode =
-    alertType === "统计" &&
-    indicator === "反馈量" &&
-    (dim === "10分钟" || dim === "20分钟" || dim === "30分钟");
+  // Lock-end modes for 统计 + 反馈量:
+  //  - sub-hour dims (10/20/30分钟) -> end = start + 1 day
+  //  - 1-6小时 dims -> end = start + 14 days
+  const isSubHour = dim === "10分钟" || dim === "20分钟" || dim === "30分钟";
+  const is1to6Hour = dim === "1小时" || dim === "2小时" || dim === "3小时" || dim === "4小时" || dim === "5小时" || dim === "6小时";
+  const statFeedback = alertType === "统计" && indicator === "反馈量";
+  const lockEndMode = statFeedback && (isSubHour || is1to6Hour);
+  const lockOffsetDays = is1to6Hour ? 14 : 1;
 
   const [endTime, setEndTime] = useState(() => fmtDate(new Date()));
   const [startTime, setStartTime] = useState(() => {
@@ -98,7 +101,7 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, ale
     setStartTime(s);
     if (lockEndMode) {
       const d = new Date(s.replace(" ", "T"));
-      d.setDate(d.getDate() + 1);
+      d.setDate(d.getDate() + lockOffsetDays);
       setEndTime(fmtDate(d));
     }
   };
