@@ -30,6 +30,12 @@ const calcMethodOptions = [
   { label: "较平均值的增长率" },
 ];
 const percentCalcMethods = ["环比增长率", "较平均值的增长率"];
+const productTeamOptions = [
+  { label: "三方专项" }, { label: "通信与互联" }, { label: "小布记忆" },
+  { label: "DFX&底软" }, { label: "媒体与游戏" }, { label: "中国区" },
+  { label: "短距" }, { label: "系统安全" }, { label: "通信协议" },
+  { label: "平台安全" }, { label: "应用安全" },
+];
 import {
   aiTagOptions,
   brandOptions,
