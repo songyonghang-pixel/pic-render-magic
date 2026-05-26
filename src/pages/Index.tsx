@@ -163,6 +163,16 @@ const Index = () => {
           <Field label="规则名称" required>
             <TextInput key={ruleNameKey} value={ruleName} placeholder="请输入规则名称" className="max-w-xl" />
           </Field>
+          <Field label="产品团队" className="mt-3">
+            <div className="flex items-center gap-2 max-w-xl">
+              <div className="flex-1">
+                <MultiSelect placeholder="请选择产品团队" options={productTeamOptions} />
+              </div>
+              <span title="该选项近用作预警方便规则归属和后续查询，不过滤任何预警数据" className="cursor-help">
+                <HelpCircle className="w-3.5 h-3.5 text-[hsl(var(--placeholder))]" />
+              </span>
+            </div>
+          </Field>
         </Section>
 
         {/* 预警类型 */}
