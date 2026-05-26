@@ -64,6 +64,7 @@ const Index = () => {
   const [aiTagLevel, setAiTagLevel] = useState("二级标签");
   const [marketingSep, setMarketingSep] = useState(false);
   const [countrySep, setCountrySep] = useState(false);
+  const [perLevelNotify, setPerLevelNotify] = useState(false);
 
   type SubCond = { id: number; indicator: string; timeRange: string; calcMethod: string };
   type StatCond = { id: number; level: string; subs: SubCond[] };
@@ -459,6 +460,25 @@ const Index = () => {
                         </button>
                       )}
                     </div>
+                    {perLevelNotify && statConds.length > 1 && (
+                      <div className="mt-3 pl-20 space-y-3 border-t border-dashed border-border pt-3">
+                        <Field label="推送方式" required labelWidth="w-20">
+                          <div className="flex items-center gap-6 h-8">
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input type="checkbox" defaultChecked className="w-3.5 h-3.5 accent-primary" />
+                              <span className="text-[13px] text-primary">TT</span>
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input type="checkbox" className="w-3.5 h-3.5 accent-primary" />
+                              <span className="text-[13px] text-[hsl(var(--label-text))]">TT群组</span>
+                            </label>
+                          </div>
+                        </Field>
+                        <Field label="通知人员" required labelWidth="w-20">
+                          <div className="max-w-md"><SelectInput placeholder="请选择" /></div>
+                        </Field>
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -510,22 +530,45 @@ const Index = () => {
 
 
         {/* 预警通知设置 */}
-        <Section title="预警通知设置">
-          <Field label="推送方式" required>
-            <div className="flex items-center gap-6 h-8">
+        <Section
+          title="预警通知设置"
+          extra={
+            alertType === "统计" && statConds.length > 1 ? (
               <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" defaultChecked className="w-3.5 h-3.5 accent-primary" />
-                <span className="text-[13px] text-primary">TT</span>
+                <input
+                  type="checkbox"
+                  checked={perLevelNotify}
+                  onChange={(e) => setPerLevelNotify(e.target.checked)}
+                  className="w-3.5 h-3.5 accent-primary"
+                />
+                <span className="text-[13px] text-[hsl(var(--label-text))]">是否按级别分别设置</span>
               </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input type="checkbox" className="w-3.5 h-3.5 accent-primary" />
-                <span className="text-[13px] text-[hsl(var(--label-text))]">TT群组</span>
-              </label>
+            ) : null
+          }
+        >
+          {perLevelNotify && alertType === "统计" && statConds.length > 1 ? (
+            <div className="text-[13px] text-[hsl(var(--placeholder))]">
+              已开启按级别分别设置，请在上方"触发条件设置"中为每个级别分别配置推送方式与通知人员。
             </div>
-          </Field>
-          <Field label="通知人员" required>
-            <SelectInput placeholder="请选择" />
-          </Field>
+          ) : (
+            <>
+              <Field label="推送方式" required>
+                <div className="flex items-center gap-6 h-8">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" defaultChecked className="w-3.5 h-3.5 accent-primary" />
+                    <span className="text-[13px] text-primary">TT</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" className="w-3.5 h-3.5 accent-primary" />
+                    <span className="text-[13px] text-[hsl(var(--label-text))]">TT群组</span>
+                  </label>
+                </div>
+              </Field>
+              <Field label="通知人员" required>
+                <SelectInput placeholder="请选择" />
+              </Field>
+            </>
+          )}
         </Section>
       </div>
 
