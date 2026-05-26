@@ -64,6 +64,7 @@ const Index = () => {
   const [aiTagLevel, setAiTagLevel] = useState("二级标签");
   const [marketingSep, setMarketingSep] = useState(false);
   const [countrySep, setCountrySep] = useState(false);
+  const [perLevelNotify, setPerLevelNotify] = useState(false);
 
   type SubCond = { id: number; indicator: string; timeRange: string; calcMethod: string };
   type StatCond = { id: number; level: string; subs: SubCond[] };
