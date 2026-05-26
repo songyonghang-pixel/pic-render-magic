@@ -86,7 +86,7 @@ export const AlertRules = ({ onCreate, onCopy }: { onCreate: () => void; onCopy?
           <table className="w-full text-[13px]">
             <thead>
               <tr className="bg-[hsl(var(--accent))] text-[hsl(var(--label-text))]">
-                {["规则ID", "规则名称", "预警类型", "创建时间", "创建人员", "规则更新时间", "规则更新人", "预警次数", "启用状态", "操作"].map((h) => (
+                {["规则ID", "规则名称", "预警类型", "创建时间", "创建人员", "规则更新时间", "规则更新人", "产品团队", "预警次数", "启用状态", "操作"].map((h) => (
                   <th key={h} className="text-left py-3 px-4 font-medium">{h}</th>
                 ))}
               </tr>
