@@ -460,6 +460,25 @@ const Index = () => {
                         </button>
                       )}
                     </div>
+                    {perLevelNotify && statConds.length > 1 && (
+                      <div className="mt-3 pl-20 space-y-3 border-t border-dashed border-border pt-3">
+                        <Field label="推送方式" required labelWidth="w-20">
+                          <div className="flex items-center gap-6 h-8">
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input type="checkbox" defaultChecked className="w-3.5 h-3.5 accent-primary" />
+                              <span className="text-[13px] text-primary">TT</span>
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input type="checkbox" className="w-3.5 h-3.5 accent-primary" />
+                              <span className="text-[13px] text-[hsl(var(--label-text))]">TT群组</span>
+                            </label>
+                          </div>
+                        </Field>
+                        <Field label="通知人员" required labelWidth="w-20">
+                          <div className="max-w-md"><SelectInput placeholder="请选择" /></div>
+                        </Field>
+                      </div>
+                    )}
                   </div>
                 );
               })}
