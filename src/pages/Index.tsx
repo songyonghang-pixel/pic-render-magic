@@ -20,6 +20,7 @@ const timeRangeOptions = [
   { label: "4小时" }, { label: "5小时" }, { label: "6小时" },
   { label: "当日" }, { label: "本周" },
 ];
+const timeRangeOptionsStat = [...timeRangeOptions, { label: "昨日" }];
 const compareOperators = [{ label: "大于" }, { label: "大于等于" }, { label: "小于" }, { label: "小于等于" }];
 const calcMethodOptions = [
   { label: "值" },
