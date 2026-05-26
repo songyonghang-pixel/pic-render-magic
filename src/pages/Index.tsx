@@ -20,6 +20,7 @@ const timeRangeOptions = [
   { label: "4小时" }, { label: "5小时" }, { label: "6小时" },
   { label: "当日" }, { label: "本周" },
 ];
+const timeRangeOptionsStat = [...timeRangeOptions, { label: "昨日" }];
 const compareOperators = [{ label: "大于" }, { label: "大于等于" }, { label: "小于" }, { label: "小于等于" }];
 const calcMethodOptions = [
   { label: "值" },
@@ -378,7 +379,7 @@ const Index = () => {
                               <div className="flex items-center gap-3 flex-wrap">
                                 <div className="flex items-center gap-3 flex-wrap flex-1 min-w-[700px]">
                                   <div className="w-[180px]"><SingleSelect placeholder="请选择预警指标" options={warningIndicatorOptions} value={sub.indicator} onChange={(v) => updateSub(cond.id, sub.id, { indicator: v })} /></div>
-                                  <div className="w-[180px]"><SingleSelect placeholder="请选择时间范围" options={timeRangeOptions} value={sub.timeRange} onChange={(v) => updateSub(cond.id, sub.id, { timeRange: v })} /></div>
+                                  <div className="w-[180px]"><SingleSelect placeholder="请选择时间范围" options={timeRangeOptionsStat} value={sub.timeRange} onChange={(v) => updateSub(cond.id, sub.id, { timeRange: v })} /></div>
                                   {showCalcMethod && (
                                     <>
                                       <div className="w-[180px]"><SingleSelect placeholder="请选择计算方式" options={calcMethodOptions} value={sub.calcMethod} onChange={(v) => updateSub(cond.id, sub.id, { calcMethod: v })} /></div>
