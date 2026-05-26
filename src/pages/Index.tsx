@@ -30,6 +30,12 @@ const calcMethodOptions = [
   { label: "较平均值的增长率" },
 ];
 const percentCalcMethods = ["环比增长率", "较平均值的增长率"];
+const productTeamOptions = [
+  { label: "三方专项" }, { label: "通信与互联" }, { label: "小布记忆" },
+  { label: "DFX&底软" }, { label: "媒体与游戏" }, { label: "中国区" },
+  { label: "短距" }, { label: "系统安全" }, { label: "通信协议" },
+  { label: "平台安全" }, { label: "应用安全" },
+];
 import {
   aiTagOptions,
   brandOptions,
@@ -162,6 +168,16 @@ const Index = () => {
         <Section title="预警规则名称">
           <Field label="规则名称" required>
             <TextInput key={ruleNameKey} value={ruleName} placeholder="请输入规则名称" className="max-w-xl" />
+          </Field>
+          <Field label="产品团队" className="mt-3">
+            <div className="flex items-center gap-2 max-w-xl">
+              <div className="flex-1">
+                <MultiSelect placeholder="请选择产品团队" options={productTeamOptions} />
+              </div>
+              <span title="该选项近用作预警方便规则归属和后续查询，不过滤任何预警数据" className="cursor-help">
+                <HelpCircle className="w-3.5 h-3.5 text-[hsl(var(--placeholder))]" />
+              </span>
+            </div>
           </Field>
         </Section>
 

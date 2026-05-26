@@ -2,18 +2,26 @@ import { ChevronRight, Plus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { SingleSelect } from "@/components/feedback/SingleSelect";
+import { MultiSelect } from "@/components/feedback/MultiSelect";
+
+const productTeamOptions = [
+  { label: "三方专项" }, { label: "通信与互联" }, { label: "小布记忆" },
+  { label: "DFX&底软" }, { label: "媒体与游戏" }, { label: "中国区" },
+  { label: "短距" }, { label: "系统安全" }, { label: "通信协议" },
+  { label: "平台安全" }, { label: "应用安全" },
+];
 
 const rows = [
-  { id: 214, name: "测试ai预警2006", type: "实时", ct: "2026-04-29 20:08:12", cu: "彭海林(W9074737)", ut: "2026-04-29 20:21:33", uu: "宋永航(80261667)", count: 5, enabled: false },
-  { id: 209, name: "16.1设置L3舆情预警", type: "统计", ct: "2026-04-29 15:39:24", cu: "叶春(80200542)", ut: "2026-04-29 15:39:37", uu: "叶春(80200542)", count: 0, enabled: true },
-  { id: 204, name: "UI动效_16.1多彩引擎舆情...", type: "统计", ct: "2026-04-29 10:40:58", cu: "游皓翔(80397472)", ut: "2026-04-29 16:03:29", uu: "游皓翔(80397472)", count: 0, enabled: true },
-  { id: 203, name: "个性化16.1预警", type: "实时", ct: "2026-04-29 10:29:25", cu: "程丽洁(80264100)", ut: "2026-04-29 16:15:33", uu: "程丽洁(80264100)", count: 5, enabled: true },
-  { id: 202, name: "UI动效_16.1无缝动画舆...", type: "实时", ct: "2026-04-29 10:29:24", cu: "游皓翔(80397472)", ut: "2026-04-29 16:04:07", uu: "游皓翔(80397472)", count: 0, enabled: true },
-  { id: 199, name: "桌面快稳省严重问题预警", type: "实时", ct: "2026-04-29 00:35:52", cu: "杨柳(80341332)", ut: "2026-04-29 00:49:09", uu: "杨柳(80341332)", count: 2, enabled: true },
-  { id: 198, name: "桌面近期任务严重问题预警", type: "实时", ct: "2026-04-29 00:34:15", cu: "杨柳(80341332)", ut: "2026-04-29 00:49:10", uu: "杨柳(80341332)", count: 0, enabled: true },
-  { id: 190, name: "桌面布局严重问题预警", type: "实时", ct: "2026-04-28 12:15:45", cu: "杨柳(80341332)", ut: "2026-04-29 15:14:12", uu: "杨柳(80341332)", count: 3, enabled: true },
-  { id: 188, name: "桌面S级严重问题预警", type: "实时", ct: "2026-04-28 12:11:00", cu: "杨柳(80341332)", ut: "2026-04-28 16:18:11", uu: "杨柳(80341332)", count: 0, enabled: true },
-  { id: 182, name: "桌面舆情预警监控", type: "统计", ct: "2026-04-27 20:52:58", cu: "杨柳(80341332)", ut: "2026-04-29 11:41:46", uu: "杨柳(80341332)", count: 2, enabled: true },
+  { id: 214, name: "测试ai预警2006", type: "实时", ct: "2026-04-29 20:08:12", cu: "彭海林(W9074737)", ut: "2026-04-29 20:21:33", uu: "宋永航(80261667)", team: "通信与互联", count: 5, enabled: false },
+  { id: 209, name: "16.1设置L3舆情预警", type: "统计", ct: "2026-04-29 15:39:24", cu: "叶春(80200542)", ut: "2026-04-29 15:39:37", uu: "叶春(80200542)", team: "系统安全", count: 0, enabled: true },
+  { id: 204, name: "UI动效_16.1多彩引擎舆情...", type: "统计", ct: "2026-04-29 10:40:58", cu: "游皓翔(80397472)", ut: "2026-04-29 16:03:29", uu: "游皓翔(80397472)", team: "媒体与游戏", count: 0, enabled: true },
+  { id: 203, name: "个性化16.1预警", type: "实时", ct: "2026-04-29 10:29:25", cu: "程丽洁(80264100)", ut: "2026-04-29 16:15:33", uu: "程丽洁(80264100)", team: "中国区", count: 5, enabled: true },
+  { id: 202, name: "UI动效_16.1无缝动画舆...", type: "实时", ct: "2026-04-29 10:29:24", cu: "游皓翔(80397472)", ut: "2026-04-29 16:04:07", uu: "游皓翔(80397472)", team: "媒体与游戏", count: 0, enabled: true },
+  { id: 199, name: "桌面快稳省严重问题预警", type: "实时", ct: "2026-04-29 00:35:52", cu: "杨柳(80341332)", ut: "2026-04-29 00:49:09", uu: "杨柳(80341332)", team: "DFX&底软", count: 2, enabled: true },
+  { id: 198, name: "桌面近期任务严重问题预警", type: "实时", ct: "2026-04-29 00:34:15", cu: "杨柳(80341332)", ut: "2026-04-29 00:49:10", uu: "杨柳(80341332)", team: "DFX&底软", count: 0, enabled: true },
+  { id: 190, name: "桌面布局严重问题预警", type: "实时", ct: "2026-04-28 12:15:45", cu: "杨柳(80341332)", ut: "2026-04-29 15:14:12", uu: "杨柳(80341332)", team: "平台安全", count: 3, enabled: true },
+  { id: 188, name: "桌面S级严重问题预警", type: "实时", ct: "2026-04-28 12:11:00", cu: "杨柳(80341332)", ut: "2026-04-28 16:18:11", uu: "杨柳(80341332)", team: "应用安全", count: 0, enabled: true },
+  { id: 182, name: "桌面舆情预警监控", type: "统计", ct: "2026-04-27 20:52:58", cu: "杨柳(80341332)", ut: "2026-04-29 11:41:46", uu: "杨柳(80341332)", team: "通信协议", count: 2, enabled: true },
 ];
 
 export const AlertRules = ({ onCreate, onCopy }: { onCreate: () => void; onCopy?: (name: string, type: string) => void }) => {
@@ -57,6 +65,7 @@ export const AlertRules = ({ onCreate, onCopy }: { onCreate: () => void; onCopy?
             <Filter label="创建时间"><DateRange /></Filter>
             <Filter label="创建人员"><Input placeholder="请输入创建人员" /></Filter>
             <Filter label="状态"><Select placeholder="请选择状态" /></Filter>
+            <Filter label="产品团队"><MultiSelect placeholder="请选择产品团队" options={productTeamOptions} /></Filter>
           </div>
           <div className="border-t border-border mt-5 pt-4 flex justify-end gap-2">
             <button className="h-8 px-5 rounded-md bg-primary text-primary-foreground text-[13px]">查询</button>
@@ -77,7 +86,7 @@ export const AlertRules = ({ onCreate, onCopy }: { onCreate: () => void; onCopy?
           <table className="w-full text-[13px]">
             <thead>
               <tr className="bg-[hsl(var(--accent))] text-[hsl(var(--label-text))]">
-                {["规则ID", "规则名称", "预警类型", "创建时间", "创建人员", "规则更新时间", "规则更新人", "预警次数", "启用状态", "操作"].map((h) => (
+                {["规则ID", "规则名称", "预警类型", "创建时间", "创建人员", "规则更新时间", "规则更新人", "产品团队", "预警次数", "启用状态", "操作"].map((h) => (
                   <th key={h} className="text-left py-3 px-4 font-medium">{h}</th>
                 ))}
               </tr>
@@ -92,6 +101,7 @@ export const AlertRules = ({ onCreate, onCopy }: { onCreate: () => void; onCopy?
                   <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.cu}</td>
                   <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.ut}</td>
                   <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.uu}</td>
+                  <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.team}</td>
                   <td className={`py-3 px-4 ${r.count > 0 ? "text-primary" : "text-[hsl(var(--label-text))]"}`}>{r.count}</td>
                   <td className="py-3 px-4">
                     <Toggle on={r.enabled} />
