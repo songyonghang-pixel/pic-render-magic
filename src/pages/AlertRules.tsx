@@ -101,6 +101,7 @@ export const AlertRules = ({ onCreate, onCopy }: { onCreate: () => void; onCopy?
                   <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.cu}</td>
                   <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.ut}</td>
                   <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.uu}</td>
+                  <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.team}</td>
                   <td className={`py-3 px-4 ${r.count > 0 ? "text-primary" : "text-[hsl(var(--label-text))]"}`}>{r.count}</td>
                   <td className="py-3 px-4">
                     <Toggle on={r.enabled} />
