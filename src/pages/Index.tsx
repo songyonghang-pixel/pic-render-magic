@@ -379,7 +379,7 @@ const Index = () => {
                               <div className="flex items-center gap-3 flex-wrap">
                                 <div className="flex items-center gap-3 flex-wrap flex-1 min-w-[700px]">
                                   <div className="w-[180px]"><SingleSelect placeholder="请选择预警指标" options={warningIndicatorOptions} value={sub.indicator} onChange={(v) => updateSub(cond.id, sub.id, { indicator: v })} /></div>
-                                  <div className="w-[180px]"><SingleSelect placeholder="请选择时间范围" options={timeRangeOptions} value={sub.timeRange} onChange={(v) => updateSub(cond.id, sub.id, { timeRange: v })} /></div>
+                                  <div className="w-[180px]"><SingleSelect placeholder="请选择时间范围" options={timeRangeOptionsStat} value={sub.timeRange} onChange={(v) => updateSub(cond.id, sub.id, { timeRange: v })} /></div>
                                   {showCalcMethod && (
                                     <>
                                       <div className="w-[180px]"><SingleSelect placeholder="请选择计算方式" options={calcMethodOptions} value={sub.calcMethod} onChange={(v) => updateSub(cond.id, sub.id, { calcMethod: v })} /></div>
