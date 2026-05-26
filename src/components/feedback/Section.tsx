@@ -8,7 +8,7 @@ interface SectionProps {
 
 export const Section = ({ title, children, extra }: SectionProps) => (
   <div className="mb-4">
-    <div className="flex items-center justify-between mb-3">
+    <div className="flex items-center gap-3 mb-3">
       <h3 className="text-[15px] font-semibold text-[hsl(var(--section-title))]">{title}</h3>
       {extra && <div className="flex items-center">{extra}</div>}
     </div>
