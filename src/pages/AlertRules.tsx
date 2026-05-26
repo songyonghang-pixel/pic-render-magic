@@ -65,6 +65,7 @@ export const AlertRules = ({ onCreate, onCopy }: { onCreate: () => void; onCopy?
             <Filter label="创建时间"><DateRange /></Filter>
             <Filter label="创建人员"><Input placeholder="请输入创建人员" /></Filter>
             <Filter label="状态"><Select placeholder="请选择状态" /></Filter>
+            <Filter label="产品团队"><MultiSelect placeholder="请选择产品团队" options={productTeamOptions} /></Filter>
           </div>
           <div className="border-t border-border mt-5 pt-4 flex justify-end gap-2">
             <button className="h-8 px-5 rounded-md bg-primary text-primary-foreground text-[13px]">查询</button>
