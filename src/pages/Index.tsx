@@ -30,6 +30,12 @@ const calcMethodOptions = [
   { label: "较平均值的增长率" },
 ];
 const percentCalcMethods = ["环比增长率", "较平均值的增长率"];
+const multiPushTimeRanges = ["当日", "本周", "昨日"];
+const monitorFreqOptions = [
+  { label: "10分钟" }, { label: "20分钟" }, { label: "30分钟" },
+  { label: "1小时" }, { label: "2小时" }, { label: "3小时" },
+  { label: "4小时" }, { label: "5小时" }, { label: "6小时" },
+];
 const productTeamOptions = [
   { label: "三方专项" }, { label: "通信与互联" }, { label: "小布记忆" },
   { label: "DFX&底软" }, { label: "媒体与游戏" }, { label: "中国区" },
@@ -71,6 +77,7 @@ const Index = () => {
   const [marketingSep, setMarketingSep] = useState(false);
   const [countrySep, setCountrySep] = useState(false);
   const [perLevelNotify, setPerLevelNotify] = useState(false);
+  const [monitorFreq, setMonitorFreq] = useState<string>("");
 
   type SubCond = { id: number; indicator: string; timeRange: string; calcMethod: string };
   type StatCond = { id: number; level: string; subs: SubCond[] };
@@ -476,7 +483,9 @@ const Index = () => {
                         </button>
                       )}
                     </div>
-                    {perLevelNotify && statConds.length > 1 && (
+                    {perLevelNotify && statConds.length > 1 && (() => {
+                      const showMultiPush = cond.subs.some((s) => multiPushTimeRanges.includes(s.timeRange));
+                      return (
                       <div className="mt-3 pl-20 space-y-3 border-t border-dashed border-border pt-3">
                         <Field label="推送方式" required labelWidth="w-20">
                           <div className="flex items-center gap-6 h-8">
@@ -488,13 +497,23 @@ const Index = () => {
                               <input type="checkbox" className="w-3.5 h-3.5 accent-primary" />
                               <span className="text-[13px] text-[hsl(var(--label-text))]">TT群组</span>
                             </label>
+                            {showMultiPush && (
+                              <label className="flex items-center gap-1.5 cursor-pointer">
+                                <span className="text-[13px] text-[hsl(var(--label-text))]">多次推送</span>
+                                <span title="当日、本周、昨日情况下，若达到触发条件将会根据监控频次多次推送" className="cursor-help inline-flex">
+                                  <HelpCircle className="w-3.5 h-3.5 text-[hsl(var(--placeholder))]" />
+                                </span>
+                                <input type="checkbox" className="w-3.5 h-3.5 accent-primary ml-1" />
+                              </label>
+                            )}
                           </div>
                         </Field>
                         <Field label="通知人员" required labelWidth="w-20">
                           <div className="max-w-md"><SelectInput placeholder="请选择" /></div>
                         </Field>
                       </div>
-                    )}
+                      );
+                    })()}
                   </div>
                 );
               })}
@@ -563,11 +582,27 @@ const Index = () => {
           }
         >
           {perLevelNotify && alertType === "统计" && statConds.length > 1 ? (
-            <div className="text-[13px] text-[hsl(var(--placeholder))]">
-              已开启按级别分别设置，请在上方"触发条件设置"中为每个级别分别配置推送方式与通知人员。
-            </div>
+            <>
+              {alertType === "统计" && (
+                <Field label="监控频次" required>
+                  <div className="max-w-[200px]">
+                    <SingleSelect placeholder="请选择监控频次" options={monitorFreqOptions} value={monitorFreq} onChange={setMonitorFreq} />
+                  </div>
+                </Field>
+              )}
+              <div className="text-[13px] text-[hsl(var(--placeholder))]">
+                已开启按级别分别设置，请在上方"触发条件设置"中为每个级别分别配置推送方式与通知人员。
+              </div>
+            </>
           ) : (
             <>
+              {alertType === "统计" && (
+                <Field label="监控频次" required>
+                  <div className="max-w-[200px]">
+                    <SingleSelect placeholder="请选择监控频次" options={monitorFreqOptions} value={monitorFreq} onChange={setMonitorFreq} />
+                  </div>
+                </Field>
+              )}
               <Field label="推送方式" required>
                 <div className="flex items-center gap-6 h-8">
                   <label className="flex items-center gap-2 cursor-pointer">
@@ -578,6 +613,15 @@ const Index = () => {
                     <input type="checkbox" className="w-3.5 h-3.5 accent-primary" />
                     <span className="text-[13px] text-[hsl(var(--label-text))]">TT群组</span>
                   </label>
+                  {alertType === "统计" && statConds.some((c) => c.subs.some((s) => multiPushTimeRanges.includes(s.timeRange))) && (
+                    <label className="flex items-center gap-1.5 cursor-pointer">
+                      <span className="text-[13px] text-[hsl(var(--label-text))]">多次推送</span>
+                      <span title="当日、本周、昨日情况下，若达到触发条件将会根据监控频次多次推送" className="cursor-help inline-flex">
+                        <HelpCircle className="w-3.5 h-3.5 text-[hsl(var(--placeholder))]" />
+                      </span>
+                      <input type="checkbox" className="w-3.5 h-3.5 accent-primary ml-1" />
+                    </label>
+                  )}
                 </div>
               </Field>
               <Field label="通知人员" required>
