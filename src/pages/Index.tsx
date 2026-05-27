@@ -483,9 +483,7 @@ const Index = () => {
                         </button>
                       )}
                     </div>
-                    {perLevelNotify && statConds.length > 1 && (() => {
-                      const showMultiPush = cond.subs.some((s) => multiPushTimeRanges.includes(s.timeRange));
-                      return (
+                    {perLevelNotify && statConds.length > 1 && (
                       <div className="mt-3 pl-20 space-y-3 border-t border-dashed border-border pt-3">
                         <Field label="推送方式" required labelWidth="w-20">
                           <div className="flex items-center gap-6 h-8">
@@ -497,23 +495,13 @@ const Index = () => {
                               <input type="checkbox" className="w-3.5 h-3.5 accent-primary" />
                               <span className="text-[13px] text-[hsl(var(--label-text))]">TT群组</span>
                             </label>
-                            {showMultiPush && (
-                              <label className="flex items-center gap-1.5 cursor-pointer">
-                                <span className="text-[13px] text-[hsl(var(--label-text))]">多次推送</span>
-                                <span title="当日、本周、昨日情况下，若达到触发条件将会根据监控频次多次推送" className="cursor-help inline-flex">
-                                  <HelpCircle className="w-3.5 h-3.5 text-[hsl(var(--placeholder))]" />
-                                </span>
-                                <input type="checkbox" className="w-3.5 h-3.5 accent-primary ml-1" />
-                              </label>
-                            )}
                           </div>
                         </Field>
                         <Field label="通知人员" required labelWidth="w-20">
                           <div className="max-w-md"><SelectInput placeholder="请选择" /></div>
                         </Field>
                       </div>
-                      );
-                    })()}
+                    )}
                   </div>
                 );
               })}
