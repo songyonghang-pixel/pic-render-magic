@@ -30,6 +30,12 @@ const calcMethodOptions = [
   { label: "较平均值的增长率" },
 ];
 const percentCalcMethods = ["环比增长率", "较平均值的增长率"];
+const multiPushTimeRanges = ["当日", "本周", "昨日"];
+const monitorFreqOptions = [
+  { label: "10分钟" }, { label: "20分钟" }, { label: "30分钟" },
+  { label: "1小时" }, { label: "2小时" }, { label: "3小时" },
+  { label: "4小时" }, { label: "5小时" }, { label: "6小时" },
+];
 const productTeamOptions = [
   { label: "三方专项" }, { label: "通信与互联" }, { label: "小布记忆" },
   { label: "DFX&底软" }, { label: "媒体与游戏" }, { label: "中国区" },
