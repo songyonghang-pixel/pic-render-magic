@@ -6,6 +6,7 @@ import { CascadeMultiSelect } from "@/components/feedback/CascadeMultiSelect";
 import { SeparateMonitor } from "@/components/feedback/SeparateMonitor";
 import { RecentDataDialog } from "@/components/feedback/RecentDataDialog";
 import { AiClusterTagDialog } from "@/components/feedback/AiClusterTagDialog";
+import { AiCreateRuleDialog, AiMsg, AiRuleFilters } from "@/components/feedback/AiCreateRuleDialog";
 
 const aiTagLevels = ["一级标签", "二级标签", "三级标签", "四级标签", "五级标签"];
 
@@ -55,7 +56,7 @@ import {
   warningImportanceOptions,
   fanCountOperators,
 } from "@/components/feedback/filterData";
-import { ChevronRight, Plus, Copy, HelpCircle, Trash2 } from "lucide-react";
+import { ChevronRight, Plus, Copy, HelpCircle, Trash2, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 import FeedbackDataAnalysis from "./FeedbackDataAnalysis";
 import AlertRules from "./AlertRules";
@@ -78,6 +79,39 @@ const Index = () => {
   const [countrySep, setCountrySep] = useState(false);
   const [perLevelNotify, setPerLevelNotify] = useState(false);
   const [monitorFreq, setMonitorFreq] = useState<string>("");
+
+  // AI-controlled filter fields
+  const [feedbackTypeVals, setFeedbackTypeVals] = useState<string[]>([]);
+  const [sentimentVals, setSentimentVals] = useState<string[]>([]);
+  const [alertLevelVal, setAlertLevelVal] = useState<string>("");
+
+  // AI create rule dialog
+  const [aiDialogOpen, setAiDialogOpen] = useState(false);
+  const [aiMessages, setAiMessages] = useState<AiMsg[]>([]);
+
+  const handleAiApply = (f: AiRuleFilters) => {
+    if (f.alertType) setAlertType(f.alertType);
+    if (f.aiTags) setAiTagVals(f.aiTags);
+    if (f.marketingNames) setMarketingVals(f.marketingNames);
+    if (f.countries) setCountryVals(f.countries);
+    if (f.feedbackTypes) setFeedbackTypeVals(f.feedbackTypes);
+    if (f.sentiments) setSentimentVals(f.sentiments);
+    if (f.alertLevel) setAlertLevelVal(f.alertLevel);
+    if (f.triggerConditions && f.triggerConditions.length > 0) {
+      setStatConds(
+        f.triggerConditions.map((c, i) => ({
+          id: Date.now() + i,
+          level: c.level || "",
+          subs: (c.subs && c.subs.length > 0 ? c.subs : [{}]).map((s, j) => ({
+            id: Date.now() + i * 100 + j + 1,
+            indicator: s.indicator || "",
+            timeRange: s.timeRange || "",
+            calcMethod: s.calcMethod || "",
+          })),
+        }))
+      );
+    }
+  };
 
   type SubCond = { id: number; indicator: string; timeRange: string; calcMethod: string };
   type StatCond = { id: number; level: string; subs: SubCond[] };
@@ -172,7 +206,18 @@ const Index = () => {
       {/* Form */}
       <div className="px-6 py-5 pb-24">
         {/* 预警规则名称 */}
-        <Section title="预警规则名称">
+        <Section
+          title="预警规则名称"
+          extra={
+            <button
+              onClick={() => setAiDialogOpen(true)}
+              className="h-7 px-3 text-[12px] rounded-sm border border-primary text-primary bg-gradient-to-r from-[hsl(var(--primary)/0.08)] to-transparent hover:bg-primary hover:text-primary-foreground transition-colors inline-flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              AI 创建预警规则
+            </button>
+          }
+        >
           <Field label="规则名称" required>
             <TextInput key={ruleNameKey} value={ruleName} placeholder="请输入规则名称" className="max-w-xl" />
           </Field>
@@ -307,10 +352,10 @@ const Index = () => {
               <div className="flex-1 space-y-3">
                 <div className="grid grid-cols-3 gap-4">
                   <Field label="反馈类型" labelWidth="w-20">
-                    <MultiSelect placeholder="请选择反馈类型" options={feedbackTypeOptions} />
+                    <MultiSelect placeholder="请选择反馈类型" options={feedbackTypeOptions} value={feedbackTypeVals} onChange={setFeedbackTypeVals} />
                   </Field>
                   <Field label="用户情感" labelWidth="w-20">
-                    <MultiSelect placeholder="请选择用户情感" options={sentimentOptions} />
+                    <MultiSelect placeholder="请选择用户情感" options={sentimentOptions} value={sentimentVals} onChange={setSentimentVals} />
                   </Field>
                   <Field label="社媒类型" labelWidth="w-20">
                     <MultiSelect placeholder="请选择社媒类型" options={socialMediaTypeOptions} />
@@ -372,7 +417,7 @@ const Index = () => {
           {alertType !== "统计" && (
             <Field label="预警级别" required>
               <div className="max-w-md">
-                <SingleSelect placeholder="请选择预警级别" options={alertLevelOptions} />
+                <SingleSelect placeholder="请选择预警级别" options={alertLevelOptions} value={alertLevelVal} onChange={setAlertLevelVal} />
               </div>
             </Field>
           )}
@@ -624,6 +669,13 @@ const Index = () => {
       </div>
         </>
       )}
+      <AiCreateRuleDialog
+        open={aiDialogOpen}
+        onOpenChange={setAiDialogOpen}
+        messages={aiMessages}
+        setMessages={setAiMessages}
+        onApply={handleAiApply}
+      />
     </div>
   );
 };
