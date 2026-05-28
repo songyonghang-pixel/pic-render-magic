@@ -206,7 +206,18 @@ const Index = () => {
       {/* Form */}
       <div className="px-6 py-5 pb-24">
         {/* 预警规则名称 */}
-        <Section title="预警规则名称">
+        <Section
+          title="预警规则名称"
+          extra={
+            <button
+              onClick={() => setAiDialogOpen(true)}
+              className="h-7 px-3 text-[12px] rounded-sm border border-primary text-primary bg-gradient-to-r from-[hsl(var(--primary)/0.08)] to-transparent hover:bg-primary hover:text-primary-foreground transition-colors inline-flex items-center gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              AI 创建预警规则
+            </button>
+          }
+        >
           <Field label="规则名称" required>
             <TextInput key={ruleNameKey} value={ruleName} placeholder="请输入规则名称" className="max-w-xl" />
           </Field>
