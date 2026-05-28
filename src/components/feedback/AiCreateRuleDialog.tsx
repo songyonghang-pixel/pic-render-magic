@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Sparkles, Send, X, Loader2 } from "lucide-react";
+import { Sparkles, Send, Loader2 } from "lucide-react";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { toast } from "@/hooks/use-toast";
 
@@ -166,9 +166,6 @@ export const AiCreateRuleDialog = ({ open, onOpenChange, messages, setMessages, 
               <div className="text-[11px] text-[hsl(var(--placeholder))]">通过对话自动配置预警条件</div>
             </div>
           </div>
-          <button onClick={() => onOpenChange(false)} className="text-[hsl(var(--placeholder))] hover:text-[hsl(var(--label-text))]">
-            <X className="w-4 h-4" />
-          </button>
         </div>
 
         <div ref={scrollRef} className="h-[480px] overflow-y-auto px-5 py-4 space-y-4 bg-[hsl(var(--page-bg))]">
