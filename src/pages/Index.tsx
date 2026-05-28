@@ -6,6 +6,7 @@ import { CascadeMultiSelect } from "@/components/feedback/CascadeMultiSelect";
 import { SeparateMonitor } from "@/components/feedback/SeparateMonitor";
 import { RecentDataDialog } from "@/components/feedback/RecentDataDialog";
 import { AiClusterTagDialog } from "@/components/feedback/AiClusterTagDialog";
+import { AiCreateRuleDialog, AiMsg, AiRuleFilters } from "@/components/feedback/AiCreateRuleDialog";
 
 const aiTagLevels = ["一级标签", "二级标签", "三级标签", "四级标签", "五级标签"];
 
@@ -55,7 +56,7 @@ import {
   warningImportanceOptions,
   fanCountOperators,
 } from "@/components/feedback/filterData";
-import { ChevronRight, Plus, Copy, HelpCircle, Trash2 } from "lucide-react";
+import { ChevronRight, Plus, Copy, HelpCircle, Trash2, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 import FeedbackDataAnalysis from "./FeedbackDataAnalysis";
 import AlertRules from "./AlertRules";
@@ -78,6 +79,39 @@ const Index = () => {
   const [countrySep, setCountrySep] = useState(false);
   const [perLevelNotify, setPerLevelNotify] = useState(false);
   const [monitorFreq, setMonitorFreq] = useState<string>("");
+
+  // AI-controlled filter fields
+  const [feedbackTypeVals, setFeedbackTypeVals] = useState<string[]>([]);
+  const [sentimentVals, setSentimentVals] = useState<string[]>([]);
+  const [alertLevelVal, setAlertLevelVal] = useState<string>("");
+
+  // AI create rule dialog
+  const [aiDialogOpen, setAiDialogOpen] = useState(false);
+  const [aiMessages, setAiMessages] = useState<AiMsg[]>([]);
+
+  const handleAiApply = (f: AiRuleFilters) => {
+    if (f.alertType) setAlertType(f.alertType);
+    if (f.aiTags) setAiTagVals(f.aiTags);
+    if (f.marketingNames) setMarketingVals(f.marketingNames);
+    if (f.countries) setCountryVals(f.countries);
+    if (f.feedbackTypes) setFeedbackTypeVals(f.feedbackTypes);
+    if (f.sentiments) setSentimentVals(f.sentiments);
+    if (f.alertLevel) setAlertLevelVal(f.alertLevel);
+    if (f.triggerConditions && f.triggerConditions.length > 0) {
+      setStatConds(
+        f.triggerConditions.map((c, i) => ({
+          id: Date.now() + i,
+          level: c.level || "",
+          subs: (c.subs && c.subs.length > 0 ? c.subs : [{}]).map((s, j) => ({
+            id: Date.now() + i * 100 + j + 1,
+            indicator: s.indicator || "",
+            timeRange: s.timeRange || "",
+            calcMethod: s.calcMethod || "",
+          })),
+        }))
+      );
+    }
+  };
 
   type SubCond = { id: number; indicator: string; timeRange: string; calcMethod: string };
   type StatCond = { id: number; level: string; subs: SubCond[] };
