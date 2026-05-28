@@ -669,8 +669,17 @@ const Index = () => {
       </div>
         </>
       )}
+      <AiCreateRuleDialog
+        open={aiDialogOpen}
+        onOpenChange={setAiDialogOpen}
+        messages={aiMessages}
+        setMessages={setAiMessages}
+        onApply={handleAiApply}
+      />
     </div>
   );
 };
+
+export default Index;
 
 export default Index;
