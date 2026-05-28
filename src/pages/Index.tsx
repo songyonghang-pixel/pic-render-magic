@@ -352,10 +352,10 @@ const Index = () => {
               <div className="flex-1 space-y-3">
                 <div className="grid grid-cols-3 gap-4">
                   <Field label="反馈类型" labelWidth="w-20">
-                    <MultiSelect placeholder="请选择反馈类型" options={feedbackTypeOptions} />
+                    <MultiSelect placeholder="请选择反馈类型" options={feedbackTypeOptions} value={feedbackTypeVals} onChange={setFeedbackTypeVals} />
                   </Field>
                   <Field label="用户情感" labelWidth="w-20">
-                    <MultiSelect placeholder="请选择用户情感" options={sentimentOptions} />
+                    <MultiSelect placeholder="请选择用户情感" options={sentimentOptions} value={sentimentVals} onChange={setSentimentVals} />
                   </Field>
                   <Field label="社媒类型" labelWidth="w-20">
                     <MultiSelect placeholder="请选择社媒类型" options={socialMediaTypeOptions} />
@@ -417,7 +417,7 @@ const Index = () => {
           {alertType !== "统计" && (
             <Field label="预警级别" required>
               <div className="max-w-md">
-                <SingleSelect placeholder="请选择预警级别" options={alertLevelOptions} />
+                <SingleSelect placeholder="请选择预警级别" options={alertLevelOptions} value={alertLevelVal} onChange={setAlertLevelVal} />
               </div>
             </Field>
           )}
