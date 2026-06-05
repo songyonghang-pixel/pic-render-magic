@@ -415,29 +415,53 @@ const CloseDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: ()
   );
 };
 
-const InaccurateDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: () => void; onConfirm: (reason: string) => void }) => {
+const InaccurateDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: () => void; onConfirm: (accuracy: "准确" | "不准确", reason: string) => void }) => {
+  const [accuracy, setAccuracy] = useState<"准确" | "不准确">("不准确");
   const [reason, setReason] = useState("");
   const open = !!row;
   const handleConfirm = () => {
-    if (!reason.trim()) { toast.error("请输入预警不准说明"); return; }
-    onConfirm(reason.trim());
+    if (accuracy === "不准确" && !reason.trim()) { toast.error("请输入预警不准说明"); return; }
+    onConfirm(accuracy, reason.trim());
   };
   return (
     <Dialog open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
       <DialogContent
         className="max-w-[480px]"
-        onOpenAutoFocus={() => { if (row) setReason(row.inaccurateReason); }}
+        onOpenAutoFocus={() => {
+          if (row) {
+            setAccuracy(row.accuracy === "准确" ? "准确" : "不准确");
+            setReason(row.inaccurateReason);
+          }
+        }}
       >
-        <DialogHeader><DialogTitle>预警不准</DialogTitle></DialogHeader>
+        <DialogHeader><DialogTitle>预警反馈</DialogTitle></DialogHeader>
         <div className="space-y-4 py-2">
-          <FormRow label={<span><span className="text-destructive">*</span> 预警不准说明</span>}>
-            <textarea
-              value={reason}
-              onChange={(e) => setReason(e.target.value)}
-              placeholder="请输入预警不准说明"
-              className="w-full min-h-[100px] px-3 py-2 text-[13px] rounded-md border border-[hsl(var(--field-border))] bg-card placeholder:text-[hsl(var(--placeholder))] focus:border-primary focus:outline-none"
-            />
+          <FormRow label={<span><span className="text-destructive">*</span> 是否准确</span>}>
+            <div className="flex items-center gap-6 pt-1.5">
+              {(["准确", "不准确"] as const).map((v) => (
+                <label key={v} className="flex items-center gap-2 cursor-pointer text-[13px] text-[hsl(var(--label-text))]">
+                  <input
+                    type="radio"
+                    name="accuracy"
+                    checked={accuracy === v}
+                    onChange={() => setAccuracy(v)}
+                    className="w-3.5 h-3.5 accent-primary"
+                  />
+                  {v}
+                </label>
+              ))}
+            </div>
           </FormRow>
+          {accuracy === "不准确" && (
+            <FormRow label={<span><span className="text-destructive">*</span> 预警不准说明</span>}>
+              <textarea
+                value={reason}
+                onChange={(e) => setReason(e.target.value)}
+                placeholder="请输入预警不准说明"
+                className="w-full min-h-[100px] px-3 py-2 text-[13px] rounded-md border border-[hsl(var(--field-border))] bg-card placeholder:text-[hsl(var(--placeholder))] focus:border-primary focus:outline-none"
+              />
+            </FormRow>
+          )}
         </div>
         <DialogFooter>
           <button onClick={onClose} className="h-8 px-5 rounded-md bg-card border border-[hsl(var(--field-border))] text-[13px] text-[hsl(var(--label-text))]">取消</button>
