@@ -11,7 +11,7 @@ interface Row {
   id: number; ruleId: number; name: string; cu: string; at: string; level: string;
   type: string; period: string; trigger: string; content: string; notify: string; tt: string; group: string;
   status: Status; priority: string; handler: string; remark: string; closeReason: string; closeReasonOther: string; closeDesc: string; noahId: string;
-  accuracy: "未反馈" | "不准确"; inaccurateReason: string;
+  accuracy: "未反馈" | "不准确" | "准确"; inaccurateReason: string;
 }
 
 const rawRows = [
