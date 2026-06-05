@@ -306,7 +306,7 @@ const ActionLinks = ({ r, onHandle, onClose, onInaccurate }: { r: Row; onHandle:
         处理
       </a>
       <a className="text-primary cursor-pointer hover:underline" onClick={onClose}>关闭</a>
-      <a className="text-primary cursor-pointer hover:underline" onClick={onInaccurate}>预警不准</a>
+      <a className="text-primary cursor-pointer hover:underline" onClick={onInaccurate}>反馈准确性</a>
     </div>
   );
 };
