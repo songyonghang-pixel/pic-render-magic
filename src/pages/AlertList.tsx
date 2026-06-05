@@ -264,8 +264,8 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
       <InaccurateDialog
         row={inaccurateTarget}
         onClose={() => setInaccurateTarget(null)}
-        onConfirm={(reason) => {
-          if (inaccurateTarget) updateRow(inaccurateTarget.id, { accuracy: "不准确", inaccurateReason: reason });
+        onConfirm={(accuracy, reason) => {
+          if (inaccurateTarget) updateRow(inaccurateTarget.id, { accuracy, inaccurateReason: accuracy === "准确" ? "" : reason });
           setInaccurateTarget(null);
         }}
       />
