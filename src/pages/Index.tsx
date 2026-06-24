@@ -411,8 +411,24 @@ const Index = () => {
                 <div className="flex items-center">
                   <label className="w-20 shrink-0 text-right pr-3 text-[13px] text-[hsl(var(--label-text))]">关键词组合</label>
                   <div className="flex-1 flex items-center gap-2">
-                    <SelectInput value="反馈原声" className="w-32" />
-                    <SelectInput value="包含" className="w-24" />
+                    <div className="w-28 shrink-0">
+                      <SingleSelect
+                        value="反馈原声"
+                        options={[
+                          { label: "运营观点" },
+                          { label: "反馈原声" },
+                          { label: "AI聚类标签" },
+                          { label: "译文" },
+                          { label: "用户名" },
+                        ]}
+                      />
+                    </div>
+                    <div className="w-24 shrink-0">
+                      <SingleSelect
+                        value="包含"
+                        options={[{ label: "包含" }, { label: "不包含" }]}
+                      />
+                    </div>
                     <TextInput placeholder='单行关键词为"或"，多行关键词为"且"（按enter键隔开）' className="flex-1" />
                     <button className="w-7 h-7 flex items-center justify-center rounded-sm border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors">
                       <Plus className="w-4 h-4" />
