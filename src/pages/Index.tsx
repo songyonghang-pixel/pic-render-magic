@@ -637,11 +637,54 @@ const Index = () => {
         >
           {alertType === "统计" && (
             <Field label="监控频次" required>
-              <div className="flex items-center gap-3">
-                <div className="w-[200px]">
-                  <SingleSelect placeholder="请选择监控频次" options={monitorFreqOptions} value={monitorFreq} onChange={setMonitorFreq} />
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="w-[140px]">
+                  <SingleSelect
+                    placeholder="请选择"
+                    options={[{ label: "间隔" }, { label: "每日" }, { label: "每周" }, { label: "每月" }]}
+                    value={freqPeriod}
+                    onChange={setFreqPeriod}
+                  />
                 </div>
-                {statConds.some((c) => c.subs.some((s) => multiPushTimeRanges.includes(s.timeRange))) && (
+
+                {freqPeriod === "间隔" && (
+                  <div className="w-[200px]">
+                    <SingleSelect placeholder="请选择监控频次" options={monitorFreqOptions} value={monitorFreq} onChange={setMonitorFreq} />
+                  </div>
+                )}
+
+                {freqPeriod === "每周" && (
+                  <div className="w-[240px]">
+                    <MultiSelect
+                      placeholder="请选择周几"
+                      options={["周一", "周二", "周三", "周四", "周五", "周六", "周日"].map((l) => ({ label: l }))}
+                      value={freqWeekdays}
+                      onChange={setFreqWeekdays}
+                    />
+                  </div>
+                )}
+
+                {freqPeriod === "每月" && (
+                  <div className="w-[240px]">
+                    <MultiSelect
+                      placeholder="请选择日期"
+                      options={Array.from({ length: 31 }, (_, i) => ({ label: `${i + 1}号` }))}
+                      value={freqMonthDays}
+                      onChange={setFreqMonthDays}
+                    />
+                  </div>
+                )}
+
+                {(freqPeriod === "每日" || freqPeriod === "每周" || freqPeriod === "每月") && (
+                  <input
+                    type="time"
+                    value={freqTime}
+                    onChange={(e) => setFreqTime(e.target.value)}
+                    className="h-8 px-2 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm w-[140px]"
+                  />
+                )}
+
+                {freqPeriod === "间隔" && statConds.some((c) => c.subs.some((s) => multiPushTimeRanges.includes(s.timeRange))) && (
                   <label className="flex items-center gap-1.5 cursor-pointer">
                     <span className="text-[13px] text-[hsl(var(--label-text))]">多次推送</span>
                     <span title="当日、本周、昨日情况下，若达到触发条件将会根据监控频次多次推送" className="cursor-help inline-flex">
