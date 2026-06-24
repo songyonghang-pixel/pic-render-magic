@@ -80,6 +80,10 @@ const Index = () => {
   const [countrySep, setCountrySep] = useState(false);
   const [perLevelNotify, setPerLevelNotify] = useState(false);
   const [monitorFreq, setMonitorFreq] = useState<string>("");
+  const [freqPeriod, setFreqPeriod] = useState<string>("间隔");
+  const [freqTime, setFreqTime] = useState<string>("09:00");
+  const [freqWeekdays, setFreqWeekdays] = useState<string[]>([]);
+  const [freqMonthDays, setFreqMonthDays] = useState<string[]>([]);
 
   // AI-controlled filter fields
   const [feedbackTypeVals, setFeedbackTypeVals] = useState<string[]>([]);
