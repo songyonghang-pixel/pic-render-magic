@@ -190,7 +190,7 @@ const Index = () => {
       {activeTab === "analysis" ? (
         <FeedbackDataAnalysis />
       ) : activeTab === "rules" ? (
-        <AlertRules onCreate={() => setActiveTab("alert")} onAiCreate={() => { setActiveTab("alert"); setAiDialogOpen(true); }} onCopy={(name, type) => { setRuleName(name); setAlertType(type); setRuleNameKey((k) => k + 1); setActiveTab("alert"); }} />
+        <AlertRules onCreate={(t) => { if (t) setAlertType(t); setActiveTab("alert"); }} onAiCreate={(t) => { if (t) setAlertType(t); setActiveTab("alert"); setAiDialogOpen(true); }} onCopy={(name, type) => { setRuleName(name); setAlertType(type); setRuleNameKey((k) => k + 1); setActiveTab("alert"); }} />
       ) : activeTab === "list" ? (
         <AlertList onShowAnalysis={() => setActiveTab("analysis")} />
       ) : (
