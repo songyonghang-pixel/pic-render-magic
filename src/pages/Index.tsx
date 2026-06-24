@@ -441,7 +441,7 @@ const Index = () => {
                           </div>
                         </Field>
                         {cond.subs.map((sub, subIdx) => {
-                          const showCalcMethod = sub.indicator === "反馈量" && (sub.timeRange === "当日" || sub.timeRange === "本周");
+                          const showCalcMethod = sub.indicator === "反馈量" && (dailyLikeRanges.includes(sub.timeRange) || sub.timeRange === "本周");
                           const isPercent = showCalcMethod && percentCalcMethods.includes(sub.calcMethod);
                           const chartDisabled = !sub.indicator || !sub.timeRange;
                           return (
