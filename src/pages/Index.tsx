@@ -684,7 +684,7 @@ const Index = () => {
                   />
                 )}
 
-                {freqPeriod === "间隔" && statConds.some((c) => c.subs.some((s) => multiPushTimeRanges.includes(s.timeRange))) && (
+                {freqPeriod === "间隔" && (
                   <label className="flex items-center gap-1.5 cursor-pointer">
                     <span className="text-[13px] text-[hsl(var(--label-text))]">多次推送</span>
                     <span title="当日、本周、昨日情况下，若达到触发条件将会根据监控频次多次推送" className="cursor-help inline-flex">
