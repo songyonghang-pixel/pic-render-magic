@@ -129,7 +129,7 @@ const Index = () => {
         subs: c.subs.map((s) => {
           if (s.id !== subId) return s;
           const next = { ...s, ...patch };
-          const showCalc = next.indicator === "反馈量" && (next.timeRange === "当日" || next.timeRange === "本周");
+          const showCalc = next.indicator === "反馈量" && (dailyLikeRanges.includes(next.timeRange) || next.timeRange === "本周");
           if (!showCalc) next.calcMethod = "";
           return next;
         }),
