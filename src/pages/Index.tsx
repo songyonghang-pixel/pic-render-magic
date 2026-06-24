@@ -68,6 +68,8 @@ const Index = () => {
   const [fanOp, setFanOp] = useState<string[]>([]);
   const [alertType, setAlertType] = useState<string>("实时");
   const [ruleName, setRuleName] = useState<string>("");
+  const [kwField, setKwField] = useState<string>("反馈原声");
+  const [kwOp, setKwOp] = useState<string>("包含");
   const [ruleNameKey, setRuleNameKey] = useState<number>(0);
 
   const [aiTagVals, setAiTagVals] = useState<string[]>([]);
