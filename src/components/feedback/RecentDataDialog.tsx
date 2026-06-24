@@ -42,6 +42,8 @@ const rangeMap: Record<string, { dim: string; spanLabel: string; points: number;
   "5小时":  { dim: "5小时",  spanLabel: "前14天",   points: 67,  stepMs: 5 * 60 * 60 * 1000 },
   "6小时":  { dim: "6小时",  spanLabel: "前14天",   points: 56,  stepMs: 6 * 60 * 60 * 1000 },
   "当日":   { dim: "日",      spanLabel: "前10天",  points: 10, stepMs: 24 * 60 * 60 * 1000 },
+  "近7日":  { dim: "日",      spanLabel: "前10天",  points: 10, stepMs: 24 * 60 * 60 * 1000 },
+  "本月":   { dim: "日",      spanLabel: "前10天",  points: 10, stepMs: 24 * 60 * 60 * 1000 },
   "本周":   { dim: "周",      spanLabel: "前10周",  points: 10, stepMs: 7 * 24 * 60 * 60 * 1000 },
 };
 
