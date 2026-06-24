@@ -96,7 +96,7 @@ export const RecentDataDialog = ({ open, onOpenChange, timeRange, indicator, ale
       if (statFeedback) {
         if (timeRange === "1小时" || timeRange === "2小时" || timeRange === "3小时" || timeRange === "4小时" || timeRange === "5小时" || timeRange === "6小时") {
           offsetDays = 14;
-        } else if (timeRange === "当日") {
+        } else if (timeRange === "当日" || timeRange === "近7日" || timeRange === "本月") {
           offsetDays = 30;
         } else if (timeRange === "本周") {
           offsetDays = 70;
