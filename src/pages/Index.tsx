@@ -238,9 +238,25 @@ const Index = () => {
         <Section title="预警类型">
           <div className="flex items-center">
             <Field label="预警类型" required labelWidth="w-20">
-              <div className="flex items-center gap-3">
-                <div className="max-w-[200px] w-[200px]">
-                  <SingleSelect options={alertTypeOptions} value={alertType} onChange={setAlertType} />
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex items-center gap-2">
+                  {alertTypeOptions.map((opt) => {
+                    const active = alertType === opt.label;
+                    return (
+                      <button
+                        key={opt.label}
+                        type="button"
+                        onClick={() => setAlertType(opt.label)}
+                        className={`h-8 px-5 text-[13px] rounded-sm border transition-colors ${
+                          active
+                            ? "border-primary text-primary bg-[hsl(var(--primary)/0.08)] font-medium"
+                            : "border-[hsl(var(--field-border))] text-[hsl(var(--label-text))] bg-card hover:border-primary hover:text-primary"
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    );
+                  })}
                 </div>
                 <span className="text-[12px] text-[hsl(var(--muted-foreground))]">
                   <span className="text-destructive">*</span> 统计为监控一段时间内的反馈数据或变化，因数据采集及处理，预计会延迟10～20分钟
