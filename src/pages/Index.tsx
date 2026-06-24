@@ -416,13 +416,18 @@ const Index = () => {
                     <div className="w-28 shrink-0">
                       <SingleSelect
                         value={kwField}
-                        onChange={setKwField}
+                        onChange={(v) => {
+                          setKwField(v);
+                          if (v === "用户名" || v === "内容作者") setKwOp("等于");
+                          else setKwOp("包含");
+                        }}
                         options={[
                           { label: "运营观点" },
                           { label: "反馈原声" },
                           { label: "AI聚类标签" },
                           { label: "译文" },
                           { label: "用户名" },
+                          { label: "内容作者" },
                         ]}
                       />
                     </div>
@@ -430,7 +435,11 @@ const Index = () => {
                       <SingleSelect
                         value={kwOp}
                         onChange={setKwOp}
-                        options={[{ label: "包含" }, { label: "不包含" }]}
+                        options={
+                          kwField === "用户名" || kwField === "内容作者"
+                            ? [{ label: "等于" }, { label: "不等于" }]
+                            : [{ label: "包含" }, { label: "不包含" }]
+                        }
                       />
                     </div>
                     <TextInput placeholder='单行关键词为"或"，多行关键词为"且"（按enter键隔开）' className="flex-1" />
