@@ -21,7 +21,8 @@ const timeRangeOptions = [
   { label: "4小时" }, { label: "5小时" }, { label: "6小时" },
   { label: "当日" }, { label: "本周" },
 ];
-const timeRangeOptionsStat = [...timeRangeOptions, { label: "昨日" }];
+const timeRangeOptionsStat = [...timeRangeOptions, { label: "昨日" }, { label: "近7日" }, { label: "本月" }];
+const dailyLikeRanges = ["当日", "近7日", "本月"];
 const compareOperators = [{ label: "大于" }, { label: "大于等于" }, { label: "小于" }, { label: "小于等于" }];
 const calcMethodOptions = [
   { label: "值" },
@@ -31,7 +32,7 @@ const calcMethodOptions = [
   { label: "较平均值的增长率" },
 ];
 const percentCalcMethods = ["环比增长率", "较平均值的增长率"];
-const multiPushTimeRanges = ["当日", "本周", "昨日"];
+const multiPushTimeRanges = ["当日", "本周", "昨日", "近7日", "本月"];
 const monitorFreqOptions = [
   { label: "10分钟" }, { label: "20分钟" }, { label: "30分钟" },
   { label: "1小时" }, { label: "2小时" }, { label: "3小时" },
@@ -128,7 +129,7 @@ const Index = () => {
         subs: c.subs.map((s) => {
           if (s.id !== subId) return s;
           const next = { ...s, ...patch };
-          const showCalc = next.indicator === "反馈量" && (next.timeRange === "当日" || next.timeRange === "本周");
+          const showCalc = next.indicator === "反馈量" && (dailyLikeRanges.includes(next.timeRange) || next.timeRange === "本周");
           if (!showCalc) next.calcMethod = "";
           return next;
         }),
@@ -189,7 +190,7 @@ const Index = () => {
       {activeTab === "analysis" ? (
         <FeedbackDataAnalysis />
       ) : activeTab === "rules" ? (
-        <AlertRules onCreate={() => setActiveTab("alert")} onAiCreate={() => { setActiveTab("alert"); setAiDialogOpen(true); }} onCopy={(name, type) => { setRuleName(name); setAlertType(type); setRuleNameKey((k) => k + 1); setActiveTab("alert"); }} />
+        <AlertRules onCreate={(t) => { if (t) setAlertType(t); setActiveTab("alert"); }} onAiCreate={(t) => { if (t) setAlertType(t); setActiveTab("alert"); setAiDialogOpen(true); }} onCopy={(name, type) => { setRuleName(name); setAlertType(type); setRuleNameKey((k) => k + 1); setActiveTab("alert"); }} />
       ) : activeTab === "list" ? (
         <AlertList onShowAnalysis={() => setActiveTab("analysis")} />
       ) : (
@@ -237,9 +238,25 @@ const Index = () => {
         <Section title="预警类型">
           <div className="flex items-center">
             <Field label="预警类型" required labelWidth="w-20">
-              <div className="flex items-center gap-3">
-                <div className="max-w-[200px] w-[200px]">
-                  <SingleSelect options={alertTypeOptions} value={alertType} onChange={setAlertType} />
+              <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex items-center gap-2">
+                  {alertTypeOptions.map((opt) => {
+                    const active = alertType === opt.label;
+                    return (
+                      <button
+                        key={opt.label}
+                        type="button"
+                        onClick={() => setAlertType(opt.label)}
+                        className={`h-8 px-5 text-[13px] rounded-sm border transition-colors ${
+                          active
+                            ? "border-primary text-primary bg-[hsl(var(--primary)/0.08)] font-medium"
+                            : "border-[hsl(var(--field-border))] text-[hsl(var(--label-text))] bg-card hover:border-primary hover:text-primary"
+                        }`}
+                      >
+                        {opt.label}
+                      </button>
+                    );
+                  })}
                 </div>
                 <span className="text-[12px] text-[hsl(var(--muted-foreground))]">
                   <span className="text-destructive">*</span> 统计为监控一段时间内的反馈数据或变化，因数据采集及处理，预计会延迟10～20分钟
@@ -440,7 +457,7 @@ const Index = () => {
                           </div>
                         </Field>
                         {cond.subs.map((sub, subIdx) => {
-                          const showCalcMethod = sub.indicator === "反馈量" && (sub.timeRange === "当日" || sub.timeRange === "本周");
+                          const showCalcMethod = sub.indicator === "反馈量" && (dailyLikeRanges.includes(sub.timeRange) || sub.timeRange === "本周");
                           const isPercent = showCalcMethod && percentCalcMethods.includes(sub.calcMethod);
                           const chartDisabled = !sub.indicator || !sub.timeRange;
                           return (

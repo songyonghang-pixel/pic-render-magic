@@ -24,7 +24,7 @@ const rows = [
   { id: 182, name: "桌面舆情预警监控", type: "统计", ct: "2026-04-27 20:52:58", cu: "杨柳(80341332)", ut: "2026-04-29 11:41:46", uu: "杨柳(80341332)", team: "通信协议", count: 2, enabled: true },
 ];
 
-export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: () => void; onAiCreate?: () => void; onCopy?: (name: string, type: string) => void }) => {
+export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: (type?: string) => void; onAiCreate?: (type?: string) => void; onCopy?: (name: string, type: string) => void }) => {
   const [subTab, setSubTab] = useState<"实时" | "统计">("实时");
   const filteredRows = rows.filter((r) => r.type === subTab);
   return (
@@ -79,10 +79,10 @@ export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: () => v
       <div className="px-6 mt-4 pb-10">
         <div className="bg-card rounded-md p-5">
           <div className="flex justify-end gap-2 mb-3">
-            <button onClick={onCreate} className="h-8 px-4 rounded-md bg-primary text-primary-foreground text-[13px] inline-flex items-center gap-1">
+            <button onClick={() => onCreate(subTab)} className="h-8 px-4 rounded-md bg-primary text-primary-foreground text-[13px] inline-flex items-center gap-1">
               <Plus className="w-3.5 h-3.5" /> 新增预警规则
             </button>
-            <button onClick={onAiCreate} className="h-8 px-4 rounded-md bg-card border border-primary text-primary text-[13px] inline-flex items-center gap-1 hover:bg-[hsl(var(--primary)/0.08)]">
+            <button onClick={() => onAiCreate?.(subTab)} className="h-8 px-4 rounded-md bg-card border border-primary text-primary text-[13px] inline-flex items-center gap-1 hover:bg-[hsl(var(--primary)/0.08)]">
               <Sparkles className="w-3.5 h-3.5" /> AI创建预警规则
             </button>
           </div>
