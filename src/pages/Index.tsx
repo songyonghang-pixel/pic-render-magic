@@ -687,7 +687,7 @@ const Index = () => {
                 {freqPeriod === "间隔" && (
                   <label className="flex items-center gap-1.5 cursor-pointer">
                     <span className="text-[13px] text-[hsl(var(--label-text))]">多次推送</span>
-                    <span title="当日、本周、昨日情况下，若达到触发条件将会根据监控频次多次推送" className="cursor-help inline-flex">
+                    <span title="当日、本周、昨日、近7日、本月情况下，若达到触发条件将会根据监控频次多次推送" className="cursor-help inline-flex">
                       <HelpCircle className="w-3.5 h-3.5 text-[hsl(var(--placeholder))]" />
                     </span>
                     <input type="checkbox" className="w-3.5 h-3.5 accent-primary ml-1" />
