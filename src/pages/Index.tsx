@@ -415,7 +415,8 @@ const Index = () => {
                   <div className="flex-1 flex items-center gap-2">
                     <div className="w-28 shrink-0">
                       <SingleSelect
-                        value="反馈原声"
+                        value={kwField}
+                        onChange={setKwField}
                         options={[
                           { label: "运营观点" },
                           { label: "反馈原声" },
@@ -427,7 +428,8 @@ const Index = () => {
                     </div>
                     <div className="w-24 shrink-0">
                       <SingleSelect
-                        value="包含"
+                        value={kwOp}
+                        onChange={setKwOp}
                         options={[{ label: "包含" }, { label: "不包含" }]}
                       />
                     </div>
