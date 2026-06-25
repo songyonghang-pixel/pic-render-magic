@@ -450,6 +450,7 @@ const Index = () => {
                     <button className="w-7 h-7 flex items-center justify-center rounded-sm border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors">
                       <Copy className="w-3.5 h-3.5" />
                     </button>
+                  </div>
                 </div>
                 <div className="flex items-start">
                   <label className="w-20 shrink-0 text-right pr-3 text-[13px] text-[hsl(var(--label-text))] pt-1.5">内容数据</label>
@@ -492,10 +493,10 @@ const Index = () => {
                     )}
                   </div>
                 </div>
-                </div>
               </div>
             </div>
           </div>
+
 
           <div className="flex justify-end pt-2">
             <button className="h-8 px-4 text-[13px] border border-primary text-primary rounded-sm hover:bg-primary hover:text-primary-foreground transition-colors">
