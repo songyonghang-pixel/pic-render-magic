@@ -70,6 +70,7 @@ const Index = () => {
   const [ruleName, setRuleName] = useState<string>("");
   const [kwField, setKwField] = useState<string>("反馈原声");
   const [kwOp, setKwOp] = useState<string>("包含");
+  const [contentDataVals, setContentDataVals] = useState<string[]>([]);
   const [ruleNameKey, setRuleNameKey] = useState<number>(0);
 
   const [aiTagVals, setAiTagVals] = useState<string[]>([]);
