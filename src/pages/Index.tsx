@@ -470,13 +470,13 @@ const Index = () => {
                       <div className="space-y-2">
                         {contentDataVals.map((m) => (
                           <div key={m} className="flex items-center gap-2">
-                            <label className="w-20 shrink-0 text-right pr-3 text-[13px] text-[hsl(var(--label-text))]">{m}</label>
+                            <label className="w-16 shrink-0 text-right pr-3 text-[13px] text-[hsl(var(--label-text))]">{m}</label>
                             <input
                               type="text"
                               inputMode="numeric"
                               placeholder="输入字数"
                               onInput={(e) => { e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, ""); }}
-                              className="flex-1 h-8 px-3 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]"
+                              className="w-40 h-8 px-3 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]"
                             />
                             <span className="text-[13px] text-[hsl(var(--label-text))]">~</span>
                             <input
@@ -484,7 +484,7 @@ const Index = () => {
                               inputMode="numeric"
                               placeholder="输入字数"
                               onInput={(e) => { e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, ""); }}
-                              className="flex-1 h-8 px-3 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]"
+                              className="w-40 h-8 px-3 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]"
                             />
                           </div>
                         ))}
