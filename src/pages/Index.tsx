@@ -450,7 +450,48 @@ const Index = () => {
                     <button className="w-7 h-7 flex items-center justify-center rounded-sm border border-primary text-primary hover:bg-primary hover:text-primary-foreground transition-colors">
                       <Copy className="w-3.5 h-3.5" />
                     </button>
+                </div>
+                <div className="flex items-start">
+                  <label className="w-20 shrink-0 text-right pr-3 text-[13px] text-[hsl(var(--label-text))] pt-1.5">内容数据</label>
+                  <div className="flex-1 space-y-3">
+                    <MultiSelect
+                      placeholder="请选择"
+                      options={[
+                        { label: "转发量" },
+                        { label: "点赞量" },
+                        { label: "评论量" },
+                        { label: "互动量" },
+                        { label: "收藏量" },
+                      ]}
+                      value={contentDataVals}
+                      onChange={setContentDataVals}
+                    />
+                    {contentDataVals.length > 0 && (
+                      <div className="space-y-2">
+                        {contentDataVals.map((m) => (
+                          <div key={m} className="flex items-center gap-2">
+                            <label className="w-20 shrink-0 text-right pr-3 text-[13px] text-[hsl(var(--label-text))]">{m}</label>
+                            <input
+                              type="text"
+                              inputMode="numeric"
+                              placeholder="输入字数"
+                              onInput={(e) => { e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, ""); }}
+                              className="flex-1 h-8 px-3 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]"
+                            />
+                            <span className="text-[13px] text-[hsl(var(--label-text))]">~</span>
+                            <input
+                              type="text"
+                              inputMode="numeric"
+                              placeholder="输入字数"
+                              onInput={(e) => { e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, ""); }}
+                              className="flex-1 h-8 px-3 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
+                </div>
                 </div>
               </div>
             </div>
