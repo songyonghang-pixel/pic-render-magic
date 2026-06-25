@@ -455,18 +455,20 @@ const Index = () => {
                 <div className="flex items-start">
                   <label className="w-20 shrink-0 text-right pr-3 text-[13px] text-[hsl(var(--label-text))] pt-1.5">内容数据</label>
                   <div className="flex-1 space-y-3">
-                    <MultiSelect
-                      placeholder="请选择"
-                      options={[
-                        { label: "转发量" },
-                        { label: "点赞量" },
-                        { label: "评论量" },
-                        { label: "互动量" },
-                        { label: "收藏量" },
-                      ]}
-                      value={contentDataVals}
-                      onChange={setContentDataVals}
-                    />
+                    <div className="w-1/3 pr-2">
+                      <MultiSelect
+                        placeholder="请选择"
+                        options={[
+                          { label: "转发量" },
+                          { label: "点赞量" },
+                          { label: "评论量" },
+                          { label: "互动量" },
+                          { label: "收藏量" },
+                        ]}
+                        value={contentDataVals}
+                        onChange={setContentDataVals}
+                      />
+                    </div>
                     {contentDataVals.length > 0 && (
                       <div className="space-y-2">
                         {contentDataVals.map((m) => (
