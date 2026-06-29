@@ -84,6 +84,7 @@ export const FeedbackDataAnalysis = () => {
   const [selectedTag, setSelectedTag] = useState(clusterTags[0].name);
   const [aiOpen, setAiOpen] = useState(false);
   const [aiTag, setAiTag] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<Date>(new Date());
 
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))]">
