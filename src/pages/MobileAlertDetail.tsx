@@ -1,6 +1,11 @@
 import { useState } from "react";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Calendar as CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
+import { DateRange } from "react-day-picker";
 import { TrendChartCard } from "@/components/feedback/TrendChartCard";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
 
 type FeedbackItem = {
   voice: string;
@@ -57,6 +62,13 @@ export const MobileAlertDetail = () => {
   const [inner, setInner] = useState<"trend" | "detail">("trend");
   const [xAxis, setXAxis] = useState(xAxisOptions[0]);
   const [openItem, setOpenItem] = useState<FeedbackItem | null>(null);
+  const [range, setRange] = useState<DateRange | undefined>({
+    from: new Date(2026, 5, 23),
+    to: new Date(2026, 5, 29),
+  });
+  const rangeLabel = range?.from
+    ? `${format(range.from, "yyyy-MM-dd")} ~ ${range.to ? format(range.to, "yyyy-MM-dd") : ""}`
+    : "请选择反馈时间";
 
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))] flex justify-center py-6">
@@ -208,6 +220,38 @@ export const MobileAlertDetail = () => {
             </div>
           )}
         </div>
+
+        {/* Sticky bottom feedback-time filter (hidden inside item detail view) */}
+        {!openItem && (
+          <div className="shrink-0 border-t border-border bg-card px-3 py-2.5 flex items-center gap-2">
+            <span className="text-[12px] text-[hsl(var(--label-text))] shrink-0">反馈时间：</span>
+            <Popover>
+              <PopoverTrigger asChild>
+                <button
+                  className={cn(
+                    "flex-1 h-9 px-3 rounded-md border border-[hsl(var(--field-border))] bg-card flex items-center gap-2 text-[12px] text-left",
+                    !range?.from && "text-[hsl(var(--placeholder))]"
+                  )}
+                >
+                  <CalendarIcon className="w-3.5 h-3.5 text-[hsl(var(--muted-foreground))]" />
+                  <span className="truncate">{rangeLabel}</span>
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="end">
+                <Calendar
+                  mode="range"
+                  selected={range}
+                  onSelect={setRange}
+                  numberOfMonths={1}
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              </PopoverContent>
+            </Popover>
+            <button className="h-9 px-3 rounded-md bg-primary text-primary-foreground text-[12px] shrink-0">
+              查询
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
