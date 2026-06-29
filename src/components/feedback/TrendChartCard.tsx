@@ -50,9 +50,11 @@ function fmtYMD(d: Date) {
 interface TrendChartCardProps {
   endDate?: Date;
   startDate?: Date;
+  hideDimension?: boolean;
+  hideActions?: boolean;
 }
 
-export const TrendChartCard = ({ endDate, startDate }: TrendChartCardProps = {}) => {
+export const TrendChartCard = ({ endDate, startDate, hideDimension, hideActions }: TrendChartCardProps = {}) => {
   const [dim, setDim] = useState("日");
   const cfg = dimMap[dim];
 
