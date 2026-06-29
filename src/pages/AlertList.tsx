@@ -43,14 +43,46 @@ const CLOSE_REASON_OPTS = ["非问题", "已建单跟进", "已知问题", "已�
 export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
   const [subTab, setSubTab] = useState<"实时" | "统计">("实时");
   const [data, setData] = useState<Row[]>(initialRows);
-  const [handleTarget, setHandleTarget] = useState<Row | null>(null);
-  const [closeTarget, setCloseTarget] = useState<Row | null>(null);
+  const [handleTarget, setHandleTarget] = useState<Row[] | null>(null);
+  const [closeTarget, setCloseTarget] = useState<Row[] | null>(null);
   const [inaccurateTarget, setInaccurateTarget] = useState<Row | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
   const filteredRows = data.filter((r) => r.type === subTab);
+  const visibleIds = filteredRows.map((r) => r.id);
+  const allSelected = visibleIds.length > 0 && visibleIds.every((id) => selectedIds.has(id));
+  const someSelected = visibleIds.some((id) => selectedIds.has(id));
+  const selectedRows = filteredRows.filter((r) => selectedIds.has(r.id));
 
-  const updateRow = (id: number, patch: Partial<Row>) => {
-    setData((prev) => prev.map((r) => (r.id === id ? { ...r, ...patch } : r)));
+  const toggleOne = (id: number, checked: boolean) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (checked) next.add(id); else next.delete(id);
+      return next;
+    });
+  };
+  const toggleAll = (checked: boolean) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      visibleIds.forEach((id) => { if (checked) next.add(id); else next.delete(id); });
+      return next;
+    });
+  };
+
+  const updateRows = (ids: number[], patch: Partial<Row>) => {
+    const idSet = new Set(ids);
+    setData((prev) => prev.map((r) => (idSet.has(r.id) ? { ...r, ...patch } : r)));
+  };
+  const updateRow = (id: number, patch: Partial<Row>) => updateRows([id], patch);
+
+  const openBulkHandle = () => {
+    const eligible = selectedRows.filter((r) => r.status === "待处理" || r.status === "处理中");
+    if (eligible.length === 0) { toast.error("请选择待处理或处理中的预警"); return; }
+    setHandleTarget(eligible);
+  };
+  const openBulkClose = () => {
+    if (selectedRows.length === 0) { toast.error("请先勾选预警"); return; }
+    setCloseTarget(selectedRows);
   };
 
   return (
