@@ -24,8 +24,8 @@ const dimMap: Record<string, { spanLabel: string; points: number; stepMs: number
   "日":     { spanLabel: "前30天",  points: 30, stepMs: 24 * 60 * 60 * 1000 },
   "周":     { spanLabel: "前12周",  points: 12, stepMs: 7 * 24 * 60 * 60 * 1000 },
   "月":     { spanLabel: "前12月",  points: 12, stepMs: 30 * 24 * 60 * 60 * 1000 },
-  "近7日":  { spanLabel: "近7日(按日)",  points: 7,  stepMs: 24 * 60 * 60 * 1000 },
-  "近30日": { spanLabel: "近30日(按日)", points: 30, stepMs: 24 * 60 * 60 * 1000 },
+  "7日":  { spanLabel: "7日(按周期)",  points: 7,  stepMs: 24 * 60 * 60 * 1000 },
+  "30日": { spanLabel: "30日(按周期)", points: 30, stepMs: 24 * 60 * 60 * 1000 },
 };
 
 const isSubHour = (d: string) => d === "10分钟" || d === "20分钟" || d === "30分钟";
