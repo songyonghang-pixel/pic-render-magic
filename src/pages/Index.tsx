@@ -59,12 +59,22 @@ import {
 } from "@/components/feedback/filterData";
 import { ChevronRight, Plus, Copy, HelpCircle, Trash2, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import FeedbackDataAnalysis from "./FeedbackDataAnalysis";
 import AlertRules from "./AlertRules";
 import AlertList from "./AlertList";
 
+type TabKey = "rules" | "alert" | "list" | "analysis";
+const pathToTab: Record<string, TabKey> = { "/rules": "rules", "/alert": "alert", "/list": "list", "/analysis": "analysis" };
+const tabToPath: Record<TabKey, string> = { rules: "/rules", alert: "/alert", list: "/list", analysis: "/analysis" };
+
 const Index = () => {
-  const [activeTab, setActiveTab] = useState<"rules" | "alert" | "list" | "analysis">("rules");
+  const navigate = useNavigate();
+  const location = useLocation();
+  const initialTab: TabKey = pathToTab[location.pathname] ?? "rules";
+  const [activeTab, setActiveTabState] = useState<TabKey>(initialTab);
+  const setActiveTab = (t: TabKey) => { setActiveTabState(t); navigate(tabToPath[t]); };
+  useEffect(() => { const t = pathToTab[location.pathname]; if (t && t !== activeTab) setActiveTabState(t); }, [location.pathname]);
   const [fanOp, setFanOp] = useState<string[]>([]);
   const [alertType, setAlertType] = useState<string>("实时");
   const [ruleName, setRuleName] = useState<string>("");
