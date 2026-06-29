@@ -8,6 +8,7 @@ const timeDimensionOptions = [
   { label: "1小时" }, { label: "2小时" }, { label: "3小时" },
   { label: "4小时" }, { label: "5小时" }, { label: "6小时" },
   { label: "日" }, { label: "周" }, { label: "月" },
+  { label: "近7日" }, { label: "近30日" },
 ];
 
 const dimMap: Record<string, { spanLabel: string; points: number; stepMs: number }> = {
@@ -23,6 +24,8 @@ const dimMap: Record<string, { spanLabel: string; points: number; stepMs: number
   "日":     { spanLabel: "前30天",  points: 30, stepMs: 24 * 60 * 60 * 1000 },
   "周":     { spanLabel: "前12周",  points: 12, stepMs: 7 * 24 * 60 * 60 * 1000 },
   "月":     { spanLabel: "前12月",  points: 12, stepMs: 30 * 24 * 60 * 60 * 1000 },
+  "近7日":  { spanLabel: "前12周期", points: 12, stepMs: 7 * 24 * 60 * 60 * 1000 },
+  "近30日": { spanLabel: "前12周期", points: 12, stepMs: 30 * 24 * 60 * 60 * 1000 },
 };
 
 const isSubHour = (d: string) => d === "10分钟" || d === "20分钟" || d === "30分钟";
