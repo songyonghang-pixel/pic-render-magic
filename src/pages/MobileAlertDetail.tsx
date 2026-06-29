@@ -48,7 +48,7 @@ export const MobileAlertDetail = () => {
         {/* Title bar */}
         <div className="h-12 bg-card border-b border-border flex items-center px-3 shrink-0">
           <ChevronLeft className="w-5 h-5 text-[hsl(var(--label-text))]" />
-          <span className="flex-1 text-center text-[15px] font-medium text-[hsl(var(--label-text))]">预警详情</span>
+          <span className="flex-1 text-center text-[15px] font-medium text-[hsl(var(--label-text))]">FMS预警详情</span>
           <span className="w-5" />
         </div>
 
