@@ -62,6 +62,13 @@ export const MobileAlertDetail = () => {
   const [inner, setInner] = useState<"trend" | "detail">("trend");
   const [xAxis, setXAxis] = useState(xAxisOptions[0]);
   const [openItem, setOpenItem] = useState<FeedbackItem | null>(null);
+  const [range, setRange] = useState<DateRange | undefined>({
+    from: new Date(2026, 5, 23),
+    to: new Date(2026, 5, 29),
+  });
+  const rangeLabel = range?.from
+    ? `${format(range.from, "yyyy-MM-dd")} ~ ${range.to ? format(range.to, "yyyy-MM-dd") : ""}`
+    : "请选择反馈时间";
 
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))] flex justify-center py-6">
