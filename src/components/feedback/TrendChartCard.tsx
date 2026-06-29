@@ -211,17 +211,25 @@ export const TrendChartCard = ({ endDate }: TrendChartCardProps = {}) => {
             </text>
           ))}
 
-          {hover !== null && points[hover] && (
-            <g>
-              <line x1={points[hover].x} y1={PT} x2={points[hover].x} y2={PT + innerH} stroke="hsl(var(--primary))" strokeDasharray="3 3" opacity="0.5" />
-              <circle cx={points[hover].x} cy={points[hover].y} r="5" fill="hsl(var(--card))" stroke="hsl(var(--primary))" strokeWidth="2" />
-              <g transform={`translate(${Math.min(points[hover].x + 8, W - 160)}, ${Math.max(points[hover].y - 40, PT)})`}>
-                <rect width="155" height="38" rx="4" fill="hsl(var(--popover))" stroke="hsl(var(--border))" />
-                <text x="8" y="15" fontSize="11" fill="hsl(var(--muted-foreground))">{fmtTick(points[hover].t, dim)}</text>
-                <text x="8" y="30" fontSize="12" fill="hsl(var(--primary))" fontWeight="600">反馈量：{points[hover].v}</text>
+          {hover !== null && points[hover] && (() => {
+            const p = points[hover];
+            const isPeriod = isPeriodBucket(dim);
+            const tipLabel = isPeriod && p.rangeStart && p.rangeEnd
+              ? `${fmtYMD(p.rangeStart)} ~ ${fmtYMD(p.rangeEnd)}`
+              : fmtTick(p.t, dim);
+            const tipW = isPeriod ? 220 : 155;
+            return (
+              <g>
+                <line x1={p.x} y1={PT} x2={p.x} y2={PT + innerH} stroke="hsl(var(--primary))" strokeDasharray="3 3" opacity="0.5" />
+                <circle cx={p.x} cy={p.y} r="5" fill="hsl(var(--card))" stroke="hsl(var(--primary))" strokeWidth="2" />
+                <g transform={`translate(${Math.min(p.x + 8, W - tipW - 5)}, ${Math.max(p.y - 40, PT)})`}>
+                  <rect width={tipW} height="38" rx="4" fill="hsl(var(--popover))" stroke="hsl(var(--border))" />
+                  <text x="8" y="15" fontSize="11" fill="hsl(var(--muted-foreground))">{tipLabel}</text>
+                  <text x="8" y="30" fontSize="12" fill="hsl(var(--primary))" fontWeight="600">反馈量：{p.v}</text>
+                </g>
               </g>
-            </g>
-          )}
+            );
+          })()}
         </svg>
       </div>
     </div>
