@@ -231,15 +231,11 @@ export const TrendChartCard = ({ endDate, startDate }: TrendChartCardProps = {})
 
           {hover !== null && points[hover] && (() => {
             const p = points[hover];
-            const isPeriod = isPeriodBucket(dim);
-
-          {hover !== null && points[hover] && (() => {
-            const p = points[hover];
-            const isPeriod = isPeriodBucket(dim);
-            const tipLabel = isPeriod && p.rangeStart && p.rangeEnd
-              ? `${fmtYMD(p.rangeStart)} ~ ${fmtYMD(p.rangeEnd)}`
+            const isPeriodTip = isPeriodBucket(dim);
+            const tipLabel = isPeriodTip && p.rangeStart && p.rangeEnd
+              ? `${p.label ? p.label + "  " : ""}${fmtYMD(p.rangeStart)} ~ ${fmtYMD(p.rangeEnd)}`
               : fmtTick(p.t, dim);
-            const tipW = isPeriod ? 220 : 155;
+            const tipW = isPeriodTip ? 260 : 155;
             return (
               <g>
                 <line x1={p.x} y1={PT} x2={p.x} y2={PT + innerH} stroke="hsl(var(--primary))" strokeDasharray="3 3" opacity="0.5" />
