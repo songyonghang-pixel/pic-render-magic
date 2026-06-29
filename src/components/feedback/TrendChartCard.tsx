@@ -53,11 +53,18 @@ interface TrendChartCardProps {
   hideDimension?: boolean;
   hideActions?: boolean;
   compact?: boolean;
+  mobile?: boolean;
 }
 
-export const TrendChartCard = ({ endDate, startDate, hideDimension, hideActions, compact }: TrendChartCardProps = {}) => {
+export const TrendChartCard = ({ endDate, startDate, hideDimension, hideActions, compact, mobile }: TrendChartCardProps = {}) => {
   const [dim, setDim] = useState("日");
-  const cfg = dimMap[dim];
+  const baseCfg = dimMap[dim];
+  // Mobile: shorter data series for clearer chart
+  const mobilePoints: Record<string, number> = { "日": 7, "周": 8, "月": 6 };
+  const cfg = mobile && mobilePoints[dim]
+    ? { ...baseCfg, points: mobilePoints[dim] }
+    : baseCfg;
+  const mobileDimensionOptions = [{ label: "日" }, { label: "周" }, { label: "月" }];
 
   const data = useMemo(() => {
     const arr: { t: Date; v: number; rangeStart?: Date; rangeEnd?: Date; label?: string }[] = [];
@@ -107,7 +114,7 @@ export const TrendChartCard = ({ endDate, startDate, hideDimension, hideActions,
     return arr;
   }, [cfg, dim, endDate, startDate]);
 
-  const W = 1100, H = 320, PL = 50, PR = 20, PT = 20, PB = 30;
+  const W = 1100, H = mobile ? 520 : 320, PL = 50, PR = 20, PT = 20, PB = 30;
   const innerW = W - PL - PR;
   const innerH = H - PT - PB;
   const maxV = Math.max(15, ...data.map((d) => d.v));
@@ -156,11 +163,11 @@ export const TrendChartCard = ({ endDate, startDate, hideDimension, hideActions,
     <div className={`bg-card rounded-md ${compact ? "px-2 py-3" : "px-6 py-5"}`}>
       <div className="flex items-center gap-4 flex-wrap">
         <span className="text-primary text-[14px] font-medium">趋势图</span>
-        {!hideDimension && (
+        {(!hideDimension || mobile) && (
         <div className="flex items-center gap-2 ml-2">
           <span className="text-[13px] text-[hsl(var(--label-text))]">时间维度：</span>
-          <div className="w-32">
-            <SingleSelect options={timeDimensionOptions} value={dim} onChange={setDim} />
+          <div className={mobile ? "w-20" : "w-32"}>
+            <SingleSelect options={mobile ? mobileDimensionOptions : timeDimensionOptions} value={dim} onChange={setDim} />
           </div>
           {isSubHour(dim) && (
             <HoverCard openDelay={100}>
