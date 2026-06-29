@@ -31,6 +31,8 @@ const xAxisOptions = ["AI五级标签", "营销机型名", "OS版本", "反馈�
 
 export const MobileAlertDetail = () => {
   const [inner, setInner] = useState<"trend" | "detail">("trend");
+  const [xAxis, setXAxis] = useState(xAxisOptions[0]);
+
 
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))] flex justify-center py-6">
