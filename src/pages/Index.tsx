@@ -63,10 +63,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 import FeedbackDataAnalysis from "./FeedbackDataAnalysis";
 import AlertRules from "./AlertRules";
 import AlertList from "./AlertList";
+import MobileAlertDetail from "./MobileAlertDetail";
 
-type TabKey = "rules" | "alert" | "list" | "analysis";
-const pathToTab: Record<string, TabKey> = { "/rules": "rules", "/alert": "alert", "/list": "list", "/analysis": "analysis" };
-const tabToPath: Record<TabKey, string> = { rules: "/rules", alert: "/alert", list: "/list", analysis: "/analysis" };
+type TabKey = "rules" | "alert" | "list" | "analysis" | "mobile";
+const pathToTab: Record<string, TabKey> = { "/rules": "rules", "/alert": "alert", "/list": "list", "/analysis": "analysis", "/mobile": "mobile" };
+const tabToPath: Record<TabKey, string> = { rules: "/rules", alert: "/alert", list: "/list", analysis: "/analysis", mobile: "/mobile" };
 
 const Index = () => {
   const navigate = useNavigate();
@@ -189,6 +190,7 @@ const Index = () => {
           { key: "alert", label: "新建预警" },
           { key: "list", label: "预警列表" },
           { key: "analysis", label: "反馈原声分析" },
+          { key: "mobile", label: "预警详情手机端" },
         ] as const).map((t) => (
           <button
             key={t.key}
@@ -206,6 +208,8 @@ const Index = () => {
 
       {activeTab === "analysis" ? (
         <FeedbackDataAnalysis />
+      ) : activeTab === "mobile" ? (
+        <MobileAlertDetail />
       ) : activeTab === "rules" ? (
         <AlertRules onCreate={(t) => { if (t) setAlertType(t); setActiveTab("alert"); }} onAiCreate={(t) => { if (t) setAlertType(t); setActiveTab("alert"); setAiDialogOpen(true); }} onCopy={(name, type) => { setRuleName(name); setAlertType(type); setRuleNameKey((k) => k + 1); setActiveTab("alert"); }} />
       ) : activeTab === "list" ? (
