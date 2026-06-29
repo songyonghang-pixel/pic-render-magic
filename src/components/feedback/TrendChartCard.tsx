@@ -53,11 +53,18 @@ interface TrendChartCardProps {
   hideDimension?: boolean;
   hideActions?: boolean;
   compact?: boolean;
+  mobile?: boolean;
 }
 
-export const TrendChartCard = ({ endDate, startDate, hideDimension, hideActions, compact }: TrendChartCardProps = {}) => {
+export const TrendChartCard = ({ endDate, startDate, hideDimension, hideActions, compact, mobile }: TrendChartCardProps = {}) => {
   const [dim, setDim] = useState("日");
-  const cfg = dimMap[dim];
+  const baseCfg = dimMap[dim];
+  // Mobile: shorter data series for clearer chart
+  const mobilePoints: Record<string, number> = { "日": 7, "周": 8, "月": 6 };
+  const cfg = mobile && mobilePoints[dim]
+    ? { ...baseCfg, points: mobilePoints[dim] }
+    : baseCfg;
+  const mobileDimensionOptions = [{ label: "日" }, { label: "周" }, { label: "月" }];
 
   const data = useMemo(() => {
     const arr: { t: Date; v: number; rangeStart?: Date; rangeEnd?: Date; label?: string }[] = [];
