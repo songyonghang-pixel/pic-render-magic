@@ -8,7 +8,7 @@ const timeDimensionOptions = [
   { label: "1小时" }, { label: "2小时" }, { label: "3小时" },
   { label: "4小时" }, { label: "5小时" }, { label: "6小时" },
   { label: "日" }, { label: "周" }, { label: "月" },
-  { label: "近7日" }, { label: "近30日" },
+  { label: "7日" }, { label: "30日" },
 ];
 
 const dimMap: Record<string, { spanLabel: string; points: number; stepMs: number }> = {
