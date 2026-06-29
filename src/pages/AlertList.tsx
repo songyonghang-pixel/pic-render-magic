@@ -267,6 +267,9 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                 <tbody>
                   {filteredRows.map((r) => (
                     <tr key={r.id} className="border-b border-border">
+                      <td className="py-3 px-4">
+                        <Checkbox checked={selectedIds.has(r.id)} onCheckedChange={(c) => toggleOne(r.id, !!c)} />
+                      </td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))] whitespace-nowrap">{r.id}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.ruleId}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.name}</td>
@@ -286,7 +289,7 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                           <a className="text-primary cursor-pointer hover:underline">查看反馈</a>
                           <a className="text-primary cursor-pointer hover:underline" onClick={() => onShowAnalysis?.()}>反馈趋势</a>
                           <a className="text-primary cursor-pointer hover:underline" onClick={() => window.open(r.name.includes("16.1设置L3舆情预警") ? "/reports/ai-generating.html" : "/reports/feedback_analysis_report_2026-05-07.html", "_blank")}>AI总结</a>
-                          <ActionLinks r={r} onHandle={() => setHandleTarget(r)} onClose={() => setCloseTarget(r)} onInaccurate={() => setInaccurateTarget(r)} />
+                          <ActionLinks r={r} onHandle={() => setHandleTarget([r])} onClose={() => setCloseTarget([r])} onInaccurate={() => setInaccurateTarget(r)} />
                         </div>
                       </td>
                     </tr>
@@ -300,18 +303,26 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
       </div>
 
       <HandleDialog
-        row={handleTarget}
+        rows={handleTarget}
         onClose={() => setHandleTarget(null)}
         onConfirm={(patch) => {
-          if (handleTarget) updateRow(handleTarget.id, { ...patch, status: "处理中" });
+          if (handleTarget) {
+            updateRows(handleTarget.map((r) => r.id), { ...patch, status: "处理中" });
+            if (handleTarget.length > 1) toast.success(`已批量处理 ${handleTarget.length} 条预警`);
+            setSelectedIds(new Set());
+          }
           setHandleTarget(null);
         }}
       />
       <CloseDialog
-        row={closeTarget}
+        rows={closeTarget}
         onClose={() => setCloseTarget(null)}
         onConfirm={(patch) => {
-          if (closeTarget) updateRow(closeTarget.id, { ...patch, status: "已关闭" });
+          if (closeTarget) {
+            updateRows(closeTarget.map((r) => r.id), { ...patch, status: "已关闭" });
+            if (closeTarget.length > 1) toast.success(`已批量关闭 ${closeTarget.length} 条预警`);
+            setSelectedIds(new Set());
+          }
           setCloseTarget(null);
         }}
       />
