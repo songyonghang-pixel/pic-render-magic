@@ -168,6 +168,9 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
               <table className="w-full text-[13px] min-w-[2200px]">
                 <thead>
                   <tr className="bg-[hsl(var(--accent))] text-[hsl(var(--label-text))]">
+                    <th className="text-left py-3 px-4 w-[44px]">
+                      <Checkbox checked={allSelected ? true : someSelected ? "indeterminate" : false} onCheckedChange={(c) => toggleAll(!!c)} />
+                    </th>
                     {[
                       { label: "预警ID" },
                       { label: "规则ID" },
@@ -197,6 +200,9 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                 <tbody>
                   {filteredRows.map((r) => (
                     <tr key={r.id} className="border-b border-border">
+                      <td className="py-3 px-4">
+                        <Checkbox checked={selectedIds.has(r.id)} onCheckedChange={(c) => toggleOne(r.id, !!c)} />
+                      </td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))] whitespace-nowrap">{r.id}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.ruleId}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.name}</td>
@@ -215,7 +221,7 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                       <td className="py-3 px-4 whitespace-nowrap sticky right-0 bg-card shadow-[-4px_0_8px_-4px_hsl(var(--border))]">
                         <div className="flex items-center gap-3">
                           <a className="text-primary cursor-pointer hover:underline">查看反馈</a>
-                          <ActionLinks r={r} onHandle={() => setHandleTarget(r)} onClose={() => setCloseTarget(r)} onInaccurate={() => setInaccurateTarget(r)} />
+                          <ActionLinks r={r} onHandle={() => setHandleTarget([r])} onClose={() => setCloseTarget([r])} onInaccurate={() => setInaccurateTarget(r)} />
                         </div>
                       </td>
                     </tr>
@@ -226,6 +232,9 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
               <table className="w-full text-[13px] min-w-[2600px]">
                 <thead>
                   <tr className="bg-[hsl(var(--accent))] text-[hsl(var(--label-text))]">
+                    <th className="text-left py-3 px-4 w-[44px]">
+                      <Checkbox checked={allSelected ? true : someSelected ? "indeterminate" : false} onCheckedChange={(c) => toggleAll(!!c)} />
+                    </th>
                     {[
                       { label: "预警ID" },
                       { label: "规则ID" },
