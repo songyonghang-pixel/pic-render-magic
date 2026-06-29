@@ -13,6 +13,20 @@ const feedbackList = [
   { voice: "AI智慧体验功能有点鸡肋，希望优化", ch1: "官方社区", ch2: "OPPO社区" },
 ];
 
+const distributionData = [
+  { name: "拍照/拍视频体验", value: 10680 },
+  { name: "硬件配置", value: 9620 },
+  { name: "产品整体体验", value: 9510 },
+  { name: "外观/id设计", value: 8800 },
+  { name: "性能功耗热体验", value: 7020 },
+  { name: "游戏体验", value: 3450 },
+  { name: "系统易用性", value: 2380 },
+  { name: "做工质量/耐用性", value: 2180 },
+  { name: "屏幕", value: 1960 },
+  { name: "价格/性价比", value: 1410 },
+];
+
+
 export const MobileAlertDetail = () => {
   const [inner, setInner] = useState<"trend" | "detail">("trend");
 
