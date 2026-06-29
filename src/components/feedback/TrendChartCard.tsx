@@ -8,7 +8,7 @@ const timeDimensionOptions = [
   { label: "1小时" }, { label: "2小时" }, { label: "3小时" },
   { label: "4小时" }, { label: "5小时" }, { label: "6小时" },
   { label: "日" }, { label: "周" }, { label: "月" },
-  { label: "近7日" }, { label: "近30日" },
+  { label: "7日" }, { label: "30日" },
 ];
 
 const dimMap: Record<string, { spanLabel: string; points: number; stepMs: number }> = {
@@ -24,8 +24,8 @@ const dimMap: Record<string, { spanLabel: string; points: number; stepMs: number
   "日":     { spanLabel: "前30天",  points: 30, stepMs: 24 * 60 * 60 * 1000 },
   "周":     { spanLabel: "前12周",  points: 12, stepMs: 7 * 24 * 60 * 60 * 1000 },
   "月":     { spanLabel: "前12月",  points: 12, stepMs: 30 * 24 * 60 * 60 * 1000 },
-  "近7日":  { spanLabel: "近7日(按日)",  points: 7,  stepMs: 24 * 60 * 60 * 1000 },
-  "近30日": { spanLabel: "近30日(按日)", points: 30, stepMs: 24 * 60 * 60 * 1000 },
+  "7日":  { spanLabel: "7日(按周期)",  points: 7,  stepMs: 24 * 60 * 60 * 1000 },
+  "30日": { spanLabel: "30日(按周期)", points: 30, stepMs: 24 * 60 * 60 * 1000 },
 };
 
 const isSubHour = (d: string) => d === "10分钟" || d === "20分钟" || d === "30分钟";
@@ -35,12 +35,12 @@ const is1to6Hour = (d: string) =>
 function fmtTick(d: Date, dim: string) {
   const p = (n: number) => String(n).padStart(2, "0");
   if (dim === "月") return `${d.getFullYear()}-${p(d.getMonth() + 1)}`;
-  if (dim === "日" || dim === "周" || dim === "近7日" || dim === "近30日")
+  if (dim === "日" || dim === "周")
     return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
   return `${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }
 
-const isPeriodBucket = (d: string) => d === "近7日" || d === "近30日";
+const isPeriodBucket = (d: string) => d === "7日" || d === "30日";
 
 function fmtYMD(d: Date) {
   const p = (n: number) => String(n).padStart(2, "0");
@@ -49,23 +49,33 @@ function fmtYMD(d: Date) {
 
 interface TrendChartCardProps {
   endDate?: Date;
+  startDate?: Date;
 }
 
-export const TrendChartCard = ({ endDate }: TrendChartCardProps = {}) => {
+export const TrendChartCard = ({ endDate, startDate }: TrendChartCardProps = {}) => {
   const [dim, setDim] = useState("日");
   const cfg = dimMap[dim];
 
   const data = useMemo(() => {
-    const arr: { t: Date; v: number; rangeStart?: Date; rangeEnd?: Date }[] = [];
+    const arr: { t: Date; v: number; rangeStart?: Date; rangeEnd?: Date; label?: string }[] = [];
     const baseEnd = endDate ?? new Date();
     if (isPeriodBucket(dim)) {
-      // Period buckets: latest = [endDay - (N-1) at 00:00, baseEnd], previous = full N-day calendar windows
-      const periodDays = dim === "近7日" ? 7 : 30;
+      // Latest period = [endDay - (N-1) at 00:00, baseEnd] labeled "近N日"
+      // Prior periods = full N-day windows, labeled "周期1, 周期2..." (1 = oldest)
+      const periodDays = dim === "7日" ? 7 : 30;
+      const latestLabel = dim === "7日" ? "近7日" : "近30日";
       const endDayStart = new Date(baseEnd);
       endDayStart.setHours(0, 0, 0, 0);
-      const periodsCount = 12;
+      // Determine total periods to show based on selected date range
+      let periodsCount = 1;
+      if (startDate) {
+        const s = new Date(startDate);
+        s.setHours(0, 0, 0, 0);
+        const spanDays = Math.floor((endDayStart.getTime() - s.getTime()) / (24 * 60 * 60 * 1000)) + 1;
+        periodsCount = Math.max(1, Math.floor(spanDays / periodDays));
+      }
+      // i = 0 is latest (rightmost)
       for (let i = periodsCount - 1; i >= 0; i--) {
-        // bucket i = 0 is latest
         const startDay = new Date(endDayStart);
         startDay.setDate(endDayStart.getDate() - (i + 1) * periodDays + 1);
         const endOfPeriod = i === 0 ? new Date(baseEnd) : (() => {
@@ -77,7 +87,9 @@ export const TrendChartCard = ({ endDate }: TrendChartCardProps = {}) => {
         const seed = Math.sin(startDay.getTime() / 1e8) * 10000;
         const r = seed - Math.floor(seed);
         const v = Math.floor(r * 1500) + (r > 0.85 ? 300 : 100);
-        arr.push({ t: startDay, v: Math.max(0, v), rangeStart: startDay, rangeEnd: endOfPeriod });
+        const label = i === 0 ? latestLabel : `周期${periodsCount - 1 - i + 1}`;
+        // periodsCount-1-i+1: when i = periodsCount-1 (oldest) => 1
+        arr.push({ t: startDay, v: Math.max(0, v), rangeStart: startDay, rangeEnd: endOfPeriod, label });
       }
     } else {
       const end = baseEnd.getTime();
@@ -90,7 +102,7 @@ export const TrendChartCard = ({ endDate }: TrendChartCardProps = {}) => {
       }
     }
     return arr;
-  }, [cfg, dim, endDate]);
+  }, [cfg, dim, endDate, startDate]);
 
   const W = 1100, H = 320, PL = 50, PR = 20, PT = 20, PB = 30;
   const innerW = W - PL - PR;
@@ -105,6 +117,7 @@ export const TrendChartCard = ({ endDate }: TrendChartCardProps = {}) => {
     t: d.t,
     rangeStart: d.rangeStart,
     rangeEnd: d.rangeEnd,
+    label: d.label,
   }));
 
   const pathD = points.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ");
@@ -114,9 +127,12 @@ export const TrendChartCard = ({ endDate }: TrendChartCardProps = {}) => {
   const avgY = PT + innerH - (avgV / maxV) * innerH;
 
   const yTicks = [0, Math.round(maxV / 4), Math.round(maxV / 2), Math.round((maxV * 3) / 4), maxV];
-  const xTickIdx = data.length > 8
-    ? [0, Math.floor(data.length / 4), Math.floor(data.length / 2), Math.floor((data.length * 3) / 4), data.length - 1]
-    : data.map((_, i) => i);
+  const isPeriod = isPeriodBucket(dim);
+  const xTickIdx = isPeriod
+    ? data.map((_, i) => i)
+    : data.length > 8
+      ? [0, Math.floor(data.length / 4), Math.floor(data.length / 2), Math.floor((data.length * 3) / 4), data.length - 1]
+      : data.map((_, i) => i);
 
   const [hover, setHover] = useState<number | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
@@ -209,17 +225,17 @@ export const TrendChartCard = ({ endDate }: TrendChartCardProps = {}) => {
 
           {xTickIdx.map((i) => (
             <text key={i} x={points[i]?.x} y={H - 8} textAnchor="middle" fontSize="11" fill="hsl(var(--muted-foreground))">
-              {fmtTick(points[i]?.t, dim)}
+              {points[i]?.label ?? fmtTick(points[i]?.t, dim)}
             </text>
           ))}
 
           {hover !== null && points[hover] && (() => {
             const p = points[hover];
-            const isPeriod = isPeriodBucket(dim);
-            const tipLabel = isPeriod && p.rangeStart && p.rangeEnd
-              ? `${fmtYMD(p.rangeStart)} ~ ${fmtYMD(p.rangeEnd)}`
+            const isPeriodTip = isPeriodBucket(dim);
+            const tipLabel = isPeriodTip && p.rangeStart && p.rangeEnd
+              ? `${p.label ? p.label + "  " : ""}${fmtYMD(p.rangeStart)} ~ ${fmtYMD(p.rangeEnd)}`
               : fmtTick(p.t, dim);
-            const tipW = isPeriod ? 220 : 155;
+            const tipW = isPeriodTip ? 260 : 155;
             return (
               <g>
                 <line x1={p.x} y1={PT} x2={p.x} y2={PT + innerH} stroke="hsl(var(--primary))" strokeDasharray="3 3" opacity="0.5" />
