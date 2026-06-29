@@ -26,6 +26,8 @@ const distributionData = [
   { name: "价格/性价比", value: 1410 },
 ];
 
+const xAxisOptions = ["AI五级标签", "营销机型名", "OS版本", "反馈来源"];
+
 
 export const MobileAlertDetail = () => {
   const [inner, setInner] = useState<"trend" | "detail">("trend");
