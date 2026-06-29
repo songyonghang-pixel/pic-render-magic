@@ -80,7 +80,23 @@ export const MobileAlertDetail = () => {
               {/* 分布情况 */}
               <div className="bg-card rounded-md px-3 py-3">
                 <div className="text-primary text-[13px] font-medium mb-2">分布情况</div>
-                <div className="text-[11px] text-[hsl(var(--placeholder))] mb-2">横轴：AI五级标签 · 产品体验</div>
+                <div className="flex items-center gap-1.5 mb-3 overflow-x-auto">
+                  <span className="text-[11px] text-[hsl(var(--label-text))] shrink-0">横轴：</span>
+                  {xAxisOptions.map((opt) => (
+                    <button
+                      key={opt}
+                      onClick={() => setXAxis(opt)}
+                      className={`shrink-0 px-2 py-0.5 rounded-full text-[11px] border transition-colors ${
+                        xAxis === opt
+                          ? "bg-primary text-primary-foreground border-primary"
+                          : "bg-card text-[hsl(var(--label-text))] border-[hsl(var(--field-border))]"
+                      }`}
+                    >
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+
                 <div className="space-y-1.5">
                   {(() => {
                     const max = Math.max(...distributionData.map(d => d.value));
