@@ -225,9 +225,13 @@ export const TrendChartCard = ({ endDate, startDate }: TrendChartCardProps = {})
 
           {xTickIdx.map((i) => (
             <text key={i} x={points[i]?.x} y={H - 8} textAnchor="middle" fontSize="11" fill="hsl(var(--muted-foreground))">
-              {fmtTick(points[i]?.t, dim)}
+              {points[i]?.label ?? fmtTick(points[i]?.t, dim)}
             </text>
           ))}
+
+          {hover !== null && points[hover] && (() => {
+            const p = points[hover];
+            const isPeriod = isPeriodBucket(dim);
 
           {hover !== null && points[hover] && (() => {
             const p = points[hover];
