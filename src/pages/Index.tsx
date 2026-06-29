@@ -190,6 +190,7 @@ const Index = () => {
           { key: "alert", label: "新建预警" },
           { key: "list", label: "预警列表" },
           { key: "analysis", label: "反馈原声分析" },
+          { key: "mobile", label: "预警详情手机端" },
         ] as const).map((t) => (
           <button
             key={t.key}
@@ -207,6 +208,8 @@ const Index = () => {
 
       {activeTab === "analysis" ? (
         <FeedbackDataAnalysis />
+      ) : activeTab === "mobile" ? (
+        <MobileAlertDetail />
       ) : activeTab === "rules" ? (
         <AlertRules onCreate={(t) => { if (t) setAlertType(t); setActiveTab("alert"); }} onAiCreate={(t) => { if (t) setAlertType(t); setActiveTab("alert"); setAiDialogOpen(true); }} onCopy={(name, type) => { setRuleName(name); setAlertType(type); setRuleNameKey((k) => k + 1); setActiveTab("alert"); }} />
       ) : activeTab === "list" ? (
