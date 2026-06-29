@@ -67,8 +67,9 @@ export const MobileAlertDetail = () => {
     to: new Date(2026, 5, 29, 23, 59, 59),
   });
   const fmtDT = (d: Date) => format(d, "yyyy-MM-dd HH:mm:ss");
+  const fmtD = (d: Date) => format(d, "yyyy-MM-dd");
   const rangeLabel = range?.from
-    ? `${fmtDT(range.from)} ~ ${range.to ? fmtDT(range.to) : ""}`
+    ? `${fmtD(range.from)} ~ ${range.to ? fmtD(range.to) : ""}`
     : "请选择反馈时间";
 
   const updateTime = (which: "from" | "to", part: "h" | "m" | "s", val: number) => {
