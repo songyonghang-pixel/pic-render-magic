@@ -376,23 +376,26 @@ const ActionLinks = ({ r, onHandle, onClose, onInaccurate }: { r: Row; onHandle:
   );
 };
 
-const HandleDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: () => void; onConfirm: (patch: Partial<Row>) => void }) => {
+const HandleDialog = ({ rows, onClose, onConfirm }: { rows: Row[] | null; onClose: () => void; onConfirm: (patch: Partial<Row>) => void }) => {
   const [priority, setPriority] = useState("");
   const [handler, setHandler] = useState("");
   const [remark, setRemark] = useState("");
   const [noahId, setNoahId] = useState("");
 
-  const open = !!row;
+  const open = !!rows && rows.length > 0;
+  const isBulk = !!rows && rows.length > 1;
+  const single = rows && rows.length === 1 ? rows[0] : null;
 
   return (
     <Dialog open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
       <DialogContent
         className="max-w-[480px]"
         onOpenAutoFocus={() => {
-          if (row) { setPriority(row.priority); setHandler(row.handler); setRemark(row.remark); setNoahId(row.noahId); }
+          if (single) { setPriority(single.priority); setHandler(single.handler); setRemark(single.remark); setNoahId(single.noahId); }
+          else { setPriority(""); setHandler(""); setRemark(""); setNoahId(""); }
         }}
       >
-        <DialogHeader><DialogTitle>处理预警</DialogTitle></DialogHeader>
+        <DialogHeader><DialogTitle>{isBulk ? `批量处理预警（${rows!.length} 条）` : "处理预警"}</DialogTitle></DialogHeader>
         <div className="space-y-4 py-2">
           <FormRow label="处理优先级">
             <SingleSelect options={PRIORITY_OPTS.map((v) => ({ label: v, value: v }))} value={priority} onChange={setPriority} placeholder="请选择处理优先级" />
