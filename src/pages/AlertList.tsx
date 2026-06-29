@@ -430,13 +430,15 @@ const HandleDialog = ({ rows, onClose, onConfirm }: { rows: Row[] | null; onClos
   );
 };
 
-const CloseDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: () => void; onConfirm: (patch: Partial<Row>) => void }) => {
+const CloseDialog = ({ rows, onClose, onConfirm }: { rows: Row[] | null; onClose: () => void; onConfirm: (patch: Partial<Row>) => void }) => {
   const [reason, setReason] = useState("");
   const [reasonOther, setReasonOther] = useState("");
   const [closeDesc, setCloseDesc] = useState("");
   const [noahId, setNoahId] = useState("");
 
-  const open = !!row;
+  const open = !!rows && rows.length > 0;
+  const isBulk = !!rows && rows.length > 1;
+  const single = rows && rows.length === 1 ? rows[0] : null;
 
   const handleConfirm = () => {
     if (!reason) { toast.error("请选择关闭原因"); return; }
@@ -448,10 +450,11 @@ const CloseDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: ()
       <DialogContent
         className="max-w-[480px]"
         onOpenAutoFocus={() => {
-          if (row) { setReason(row.closeReason); setReasonOther(row.closeReasonOther); setCloseDesc(row.closeDesc); setNoahId(row.noahId); }
+          if (single) { setReason(single.closeReason); setReasonOther(single.closeReasonOther); setCloseDesc(single.closeDesc); setNoahId(single.noahId); }
+          else { setReason(""); setReasonOther(""); setCloseDesc(""); setNoahId(""); }
         }}
       >
-        <DialogHeader><DialogTitle>关闭预警</DialogTitle></DialogHeader>
+        <DialogHeader><DialogTitle>{isBulk ? `批量关闭预警（${rows!.length} 条）` : "关闭预警"}</DialogTitle></DialogHeader>
         <div className="space-y-4 py-2">
           <FormRow label={<span><span className="text-destructive">*</span> 关闭原因</span>}>
             <SingleSelect options={CLOSE_REASON_OPTS.map((v) => ({ label: v, value: v }))} value={reason} onChange={setReason} placeholder="请选择关闭原因" />
