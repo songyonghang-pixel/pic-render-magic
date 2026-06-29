@@ -1,9 +1,14 @@
 import { useState } from "react";
-import { ChevronDown, ChevronUp, Plus, Copy } from "lucide-react";
+import { ChevronDown, ChevronUp, Plus, Copy, CalendarIcon } from "lucide-react";
+import { format } from "date-fns";
 import { Field, TextInput, SelectInput } from "./FormField";
 import { MultiSelect } from "./MultiSelect";
 import { SingleSelect } from "./SingleSelect";
 import { CascadeMultiSelect } from "./CascadeMultiSelect";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
+import { DateRange } from "react-day-picker";
 import {
   aiTagOptions,
   brandOptions,
@@ -28,9 +33,24 @@ const npsDurationOptions = [
 ];
 const logkitSourceOptions = [{ label: "用户主动" }, { label: "自动上报" }];
 
-export const AnalysisFilterPanel = () => {
+interface Props {
+  onQuery?: (range: DateRange | undefined) => void;
+}
+
+export const AnalysisFilterPanel = ({ onQuery }: Props) => {
   const [expanded, setExpanded] = useState(false);
   const [fanOp, setFanOp] = useState<string[]>([]);
+  const today = new Date();
+  const defaultStart = new Date(today);
+  defaultStart.setDate(today.getDate() - 2);
+  const [range, setRange] = useState<DateRange | undefined>({ from: defaultStart, to: today });
+
+  const fmtRange = (r?: DateRange) => {
+    if (!r?.from) return "";
+    const f = format(r.from, "yyyy-MM-dd");
+    const t = r.to ? format(r.to, "yyyy-MM-dd") : f;
+    return `${f} 至 ${t}`;
+  };
 
   return (
     <div className="bg-[hsl(var(--accent)/0.4)] rounded-md px-6 py-5">
@@ -59,7 +79,30 @@ export const AnalysisFilterPanel = () => {
           <div className="flex-1 space-y-3">
             <div className="grid grid-cols-3 gap-4">
               <Field label="反馈时间" labelWidth="w-20">
-                <SelectInput value="2026-04-2: 至 2026-04-2:" />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button
+                      type="button"
+                      className={cn(
+                        "h-8 w-full px-3 text-left text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm flex items-center gap-2 hover:border-primary",
+                        !range?.from && "text-[hsl(var(--placeholder))]"
+                      )}
+                    >
+                      <CalendarIcon className="w-3.5 h-3.5 shrink-0 text-[hsl(var(--placeholder))]" />
+                      <span className="truncate">{range?.from ? fmtRange(range) : "请选择反馈时间"}</span>
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="range"
+                      selected={range}
+                      onSelect={setRange}
+                      numberOfMonths={2}
+                      initialFocus
+                      className={cn("p-3 pointer-events-auto")}
+                    />
+                  </PopoverContent>
+                </Popover>
               </Field>
               <Field label="反馈来源" labelWidth="w-20">
                 <CascadeMultiSelect placeholder="请选择" options={feedbackSourceOptions} />
@@ -215,7 +258,10 @@ export const AnalysisFilterPanel = () => {
           {expanded ? "收起筛选条件" : "更多筛选条件"}
         </button>
         <div className="flex items-center gap-2">
-          <button className="h-8 px-6 text-[13px] bg-primary text-primary-foreground rounded-full hover:opacity-90 transition-opacity">
+          <button
+            onClick={() => onQuery?.(range)}
+            className="h-8 px-6 text-[13px] bg-primary text-primary-foreground rounded-full hover:opacity-90 transition-opacity"
+          >
             查询
           </button>
           <button className="h-8 px-6 text-[13px] rounded-full border border-[hsl(var(--field-border))] text-[hsl(var(--label-text))] bg-card hover:border-primary hover:text-primary transition-colors">

@@ -40,27 +40,47 @@ function fmtTick(d: Date, dim: string) {
   return `${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }
 
-const isDayBucket = (d: string) => d === "近7日" || d === "近30日";
+const isPeriodBucket = (d: string) => d === "近7日" || d === "近30日";
 
-export const TrendChartCard = () => {
+function fmtYMD(d: Date) {
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}
+
+interface TrendChartCardProps {
+  endDate?: Date;
+}
+
+export const TrendChartCard = ({ endDate }: TrendChartCardProps = {}) => {
   const [dim, setDim] = useState("日");
   const cfg = dimMap[dim];
 
   const data = useMemo(() => {
-    const arr: { t: Date; v: number }[] = [];
-    if (isDayBucket(dim)) {
-      // Day-aligned buckets: start at 00:00 of (points-1) days ago, today bucket up to now
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      for (let i = cfg.points - 1; i >= 0; i--) {
-        const t = new Date(today.getTime() - i * cfg.stepMs);
-        const seed = Math.sin(t.getTime() / 1e8) * 10000;
+    const arr: { t: Date; v: number; rangeStart?: Date; rangeEnd?: Date }[] = [];
+    const baseEnd = endDate ?? new Date();
+    if (isPeriodBucket(dim)) {
+      // Period buckets: latest = [endDay - (N-1) at 00:00, baseEnd], previous = full N-day calendar windows
+      const periodDays = dim === "近7日" ? 7 : 30;
+      const endDayStart = new Date(baseEnd);
+      endDayStart.setHours(0, 0, 0, 0);
+      const periodsCount = 12;
+      for (let i = periodsCount - 1; i >= 0; i--) {
+        // bucket i = 0 is latest
+        const startDay = new Date(endDayStart);
+        startDay.setDate(endDayStart.getDate() - (i + 1) * periodDays + 1);
+        const endOfPeriod = i === 0 ? new Date(baseEnd) : (() => {
+          const e = new Date(startDay);
+          e.setDate(startDay.getDate() + periodDays - 1);
+          e.setHours(23, 59, 59, 999);
+          return e;
+        })();
+        const seed = Math.sin(startDay.getTime() / 1e8) * 10000;
         const r = seed - Math.floor(seed);
-        const v = Math.floor(r * 200) + (r > 0.85 ? 50 : 20);
-        arr.push({ t, v: Math.max(0, v) });
+        const v = Math.floor(r * 1500) + (r > 0.85 ? 300 : 100);
+        arr.push({ t: startDay, v: Math.max(0, v), rangeStart: startDay, rangeEnd: endOfPeriod });
       }
     } else {
-      const end = Date.now();
+      const end = baseEnd.getTime();
       for (let i = cfg.points - 1; i >= 0; i--) {
         const t = new Date(end - i * cfg.stepMs);
         const seed = Math.sin(t.getTime() / 1e8) * 10000;
@@ -70,7 +90,7 @@ export const TrendChartCard = () => {
       }
     }
     return arr;
-  }, [cfg, dim]);
+  }, [cfg, dim, endDate]);
 
   const W = 1100, H = 320, PL = 50, PR = 20, PT = 20, PB = 30;
   const innerW = W - PL - PR;
@@ -83,6 +103,8 @@ export const TrendChartCard = () => {
     y: PT + innerH - (d.v / maxV) * innerH,
     v: d.v,
     t: d.t,
+    rangeStart: d.rangeStart,
+    rangeEnd: d.rangeEnd,
   }));
 
   const pathD = points.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ");
@@ -191,17 +213,25 @@ export const TrendChartCard = () => {
             </text>
           ))}
 
-          {hover !== null && points[hover] && (
-            <g>
-              <line x1={points[hover].x} y1={PT} x2={points[hover].x} y2={PT + innerH} stroke="hsl(var(--primary))" strokeDasharray="3 3" opacity="0.5" />
-              <circle cx={points[hover].x} cy={points[hover].y} r="5" fill="hsl(var(--card))" stroke="hsl(var(--primary))" strokeWidth="2" />
-              <g transform={`translate(${Math.min(points[hover].x + 8, W - 160)}, ${Math.max(points[hover].y - 40, PT)})`}>
-                <rect width="155" height="38" rx="4" fill="hsl(var(--popover))" stroke="hsl(var(--border))" />
-                <text x="8" y="15" fontSize="11" fill="hsl(var(--muted-foreground))">{fmtTick(points[hover].t, dim)}</text>
-                <text x="8" y="30" fontSize="12" fill="hsl(var(--primary))" fontWeight="600">反馈量：{points[hover].v}</text>
+          {hover !== null && points[hover] && (() => {
+            const p = points[hover];
+            const isPeriod = isPeriodBucket(dim);
+            const tipLabel = isPeriod && p.rangeStart && p.rangeEnd
+              ? `${fmtYMD(p.rangeStart)} ~ ${fmtYMD(p.rangeEnd)}`
+              : fmtTick(p.t, dim);
+            const tipW = isPeriod ? 220 : 155;
+            return (
+              <g>
+                <line x1={p.x} y1={PT} x2={p.x} y2={PT + innerH} stroke="hsl(var(--primary))" strokeDasharray="3 3" opacity="0.5" />
+                <circle cx={p.x} cy={p.y} r="5" fill="hsl(var(--card))" stroke="hsl(var(--primary))" strokeWidth="2" />
+                <g transform={`translate(${Math.min(p.x + 8, W - tipW - 5)}, ${Math.max(p.y - 40, PT)})`}>
+                  <rect width={tipW} height="38" rx="4" fill="hsl(var(--popover))" stroke="hsl(var(--border))" />
+                  <text x="8" y="15" fontSize="11" fill="hsl(var(--muted-foreground))">{tipLabel}</text>
+                  <text x="8" y="30" fontSize="12" fill="hsl(var(--primary))" fontWeight="600">反馈量：{p.v}</text>
+                </g>
               </g>
-            </g>
-          )}
+            );
+          })()}
         </svg>
       </div>
     </div>

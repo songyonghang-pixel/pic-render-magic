@@ -84,6 +84,7 @@ export const FeedbackDataAnalysis = () => {
   const [selectedTag, setSelectedTag] = useState(clusterTags[0].name);
   const [aiOpen, setAiOpen] = useState(false);
   const [aiTag, setAiTag] = useState<string | null>(null);
+  const [endDate, setEndDate] = useState<Date>(new Date());
 
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))]">
@@ -98,12 +99,14 @@ export const FeedbackDataAnalysis = () => {
 
       {/* Analysis Filter Panel */}
       <div className="px-6 pt-5">
-        <AnalysisFilterPanel />
+        <AnalysisFilterPanel
+          onQuery={(r) => { if (r?.to) setEndDate(r.to); else if (r?.from) setEndDate(r.from); }}
+        />
       </div>
 
       {/* Trend chart */}
       <div className="px-6 mt-4">
-        <TrendChartCard />
+        <TrendChartCard endDate={endDate} />
       </div>
 
       {/* Chart panel */}
