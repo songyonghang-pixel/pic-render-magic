@@ -99,12 +99,14 @@ export const FeedbackDataAnalysis = () => {
 
       {/* Analysis Filter Panel */}
       <div className="px-6 pt-5">
-        <AnalysisFilterPanel />
+        <AnalysisFilterPanel
+          onQuery={(r) => { if (r?.to) setEndDate(r.to); else if (r?.from) setEndDate(r.from); }}
+        />
       </div>
 
       {/* Trend chart */}
       <div className="px-6 mt-4">
-        <TrendChartCard />
+        <TrendChartCard endDate={endDate} />
       </div>
 
       {/* Chart panel */}
