@@ -148,19 +148,17 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
       {/* Table */}
       <div className="px-6 mt-4 pb-10">
         <div className="bg-card rounded-md p-5">
-          <div className="flex justify-between items-center mb-3">
-            <div className="flex items-center gap-2">
-              <button
-                disabled={selectedRows.length === 0}
-                onClick={openBulkHandle}
-                className="h-8 px-4 rounded-md text-[13px] border border-[hsl(var(--field-border))] bg-card text-[hsl(var(--label-text))] disabled:opacity-50 disabled:cursor-not-allowed hover:enabled:border-primary hover:enabled:text-primary"
-              >批量处理{selectedRows.length > 0 ? `（${selectedRows.length}）` : ""}</button>
-              <button
-                disabled={selectedRows.length === 0}
-                onClick={openBulkClose}
-                className="h-8 px-4 rounded-md text-[13px] border border-[hsl(var(--field-border))] bg-card text-[hsl(var(--label-text))] disabled:opacity-50 disabled:cursor-not-allowed hover:enabled:border-primary hover:enabled:text-primary"
-              >批量关闭{selectedRows.length > 0 ? `（${selectedRows.length}）` : ""}</button>
-            </div>
+          <div className="flex justify-end items-center gap-2 mb-3">
+            <button
+              disabled={selectedRows.length === 0}
+              onClick={openBulkHandle}
+              className="h-8 px-4 rounded-md text-[13px] border border-[hsl(var(--field-border))] bg-card text-[hsl(var(--label-text))] disabled:opacity-50 disabled:cursor-not-allowed hover:enabled:border-primary hover:enabled:text-primary"
+            >批量处理{selectedRows.length > 0 ? `（${selectedRows.length}）` : ""}</button>
+            <button
+              disabled={selectedRows.length === 0}
+              onClick={openBulkClose}
+              className="h-8 px-4 rounded-md text-[13px] border border-[hsl(var(--field-border))] bg-card text-[hsl(var(--label-text))] disabled:opacity-50 disabled:cursor-not-allowed hover:enabled:border-primary hover:enabled:text-primary"
+            >批量关闭{selectedRows.length > 0 ? `（${selectedRows.length}）` : ""}</button>
             <button className="h-8 px-4 rounded-md bg-primary text-primary-foreground text-[13px]">导出</button>
           </div>
           <div className="overflow-x-auto">
