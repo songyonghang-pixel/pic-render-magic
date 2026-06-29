@@ -52,9 +52,10 @@ interface TrendChartCardProps {
   startDate?: Date;
   hideDimension?: boolean;
   hideActions?: boolean;
+  compact?: boolean;
 }
 
-export const TrendChartCard = ({ endDate, startDate, hideDimension, hideActions }: TrendChartCardProps = {}) => {
+export const TrendChartCard = ({ endDate, startDate, hideDimension, hideActions, compact }: TrendChartCardProps = {}) => {
   const [dim, setDim] = useState("日");
   const cfg = dimMap[dim];
 
