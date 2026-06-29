@@ -178,10 +178,29 @@ export const MobileAlertDetail = () => {
                 <Calendar
                   mode="range"
                   selected={range}
-                  onSelect={setRange}
+                  onSelect={(r) => {
+                    if (!r) { setRange(undefined); return; }
+                    const from = r.from ? new Date(r.from) : undefined;
+                    const to = r.to ? new Date(r.to) : undefined;
+                    if (from && range?.from) {
+                      from.setHours(range.from.getHours(), range.from.getMinutes(), range.from.getSeconds());
+                    } else if (from) {
+                      from.setHours(0, 0, 0);
+                    }
+                    if (to && range?.to) {
+                      to.setHours(range.to.getHours(), range.to.getMinutes(), range.to.getSeconds());
+                    } else if (to) {
+                      to.setHours(23, 59, 59);
+                    }
+                    setRange({ from, to });
+                  }}
                   numberOfMonths={1}
                   className={cn("p-3 pointer-events-auto")}
                 />
+                <div className="border-t border-border px-3 py-2.5 space-y-2 bg-card">
+                  <TimeInputs which="from" />
+                  <TimeInputs which="to" />
+                </div>
               </PopoverContent>
             </Popover>
             <button className="h-9 px-3 rounded-md bg-primary text-primary-foreground text-[12px] shrink-0">
