@@ -155,6 +155,7 @@ export const TrendChartCard = ({ endDate, startDate, hideDimension, hideActions 
     <div className="bg-card rounded-md px-6 py-5">
       <div className="flex items-center gap-4 flex-wrap">
         <span className="text-primary text-[14px] font-medium">趋势图</span>
+        {!hideDimension && (
         <div className="flex items-center gap-2 ml-2">
           <span className="text-[13px] text-[hsl(var(--label-text))]">时间维度：</span>
           <div className="w-32">
@@ -191,6 +192,7 @@ export const TrendChartCard = ({ endDate, startDate, hideDimension, hideActions 
             </HoverCard>
           )}
         </div>
+        )}
         <div className="ml-auto flex items-center gap-2 px-3 py-1 rounded-sm bg-[hsl(var(--primary)/0.08)] border border-[hsl(var(--primary)/0.2)]">
           <span className="text-[12px] text-[hsl(var(--muted-foreground))]">平均值（每{dim}）：</span>
           <span className="text-[13px] font-semibold text-primary">{avgV.toFixed(2)}</span>
