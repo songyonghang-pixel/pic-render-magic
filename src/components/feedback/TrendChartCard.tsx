@@ -117,6 +117,7 @@ export const TrendChartCard = ({ endDate, startDate }: TrendChartCardProps = {})
     t: d.t,
     rangeStart: d.rangeStart,
     rangeEnd: d.rangeEnd,
+    label: d.label,
   }));
 
   const pathD = points.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ");
@@ -126,9 +127,12 @@ export const TrendChartCard = ({ endDate, startDate }: TrendChartCardProps = {})
   const avgY = PT + innerH - (avgV / maxV) * innerH;
 
   const yTicks = [0, Math.round(maxV / 4), Math.round(maxV / 2), Math.round((maxV * 3) / 4), maxV];
-  const xTickIdx = data.length > 8
-    ? [0, Math.floor(data.length / 4), Math.floor(data.length / 2), Math.floor((data.length * 3) / 4), data.length - 1]
-    : data.map((_, i) => i);
+  const isPeriod = isPeriodBucket(dim);
+  const xTickIdx = isPeriod
+    ? data.map((_, i) => i)
+    : data.length > 8
+      ? [0, Math.floor(data.length / 4), Math.floor(data.length / 2), Math.floor((data.length * 3) / 4), data.length - 1]
+      : data.map((_, i) => i);
 
   const [hover, setHover] = useState<number | null>(null);
   const svgRef = useRef<SVGSVGElement>(null);
