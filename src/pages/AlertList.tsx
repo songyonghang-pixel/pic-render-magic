@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { SingleSelect } from "@/components/feedback/SingleSelect";
 import { Pagination } from "./AlertRules";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type Status = "待处理" | "处理中" | "已关闭";
 
@@ -42,14 +43,46 @@ const CLOSE_REASON_OPTS = ["非问题", "已建单跟进", "已知问题", "已�
 export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
   const [subTab, setSubTab] = useState<"实时" | "统计">("实时");
   const [data, setData] = useState<Row[]>(initialRows);
-  const [handleTarget, setHandleTarget] = useState<Row | null>(null);
-  const [closeTarget, setCloseTarget] = useState<Row | null>(null);
+  const [handleTarget, setHandleTarget] = useState<Row[] | null>(null);
+  const [closeTarget, setCloseTarget] = useState<Row[] | null>(null);
   const [inaccurateTarget, setInaccurateTarget] = useState<Row | null>(null);
+  const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
 
   const filteredRows = data.filter((r) => r.type === subTab);
+  const visibleIds = filteredRows.map((r) => r.id);
+  const allSelected = visibleIds.length > 0 && visibleIds.every((id) => selectedIds.has(id));
+  const someSelected = visibleIds.some((id) => selectedIds.has(id));
+  const selectedRows = filteredRows.filter((r) => selectedIds.has(r.id));
 
-  const updateRow = (id: number, patch: Partial<Row>) => {
-    setData((prev) => prev.map((r) => (r.id === id ? { ...r, ...patch } : r)));
+  const toggleOne = (id: number, checked: boolean) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (checked) next.add(id); else next.delete(id);
+      return next;
+    });
+  };
+  const toggleAll = (checked: boolean) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      visibleIds.forEach((id) => { if (checked) next.add(id); else next.delete(id); });
+      return next;
+    });
+  };
+
+  const updateRows = (ids: number[], patch: Partial<Row>) => {
+    const idSet = new Set(ids);
+    setData((prev) => prev.map((r) => (idSet.has(r.id) ? { ...r, ...patch } : r)));
+  };
+  const updateRow = (id: number, patch: Partial<Row>) => updateRows([id], patch);
+
+  const openBulkHandle = () => {
+    const eligible = selectedRows.filter((r) => r.status === "待处理" || r.status === "处理中");
+    if (eligible.length === 0) { toast.error("请选择待处理或处理中的预警"); return; }
+    setHandleTarget(eligible);
+  };
+  const openBulkClose = () => {
+    if (selectedRows.length === 0) { toast.error("请先勾选预警"); return; }
+    setCloseTarget(selectedRows);
   };
 
   return (
@@ -115,7 +148,19 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
       {/* Table */}
       <div className="px-6 mt-4 pb-10">
         <div className="bg-card rounded-md p-5">
-          <div className="flex justify-end mb-3">
+          <div className="flex justify-between items-center mb-3">
+            <div className="flex items-center gap-2">
+              <button
+                disabled={selectedRows.length === 0}
+                onClick={openBulkHandle}
+                className="h-8 px-4 rounded-md text-[13px] border border-[hsl(var(--field-border))] bg-card text-[hsl(var(--label-text))] disabled:opacity-50 disabled:cursor-not-allowed hover:enabled:border-primary hover:enabled:text-primary"
+              >批量处理{selectedRows.length > 0 ? `（${selectedRows.length}）` : ""}</button>
+              <button
+                disabled={selectedRows.length === 0}
+                onClick={openBulkClose}
+                className="h-8 px-4 rounded-md text-[13px] border border-[hsl(var(--field-border))] bg-card text-[hsl(var(--label-text))] disabled:opacity-50 disabled:cursor-not-allowed hover:enabled:border-primary hover:enabled:text-primary"
+              >批量关闭{selectedRows.length > 0 ? `（${selectedRows.length}）` : ""}</button>
+            </div>
             <button className="h-8 px-4 rounded-md bg-primary text-primary-foreground text-[13px]">导出</button>
           </div>
           <div className="overflow-x-auto">
@@ -123,6 +168,9 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
               <table className="w-full text-[13px] min-w-[2200px]">
                 <thead>
                   <tr className="bg-[hsl(var(--accent))] text-[hsl(var(--label-text))]">
+                    <th className="text-left py-3 px-4 w-[44px]">
+                      <Checkbox checked={allSelected ? true : someSelected ? "indeterminate" : false} onCheckedChange={(c) => toggleAll(!!c)} />
+                    </th>
                     {[
                       { label: "预警ID" },
                       { label: "规则ID" },
@@ -152,6 +200,9 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                 <tbody>
                   {filteredRows.map((r) => (
                     <tr key={r.id} className="border-b border-border">
+                      <td className="py-3 px-4">
+                        <Checkbox checked={selectedIds.has(r.id)} onCheckedChange={(c) => toggleOne(r.id, !!c)} />
+                      </td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))] whitespace-nowrap">{r.id}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.ruleId}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.name}</td>
@@ -170,7 +221,7 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                       <td className="py-3 px-4 whitespace-nowrap sticky right-0 bg-card shadow-[-4px_0_8px_-4px_hsl(var(--border))]">
                         <div className="flex items-center gap-3">
                           <a className="text-primary cursor-pointer hover:underline">查看反馈</a>
-                          <ActionLinks r={r} onHandle={() => setHandleTarget(r)} onClose={() => setCloseTarget(r)} onInaccurate={() => setInaccurateTarget(r)} />
+                          <ActionLinks r={r} onHandle={() => setHandleTarget([r])} onClose={() => setCloseTarget([r])} onInaccurate={() => setInaccurateTarget(r)} />
                         </div>
                       </td>
                     </tr>
@@ -181,6 +232,9 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
               <table className="w-full text-[13px] min-w-[2600px]">
                 <thead>
                   <tr className="bg-[hsl(var(--accent))] text-[hsl(var(--label-text))]">
+                    <th className="text-left py-3 px-4 w-[44px]">
+                      <Checkbox checked={allSelected ? true : someSelected ? "indeterminate" : false} onCheckedChange={(c) => toggleAll(!!c)} />
+                    </th>
                     {[
                       { label: "预警ID" },
                       { label: "规则ID" },
@@ -213,6 +267,9 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                 <tbody>
                   {filteredRows.map((r) => (
                     <tr key={r.id} className="border-b border-border">
+                      <td className="py-3 px-4">
+                        <Checkbox checked={selectedIds.has(r.id)} onCheckedChange={(c) => toggleOne(r.id, !!c)} />
+                      </td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))] whitespace-nowrap">{r.id}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.ruleId}</td>
                       <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.name}</td>
@@ -232,7 +289,7 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                           <a className="text-primary cursor-pointer hover:underline">查看反馈</a>
                           <a className="text-primary cursor-pointer hover:underline" onClick={() => onShowAnalysis?.()}>反馈趋势</a>
                           <a className="text-primary cursor-pointer hover:underline" onClick={() => window.open(r.name.includes("16.1设置L3舆情预警") ? "/reports/ai-generating.html" : "/reports/feedback_analysis_report_2026-05-07.html", "_blank")}>AI总结</a>
-                          <ActionLinks r={r} onHandle={() => setHandleTarget(r)} onClose={() => setCloseTarget(r)} onInaccurate={() => setInaccurateTarget(r)} />
+                          <ActionLinks r={r} onHandle={() => setHandleTarget([r])} onClose={() => setCloseTarget([r])} onInaccurate={() => setInaccurateTarget(r)} />
                         </div>
                       </td>
                     </tr>
@@ -246,18 +303,26 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
       </div>
 
       <HandleDialog
-        row={handleTarget}
+        rows={handleTarget}
         onClose={() => setHandleTarget(null)}
         onConfirm={(patch) => {
-          if (handleTarget) updateRow(handleTarget.id, { ...patch, status: "处理中" });
+          if (handleTarget) {
+            updateRows(handleTarget.map((r) => r.id), { ...patch, status: "处理中" });
+            if (handleTarget.length > 1) toast.success(`已批量处理 ${handleTarget.length} 条预警`);
+            setSelectedIds(new Set());
+          }
           setHandleTarget(null);
         }}
       />
       <CloseDialog
-        row={closeTarget}
+        rows={closeTarget}
         onClose={() => setCloseTarget(null)}
         onConfirm={(patch) => {
-          if (closeTarget) updateRow(closeTarget.id, { ...patch, status: "已关闭" });
+          if (closeTarget) {
+            updateRows(closeTarget.map((r) => r.id), { ...patch, status: "已关闭" });
+            if (closeTarget.length > 1) toast.success(`已批量关闭 ${closeTarget.length} 条预警`);
+            setSelectedIds(new Set());
+          }
           setCloseTarget(null);
         }}
       />
@@ -311,23 +376,26 @@ const ActionLinks = ({ r, onHandle, onClose, onInaccurate }: { r: Row; onHandle:
   );
 };
 
-const HandleDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: () => void; onConfirm: (patch: Partial<Row>) => void }) => {
+const HandleDialog = ({ rows, onClose, onConfirm }: { rows: Row[] | null; onClose: () => void; onConfirm: (patch: Partial<Row>) => void }) => {
   const [priority, setPriority] = useState("");
   const [handler, setHandler] = useState("");
   const [remark, setRemark] = useState("");
   const [noahId, setNoahId] = useState("");
 
-  const open = !!row;
+  const open = !!rows && rows.length > 0;
+  const isBulk = !!rows && rows.length > 1;
+  const single = rows && rows.length === 1 ? rows[0] : null;
 
   return (
     <Dialog open={open} onOpenChange={(o) => { if (!o) onClose(); }}>
       <DialogContent
         className="max-w-[480px]"
         onOpenAutoFocus={() => {
-          if (row) { setPriority(row.priority); setHandler(row.handler); setRemark(row.remark); setNoahId(row.noahId); }
+          if (single) { setPriority(single.priority); setHandler(single.handler); setRemark(single.remark); setNoahId(single.noahId); }
+          else { setPriority(""); setHandler(""); setRemark(""); setNoahId(""); }
         }}
       >
-        <DialogHeader><DialogTitle>处理预警</DialogTitle></DialogHeader>
+        <DialogHeader><DialogTitle>{isBulk ? `批量处理预警（${rows!.length} 条）` : "处理预警"}</DialogTitle></DialogHeader>
         <div className="space-y-4 py-2">
           <FormRow label="处理优先级">
             <SingleSelect options={PRIORITY_OPTS.map((v) => ({ label: v, value: v }))} value={priority} onChange={setPriority} placeholder="请选择处理优先级" />
@@ -362,13 +430,15 @@ const HandleDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: (
   );
 };
 
-const CloseDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: () => void; onConfirm: (patch: Partial<Row>) => void }) => {
+const CloseDialog = ({ rows, onClose, onConfirm }: { rows: Row[] | null; onClose: () => void; onConfirm: (patch: Partial<Row>) => void }) => {
   const [reason, setReason] = useState("");
   const [reasonOther, setReasonOther] = useState("");
   const [closeDesc, setCloseDesc] = useState("");
   const [noahId, setNoahId] = useState("");
 
-  const open = !!row;
+  const open = !!rows && rows.length > 0;
+  const isBulk = !!rows && rows.length > 1;
+  const single = rows && rows.length === 1 ? rows[0] : null;
 
   const handleConfirm = () => {
     if (!reason) { toast.error("请选择关闭原因"); return; }
@@ -380,10 +450,11 @@ const CloseDialog = ({ row, onClose, onConfirm }: { row: Row | null; onClose: ()
       <DialogContent
         className="max-w-[480px]"
         onOpenAutoFocus={() => {
-          if (row) { setReason(row.closeReason); setReasonOther(row.closeReasonOther); setCloseDesc(row.closeDesc); setNoahId(row.noahId); }
+          if (single) { setReason(single.closeReason); setReasonOther(single.closeReasonOther); setCloseDesc(single.closeDesc); setNoahId(single.noahId); }
+          else { setReason(""); setReasonOther(""); setCloseDesc(""); setNoahId(""); }
         }}
       >
-        <DialogHeader><DialogTitle>关闭预警</DialogTitle></DialogHeader>
+        <DialogHeader><DialogTitle>{isBulk ? `批量关闭预警（${rows!.length} 条）` : "关闭预警"}</DialogTitle></DialogHeader>
         <div className="space-y-4 py-2">
           <FormRow label={<span><span className="text-destructive">*</span> 关闭原因</span>}>
             <SingleSelect options={CLOSE_REASON_OPTS.map((v) => ({ label: v, value: v }))} value={reason} onChange={setReason} placeholder="请选择关闭原因" />
