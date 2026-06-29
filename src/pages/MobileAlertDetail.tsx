@@ -71,11 +71,32 @@ export const MobileAlertDetail = () => {
         {/* Content */}
         <div className="flex-1 overflow-auto bg-[hsl(var(--page-bg))]">
           {inner === "trend" ? (
-            <div className="p-3">
-              <div className="bg-card rounded-md p-2 [&_svg]:!h-auto">
-                <TrendChartCard hideDimension hideActions />
+            <div className="p-2 space-y-2">
+              <TrendChartCard hideDimension hideActions compact />
+              {/* 分布情况 */}
+              <div className="bg-card rounded-md px-3 py-3">
+                <div className="text-primary text-[13px] font-medium mb-2">分布情况</div>
+                <div className="text-[11px] text-[hsl(var(--placeholder))] mb-2">横轴：AI五级标签 · 产品体验</div>
+                <div className="space-y-1.5">
+                  {(() => {
+                    const max = Math.max(...distributionData.map(d => d.value));
+                    return distributionData.map((d, i) => (
+                      <div key={i} className="flex items-center gap-2">
+                        <span className="w-[88px] shrink-0 text-[11px] text-[hsl(var(--label-text))] truncate" title={d.name}>{d.name}</span>
+                        <div className="flex-1 h-4 bg-[hsl(var(--accent))] rounded-sm overflow-hidden">
+                          <div
+                            className="h-full bg-[hsl(38,95%,65%)] rounded-sm"
+                            style={{ width: `${(d.value / max) * 100}%` }}
+                          />
+                        </div>
+                        <span className="w-[48px] text-right text-[11px] text-primary tabular-nums">{d.value.toLocaleString()}</span>
+                      </div>
+                    ));
+                  })()}
+                </div>
               </div>
             </div>
+
           ) : (
             <div className="p-3 space-y-2">
               {feedbackList.map((f, i) => (
