@@ -136,7 +136,7 @@ export const MobileAlertDetail = () => {
             </div>
           ) : inner === "trend" ? (
             <div className="p-2 space-y-2">
-              <TrendChartCard hideDimension hideActions compact />
+              <TrendChartCard hideActions compact mobile />
               {/* 分布情况 */}
               <div className="bg-card rounded-md px-3 py-3">
                 <div className="text-primary text-[13px] font-medium mb-2">分布情况</div>
