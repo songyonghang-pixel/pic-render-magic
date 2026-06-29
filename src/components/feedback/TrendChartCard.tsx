@@ -79,17 +79,6 @@ export const TrendChartCard = ({ endDate }: TrendChartCardProps = {}) => {
         const v = Math.floor(r * 1500) + (r > 0.85 ? 300 : 100);
         arr.push({ t: startDay, v: Math.max(0, v), rangeStart: startDay, rangeEnd: endOfPeriod });
       }
-    } else if (dim === "近7日" === false && (dim === "近30日" === false) && false) {
-      // unreachable
-    } else if (dim === "日" || dim === "周" || dim === "月") {
-      const end = baseEnd.getTime();
-      for (let i = cfg.points - 1; i >= 0; i--) {
-        const t = new Date(end - i * cfg.stepMs);
-        const seed = Math.sin(t.getTime() / 1e8) * 10000;
-        const r = seed - Math.floor(seed);
-        const v = Math.floor(r * 200) + (r > 0.85 ? 50 : 20);
-        arr.push({ t, v: Math.max(0, v) });
-      }
     } else {
       const end = baseEnd.getTime();
       for (let i = cfg.points - 1; i >= 0; i--) {
