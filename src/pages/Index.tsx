@@ -63,10 +63,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 import FeedbackDataAnalysis from "./FeedbackDataAnalysis";
 import AlertRules from "./AlertRules";
 import AlertList from "./AlertList";
+import MobileAlertDetail from "./MobileAlertDetail";
 
-type TabKey = "rules" | "alert" | "list" | "analysis";
-const pathToTab: Record<string, TabKey> = { "/rules": "rules", "/alert": "alert", "/list": "list", "/analysis": "analysis" };
-const tabToPath: Record<TabKey, string> = { rules: "/rules", alert: "/alert", list: "/list", analysis: "/analysis" };
+type TabKey = "rules" | "alert" | "list" | "analysis" | "mobile";
+const pathToTab: Record<string, TabKey> = { "/rules": "rules", "/alert": "alert", "/list": "list", "/analysis": "analysis", "/mobile": "mobile" };
+const tabToPath: Record<TabKey, string> = { rules: "/rules", alert: "/alert", list: "/list", analysis: "/analysis", mobile: "/mobile" };
 
 const Index = () => {
   const navigate = useNavigate();
