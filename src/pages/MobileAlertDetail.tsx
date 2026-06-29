@@ -297,6 +297,22 @@ export const MobileAlertDetail = () => {
                   })()}
                 </div>
               </div>
+
+              {/* AI聚类标签 Top10 */}
+              <div className="bg-card rounded-md px-3 py-3">
+                <div className="text-primary text-[13px] font-medium mb-3">AI聚类标签 Top10</div>
+                <div className="divide-y divide-border">
+                  {aiClusterTop10.map((d, i) => (
+                    <div key={i} className="flex items-center gap-2 py-2">
+                      <span className={`w-5 h-5 shrink-0 rounded-sm flex items-center justify-center text-[11px] tabular-nums ${
+                        i < 3 ? "bg-[hsl(38,95%,65%)] text-white" : "bg-[hsl(var(--accent))] text-[hsl(var(--label-text))]"
+                      }`}>{i + 1}</span>
+                      <span className="flex-1 text-[12px] text-[hsl(var(--label-text))] truncate" title={d.name}>{d.name}</span>
+                      <span className="text-[12px] text-primary tabular-nums">{d.value.toLocaleString()}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           ) : (
             <div className="p-3 space-y-2">
