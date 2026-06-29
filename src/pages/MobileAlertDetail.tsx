@@ -33,10 +33,11 @@ export const MobileAlertDetail = () => {
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))] flex justify-center py-6">
       {/* Phone frame */}
-      <div className="w-[390px] bg-card rounded-[36px] shadow-2xl border-[10px] border-[hsl(var(--label-text))] overflow-hidden flex flex-col" style={{ height: "780px" }}>
+      <div className="w-[430px] bg-card rounded-[36px] shadow-2xl border-[10px] border-[hsl(var(--label-text))] overflow-hidden flex flex-col" style={{ height: "820px" }}>
         {/* Status bar */}
         <div className="h-7 bg-[hsl(var(--page-bg))] flex items-center justify-between px-6 text-[11px] text-[hsl(var(--label-text))] shrink-0">
           <span>9:41</span>
+
           <span>●●● </span>
         </div>
 
