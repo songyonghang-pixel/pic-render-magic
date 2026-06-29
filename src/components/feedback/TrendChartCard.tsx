@@ -163,11 +163,11 @@ export const TrendChartCard = ({ endDate, startDate, hideDimension, hideActions,
     <div className={`bg-card rounded-md ${compact ? "px-2 py-3" : "px-6 py-5"}`}>
       <div className="flex items-center gap-4 flex-wrap">
         <span className="text-primary text-[14px] font-medium">趋势图</span>
-        {!hideDimension && (
+        {(!hideDimension || mobile) && (
         <div className="flex items-center gap-2 ml-2">
           <span className="text-[13px] text-[hsl(var(--label-text))]">时间维度：</span>
-          <div className="w-32">
-            <SingleSelect options={timeDimensionOptions} value={dim} onChange={setDim} />
+          <div className={mobile ? "w-20" : "w-32"}>
+            <SingleSelect options={mobile ? mobileDimensionOptions : timeDimensionOptions} value={dim} onChange={setDim} />
           </div>
           {isSubHour(dim) && (
             <HoverCard openDelay={100}>
