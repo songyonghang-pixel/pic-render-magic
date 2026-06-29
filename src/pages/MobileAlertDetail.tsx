@@ -66,7 +66,6 @@ export const MobileAlertDetail = () => {
     from: new Date(2026, 5, 23, 0, 0, 0),
     to: new Date(2026, 5, 29, 23, 59, 59),
   });
-  const fmtDT = (d: Date) => format(d, "yyyy-MM-dd HH:mm:ss");
   const fmtD = (d: Date) => format(d, "yyyy-MM-dd");
   const rangeLabel = range?.from
     ? `${fmtD(range.from)} ~ ${range.to ? fmtD(range.to) : ""}`
