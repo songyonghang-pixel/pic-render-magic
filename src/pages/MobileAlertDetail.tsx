@@ -58,7 +58,7 @@ export const MobileAlertDetail = () => {
           {inner === "trend" ? (
             <div className="p-3">
               <div className="bg-card rounded-md p-2 [&_svg]:!h-auto">
-                <TrendChartCard />
+                <TrendChartCard hideDimension hideActions />
               </div>
             </div>
           ) : (
