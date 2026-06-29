@@ -24,8 +24,8 @@ const dimMap: Record<string, { spanLabel: string; points: number; stepMs: number
   "日":     { spanLabel: "前30天",  points: 30, stepMs: 24 * 60 * 60 * 1000 },
   "周":     { spanLabel: "前12周",  points: 12, stepMs: 7 * 24 * 60 * 60 * 1000 },
   "月":     { spanLabel: "前12月",  points: 12, stepMs: 30 * 24 * 60 * 60 * 1000 },
-  "近7日":  { spanLabel: "前12周期", points: 12, stepMs: 7 * 24 * 60 * 60 * 1000 },
-  "近30日": { spanLabel: "前12周期", points: 12, stepMs: 30 * 24 * 60 * 60 * 1000 },
+  "近7日":  { spanLabel: "近7日(按日)",  points: 7,  stepMs: 24 * 60 * 60 * 1000 },
+  "近30日": { spanLabel: "近30日(按日)", points: 30, stepMs: 24 * 60 * 60 * 1000 },
 };
 
 const isSubHour = (d: string) => d === "10分钟" || d === "20分钟" || d === "30分钟";
@@ -35,26 +35,42 @@ const is1to6Hour = (d: string) =>
 function fmtTick(d: Date, dim: string) {
   const p = (n: number) => String(n).padStart(2, "0");
   if (dim === "月") return `${d.getFullYear()}-${p(d.getMonth() + 1)}`;
-  if (dim === "日" || dim === "周") return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+  if (dim === "日" || dim === "周" || dim === "近7日" || dim === "近30日")
+    return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
   return `${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }
+
+const isDayBucket = (d: string) => d === "近7日" || d === "近30日";
 
 export const TrendChartCard = () => {
   const [dim, setDim] = useState("日");
   const cfg = dimMap[dim];
 
   const data = useMemo(() => {
-    const end = Date.now();
     const arr: { t: Date; v: number }[] = [];
-    for (let i = cfg.points - 1; i >= 0; i--) {
-      const t = new Date(end - i * cfg.stepMs);
-      const seed = Math.sin(t.getTime() / 1e8) * 10000;
-      const r = seed - Math.floor(seed);
-      const v = Math.floor(r * 200) + (r > 0.85 ? 50 : 20);
-      arr.push({ t, v: Math.max(0, v) });
+    if (isDayBucket(dim)) {
+      // Day-aligned buckets: start at 00:00 of (points-1) days ago, today bucket up to now
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      for (let i = cfg.points - 1; i >= 0; i--) {
+        const t = new Date(today.getTime() - i * cfg.stepMs);
+        const seed = Math.sin(t.getTime() / 1e8) * 10000;
+        const r = seed - Math.floor(seed);
+        const v = Math.floor(r * 200) + (r > 0.85 ? 50 : 20);
+        arr.push({ t, v: Math.max(0, v) });
+      }
+    } else {
+      const end = Date.now();
+      for (let i = cfg.points - 1; i >= 0; i--) {
+        const t = new Date(end - i * cfg.stepMs);
+        const seed = Math.sin(t.getTime() / 1e8) * 10000;
+        const r = seed - Math.floor(seed);
+        const v = Math.floor(r * 200) + (r > 0.85 ? 50 : 20);
+        arr.push({ t, v: Math.max(0, v) });
+      }
     }
     return arr;
-  }, [cfg]);
+  }, [cfg, dim]);
 
   const W = 1100, H = 320, PL = 50, PR = 20, PT = 20, PB = 30;
   const innerW = W - PL - PR;
