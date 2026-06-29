@@ -114,7 +114,7 @@ export const TrendChartCard = ({ endDate, startDate, hideDimension, hideActions,
     return arr;
   }, [cfg, dim, endDate, startDate]);
 
-  const W = 1100, H = 320, PL = 50, PR = 20, PT = 20, PB = 30;
+  const W = 1100, H = mobile ? 520 : 320, PL = 50, PR = 20, PT = 20, PB = 30;
   const innerW = W - PL - PR;
   const innerH = H - PT - PB;
   const maxV = Math.max(15, ...data.map((d) => d.v));
