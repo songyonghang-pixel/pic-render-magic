@@ -153,7 +153,7 @@ export const TrendChartCard = ({ endDate, startDate, hideDimension, hideActions,
   };
 
   return (
-    <div className="bg-card rounded-md px-6 py-5">
+    <div className={`bg-card rounded-md ${compact ? "px-2 py-3" : "px-6 py-5"}`}>
       <div className="flex items-center gap-4 flex-wrap">
         <span className="text-primary text-[14px] font-medium">趋势图</span>
         {!hideDimension && (
