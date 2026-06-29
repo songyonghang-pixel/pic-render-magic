@@ -42,6 +42,19 @@ const distributionData = [
 
 const xAxisOptions = ["AI五级标签", "营销机型名", "OS版本", "反馈来源"];
 
+const aiClusterTop10 = [
+  { name: "拍照对焦慢/模糊", value: 4820 },
+  { name: "充电速度变慢", value: 4310 },
+  { name: "续航缩短/掉电快", value: 3980 },
+  { name: "游戏发热掉帧", value: 3560 },
+  { name: "系统更新后卡顿", value: 3120 },
+  { name: "屏幕显示偏色", value: 2870 },
+  { name: "信号弱/无信号", value: 2540 },
+  { name: "AI功能体验差", value: 2180 },
+  { name: "外观设计好评", value: 1960 },
+  { name: "相机功能建议", value: 1730 },
+];
+
 const Row = ({ label, value }: { label: string; value?: React.ReactNode }) => (
   <div className="flex items-start justify-between px-4 py-3 border-b border-border last:border-b-0 gap-3">
     <span className="text-[13px] text-[hsl(var(--placeholder))] shrink-0">{label}</span>
