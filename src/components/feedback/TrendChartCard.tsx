@@ -49,23 +49,33 @@ function fmtYMD(d: Date) {
 
 interface TrendChartCardProps {
   endDate?: Date;
+  startDate?: Date;
 }
 
-export const TrendChartCard = ({ endDate }: TrendChartCardProps = {}) => {
+export const TrendChartCard = ({ endDate, startDate }: TrendChartCardProps = {}) => {
   const [dim, setDim] = useState("日");
   const cfg = dimMap[dim];
 
   const data = useMemo(() => {
-    const arr: { t: Date; v: number; rangeStart?: Date; rangeEnd?: Date }[] = [];
+    const arr: { t: Date; v: number; rangeStart?: Date; rangeEnd?: Date; label?: string }[] = [];
     const baseEnd = endDate ?? new Date();
     if (isPeriodBucket(dim)) {
-      // Period buckets: latest = [endDay - (N-1) at 00:00, baseEnd], previous = full N-day calendar windows
-      const periodDays = dim === "近7日" ? 7 : 30;
+      // Latest period = [endDay - (N-1) at 00:00, baseEnd] labeled "近N日"
+      // Prior periods = full N-day windows, labeled "周期1, 周期2..." (1 = oldest)
+      const periodDays = dim === "7日" ? 7 : 30;
+      const latestLabel = dim === "7日" ? "近7日" : "近30日";
       const endDayStart = new Date(baseEnd);
       endDayStart.setHours(0, 0, 0, 0);
-      const periodsCount = 12;
+      // Determine total periods to show based on selected date range
+      let periodsCount = 1;
+      if (startDate) {
+        const s = new Date(startDate);
+        s.setHours(0, 0, 0, 0);
+        const spanDays = Math.floor((endDayStart.getTime() - s.getTime()) / (24 * 60 * 60 * 1000)) + 1;
+        periodsCount = Math.max(1, Math.floor(spanDays / periodDays));
+      }
+      // i = 0 is latest (rightmost)
       for (let i = periodsCount - 1; i >= 0; i--) {
-        // bucket i = 0 is latest
         const startDay = new Date(endDayStart);
         startDay.setDate(endDayStart.getDate() - (i + 1) * periodDays + 1);
         const endOfPeriod = i === 0 ? new Date(baseEnd) : (() => {
@@ -77,7 +87,9 @@ export const TrendChartCard = ({ endDate }: TrendChartCardProps = {}) => {
         const seed = Math.sin(startDay.getTime() / 1e8) * 10000;
         const r = seed - Math.floor(seed);
         const v = Math.floor(r * 1500) + (r > 0.85 ? 300 : 100);
-        arr.push({ t: startDay, v: Math.max(0, v), rangeStart: startDay, rangeEnd: endOfPeriod });
+        const label = i === 0 ? latestLabel : `周期${periodsCount - 1 - i + 1}`;
+        // periodsCount-1-i+1: when i = periodsCount-1 (oldest) => 1
+        arr.push({ t: startDay, v: Math.max(0, v), rangeStart: startDay, rangeEnd: endOfPeriod, label });
       }
     } else {
       const end = baseEnd.getTime();
@@ -90,7 +102,7 @@ export const TrendChartCard = ({ endDate }: TrendChartCardProps = {}) => {
       }
     }
     return arr;
-  }, [cfg, dim, endDate]);
+  }, [cfg, dim, endDate, startDate]);
 
   const W = 1100, H = 320, PL = 50, PR = 20, PT = 20, PB = 30;
   const innerW = W - PL - PR;
