@@ -4,6 +4,7 @@ import { toast } from "sonner";
 import { SingleSelect } from "@/components/feedback/SingleSelect";
 import { Pagination } from "./AlertRules";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type Status = "待处理" | "处理中" | "已关闭";
 
