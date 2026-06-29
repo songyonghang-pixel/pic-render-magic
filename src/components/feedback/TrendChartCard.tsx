@@ -35,12 +35,12 @@ const is1to6Hour = (d: string) =>
 function fmtTick(d: Date, dim: string) {
   const p = (n: number) => String(n).padStart(2, "0");
   if (dim === "月") return `${d.getFullYear()}-${p(d.getMonth() + 1)}`;
-  if (dim === "日" || dim === "周" || dim === "近7日" || dim === "近30日")
+  if (dim === "日" || dim === "周")
     return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
   return `${p(d.getMonth() + 1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;
 }
 
-const isPeriodBucket = (d: string) => d === "近7日" || d === "近30日";
+const isPeriodBucket = (d: string) => d === "7日" || d === "30日";
 
 function fmtYMD(d: Date) {
   const p = (n: number) => String(n).padStart(2, "0");
