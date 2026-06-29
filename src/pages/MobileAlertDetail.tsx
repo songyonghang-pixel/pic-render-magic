@@ -63,12 +63,56 @@ export const MobileAlertDetail = () => {
   const [xAxis, setXAxis] = useState(xAxisOptions[0]);
   const [openItem, setOpenItem] = useState<FeedbackItem | null>(null);
   const [range, setRange] = useState<DateRange | undefined>({
-    from: new Date(2026, 5, 23),
-    to: new Date(2026, 5, 29),
+    from: new Date(2026, 5, 23, 0, 0, 0),
+    to: new Date(2026, 5, 29, 23, 59, 59),
   });
+  const fmtDT = (d: Date) => format(d, "yyyy-MM-dd HH:mm:ss");
   const rangeLabel = range?.from
-    ? `${format(range.from, "yyyy-MM-dd")} ~ ${range.to ? format(range.to, "yyyy-MM-dd") : ""}`
+    ? `${fmtDT(range.from)} ~ ${range.to ? fmtDT(range.to) : ""}`
     : "请选择反馈时间";
+
+  const updateTime = (which: "from" | "to", part: "h" | "m" | "s", val: number) => {
+    setRange((prev) => {
+      if (!prev) return prev;
+      const d = prev[which] ? new Date(prev[which]!) : new Date();
+      if (part === "h") d.setHours(val);
+      if (part === "m") d.setMinutes(val);
+      if (part === "s") d.setSeconds(val);
+      return { ...prev, [which]: d };
+    });
+  };
+
+  const TimeInputs = ({ which }: { which: "from" | "to" }) => {
+    const d = range?.[which];
+    const label = which === "from" ? "开始时间" : "结束时间";
+    const pad = (n: number) => String(n).padStart(2, "0");
+    return (
+      <div className="flex items-center gap-1.5 text-[11px]">
+        <span className="text-[hsl(var(--label-text))] w-14 shrink-0">{label}</span>
+        <input
+          type="number" min={0} max={23}
+          value={d ? pad(d.getHours()) : ""}
+          onChange={(e) => updateTime(which, "h", Math.min(23, Math.max(0, Number(e.target.value) || 0)))}
+          className="w-10 h-7 px-1 text-center border border-[hsl(var(--field-border))] rounded-sm tabular-nums"
+        />
+        <span>:</span>
+        <input
+          type="number" min={0} max={59}
+          value={d ? pad(d.getMinutes()) : ""}
+          onChange={(e) => updateTime(which, "m", Math.min(59, Math.max(0, Number(e.target.value) || 0)))}
+          className="w-10 h-7 px-1 text-center border border-[hsl(var(--field-border))] rounded-sm tabular-nums"
+        />
+        <span>:</span>
+        <input
+          type="number" min={0} max={59}
+          value={d ? pad(d.getSeconds()) : ""}
+          onChange={(e) => updateTime(which, "s", Math.min(59, Math.max(0, Number(e.target.value) || 0)))}
+          className="w-10 h-7 px-1 text-center border border-[hsl(var(--field-border))] rounded-sm tabular-nums"
+        />
+      </div>
+    );
+  };
+
 
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))] flex justify-center py-6">
@@ -134,10 +178,29 @@ export const MobileAlertDetail = () => {
                 <Calendar
                   mode="range"
                   selected={range}
-                  onSelect={setRange}
+                  onSelect={(r) => {
+                    if (!r) { setRange(undefined); return; }
+                    const from = r.from ? new Date(r.from) : undefined;
+                    const to = r.to ? new Date(r.to) : undefined;
+                    if (from && range?.from) {
+                      from.setHours(range.from.getHours(), range.from.getMinutes(), range.from.getSeconds());
+                    } else if (from) {
+                      from.setHours(0, 0, 0);
+                    }
+                    if (to && range?.to) {
+                      to.setHours(range.to.getHours(), range.to.getMinutes(), range.to.getSeconds());
+                    } else if (to) {
+                      to.setHours(23, 59, 59);
+                    }
+                    setRange({ from, to });
+                  }}
                   numberOfMonths={1}
                   className={cn("p-3 pointer-events-auto")}
                 />
+                <div className="border-t border-border px-3 py-2.5 space-y-2 bg-card">
+                  <TimeInputs which="from" />
+                  <TimeInputs which="to" />
+                </div>
               </PopoverContent>
             </Popover>
             <button className="h-9 px-3 rounded-md bg-primary text-primary-foreground text-[12px] shrink-0">
