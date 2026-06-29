@@ -103,6 +103,8 @@ export const TrendChartCard = ({ endDate }: TrendChartCardProps = {}) => {
     y: PT + innerH - (d.v / maxV) * innerH,
     v: d.v,
     t: d.t,
+    rangeStart: d.rangeStart,
+    rangeEnd: d.rangeEnd,
   }));
 
   const pathD = points.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ");
