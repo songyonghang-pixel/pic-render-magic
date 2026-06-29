@@ -178,6 +178,16 @@ export const TrendChartCard = ({ endDate, startDate }: TrendChartCardProps = {})
               </HoverCardContent>
             </HoverCard>
           )}
+          {isPeriodBucket(dim) && (
+            <HoverCard openDelay={100}>
+              <HoverCardTrigger asChild>
+                <Info className="w-4 h-4 text-[hsl(var(--muted-foreground))] cursor-help" />
+              </HoverCardTrigger>
+              <HoverCardContent side="top" className="w-auto max-w-xs text-[12px]">
+                时间维度为{dim}时，会按照结束时间以每{dim}为一个维度进行统计。
+              </HoverCardContent>
+            </HoverCard>
+          )}
         </div>
         <div className="ml-auto flex items-center gap-2 px-3 py-1 rounded-sm bg-[hsl(var(--primary)/0.08)] border border-[hsl(var(--primary)/0.2)]">
           <span className="text-[12px] text-[hsl(var(--muted-foreground))]">平均值（每{dim}）：</span>
