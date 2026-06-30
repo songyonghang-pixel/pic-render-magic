@@ -22,7 +22,7 @@ const timeRangeOptions = [
   { label: "当日" }, { label: "本周" },
 ];
 const timeRangeOptionsStat = [...timeRangeOptions, { label: "昨日" }, { label: "近7日" }, { label: "本月" }];
-const dailyLikeRanges = ["当日", "近7日", "本月"];
+const dailyLikeRanges = ["当日", "近7日", "本月", "昨日"];
 const compareOperators = [{ label: "大于" }, { label: "大于等于" }, { label: "小于" }, { label: "小于等于" }];
 const calcMethodOptions = [
   { label: "值" },
