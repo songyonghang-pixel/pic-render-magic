@@ -93,6 +93,8 @@ const Index = () => {
   const [marketingSep, setMarketingSep] = useState(false);
   const [countrySep, setCountrySep] = useState(false);
   const [perLevelNotify, setPerLevelNotify] = useState(false);
+  const [adminUser, setAdminUser] = useState<string>("当前用户（我）");
+  const [collaborators, setCollaborators] = useState<string[]>([]);
   const [monitorFreq, setMonitorFreq] = useState<string>("");
   const [freqPeriod, setFreqPeriod] = useState<string>("间隔");
   const [freqTime, setFreqTime] = useState<string>("09:00");
@@ -808,6 +810,42 @@ const Index = () => {
             </>
           )}
         </Section>
+
+        {/* 预警管理人员 */}
+        <Section title="预警管理人员">
+          <Field label="管理员" required>
+            <div className="w-[240px]">
+              <SingleSelect
+                placeholder="请选择管理员"
+                options={[
+                  { label: "当前用户（我）" },
+                  { label: "张三" },
+                  { label: "李四" },
+                  { label: "王五" },
+                  { label: "赵六" },
+                ]}
+                value={adminUser}
+                onChange={setAdminUser}
+              />
+            </div>
+          </Field>
+          <Field label="协作者">
+            <MultiSelect
+              placeholder="请选择协作者（选填）"
+              options={[
+                { label: "张三" },
+                { label: "李四" },
+                { label: "王五" },
+                { label: "赵六" },
+                { label: "钱七" },
+                { label: "孙八" },
+              ]}
+              value={collaborators}
+              onChange={setCollaborators}
+            />
+          </Field>
+        </Section>
+
       </div>
 
       {/* Footer */}
