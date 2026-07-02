@@ -58,7 +58,17 @@ export const AnalysisFilterPanel = ({ onQuery }: Props) => {
 
   return (
     <div className="bg-[hsl(var(--accent)/0.4)] rounded-md px-6 py-5">
-      <div className="text-primary text-[14px] font-medium mb-4">筛选</div>
+      <div className="flex items-center justify-between mb-4">
+        <div className="text-primary text-[14px] font-medium">筛选</div>
+        {ruleName && (
+          <div className="text-[12px] text-[hsl(var(--label-text))] flex items-center gap-2">
+            <span className="text-[hsl(var(--placeholder))]">来源预警规则：</span>
+            <span className="px-2 py-0.5 rounded border border-primary/40 text-primary bg-primary/5">
+              {ruleName}{ruleId ? `（规则ID：${ruleId}）` : ""}
+            </span>
+          </div>
+        )}
+      </div>
 
       <div className="space-y-4">
         {/* 机型范围 */}
