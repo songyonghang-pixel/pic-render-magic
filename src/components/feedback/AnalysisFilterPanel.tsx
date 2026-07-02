@@ -40,9 +40,13 @@ interface Props {
 export const AnalysisFilterPanel = ({ onQuery }: Props) => {
   const [expanded, setExpanded] = useState(false);
   const [fanOp, setFanOp] = useState<string[]>([]);
+  const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
+  const ruleName = params.get("ruleName");
+  const ruleId = params.get("ruleId");
+  const useLast7 = params.get("range") === "last7";
   const today = new Date();
   const defaultStart = new Date(today);
-  defaultStart.setDate(today.getDate() - 2);
+  defaultStart.setDate(today.getDate() - (useLast7 ? 6 : 2));
   const [range, setRange] = useState<DateRange | undefined>({ from: defaultStart, to: today });
 
   const fmtRange = (r?: DateRange) => {
