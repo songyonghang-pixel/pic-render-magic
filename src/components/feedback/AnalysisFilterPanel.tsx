@@ -40,9 +40,13 @@ interface Props {
 export const AnalysisFilterPanel = ({ onQuery }: Props) => {
   const [expanded, setExpanded] = useState(false);
   const [fanOp, setFanOp] = useState<string[]>([]);
+  const params = typeof window !== "undefined" ? new URLSearchParams(window.location.search) : new URLSearchParams();
+  const ruleName = params.get("ruleName");
+  const ruleId = params.get("ruleId");
+  const useLast7 = params.get("range") === "last7";
   const today = new Date();
   const defaultStart = new Date(today);
-  defaultStart.setDate(today.getDate() - 2);
+  defaultStart.setDate(today.getDate() - (useLast7 ? 6 : 2));
   const [range, setRange] = useState<DateRange | undefined>({ from: defaultStart, to: today });
 
   const fmtRange = (r?: DateRange) => {
@@ -54,7 +58,17 @@ export const AnalysisFilterPanel = ({ onQuery }: Props) => {
 
   return (
     <div className="bg-[hsl(var(--accent)/0.4)] rounded-md px-6 py-5">
-      <div className="text-primary text-[14px] font-medium mb-4">筛选</div>
+      <div className="flex items-center justify-between mb-4">
+        <div className="text-primary text-[14px] font-medium">筛选</div>
+        {ruleName && (
+          <div className="text-[12px] text-[hsl(var(--label-text))] flex items-center gap-2">
+            <span className="text-[hsl(var(--placeholder))]">来源预警规则：</span>
+            <span className="px-2 py-0.5 rounded border border-primary/40 text-primary bg-primary/5">
+              {ruleName}{ruleId ? `（规则ID：${ruleId}）` : ""}
+            </span>
+          </div>
+        )}
+      </div>
 
       <div className="space-y-4">
         {/* 机型范围 */}

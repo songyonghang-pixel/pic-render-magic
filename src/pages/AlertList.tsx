@@ -219,6 +219,10 @@ export const AlertList = ({ onShowAnalysis }: AlertListProps) => {
                       <td className="py-3 px-4 whitespace-nowrap sticky right-0 bg-card shadow-[-4px_0_8px_-4px_hsl(var(--border))]">
                         <div className="flex items-center gap-3">
                           <a className="text-primary cursor-pointer hover:underline">查看反馈</a>
+                          <a
+                            className="text-primary cursor-pointer hover:underline"
+                            onClick={() => window.open(`/analysis?ruleId=${r.ruleId}&ruleName=${encodeURIComponent(r.name)}&range=last7`, "_blank")}
+                          >反馈趋势</a>
                           <ActionLinks r={r} onHandle={() => setHandleTarget([r])} onClose={() => setCloseTarget([r])} onInaccurate={() => setInaccurateTarget(r)} />
                         </div>
                       </td>
