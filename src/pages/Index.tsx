@@ -668,12 +668,22 @@ const Index = () => {
                         <Field label="推送方式" required labelWidth="w-20">
                           <div className="flex items-center gap-6 h-8">
                             <label className="flex items-center gap-2 cursor-pointer">
-                              <input type="checkbox" defaultChecked className="w-3.5 h-3.5 accent-primary" />
-                              <span className="text-[13px] text-primary">TT</span>
+                              <input
+                                type="checkbox"
+                                checked={levelTt[cond.id] ?? true}
+                                onChange={(e) => setLevelTt((m) => ({ ...m, [cond.id]: e.target.checked }))}
+                                className="w-3.5 h-3.5 accent-primary"
+                              />
+                              <span className={`text-[13px] ${(levelTt[cond.id] ?? true) ? "text-primary" : "text-[hsl(var(--label-text))]"}`}>TT</span>
                             </label>
                             <label className="flex items-center gap-2 cursor-pointer">
-                              <input type="checkbox" className="w-3.5 h-3.5 accent-primary" />
-                              <span className="text-[13px] text-[hsl(var(--label-text))]">TT群组</span>
+                              <input
+                                type="checkbox"
+                                checked={!!levelTtGroup[cond.id]}
+                                onChange={(e) => setLevelTtGroup((m) => ({ ...m, [cond.id]: e.target.checked }))}
+                                className="w-3.5 h-3.5 accent-primary"
+                              />
+                              <span className={`text-[13px] ${levelTtGroup[cond.id] ? "text-primary" : "text-[hsl(var(--label-text))]"}`}>TT群组</span>
                             </label>
                             <label className="flex items-center gap-2 cursor-pointer">
                               <input
@@ -686,9 +696,32 @@ const Index = () => {
                             </label>
                           </div>
                         </Field>
-                        <Field label="通知人员" required labelWidth="w-20">
-                          <div className="max-w-md"><SelectInput placeholder="请选择" /></div>
-                        </Field>
+                        {((levelTt[cond.id] ?? true) || levelTtGroup[cond.id]) && (
+                          <>
+                            <Field label="预警名单" labelWidth="w-20">
+                              <div className="max-w-md">
+                                <MultiSelect placeholder="请选择预警名单（可多选，最多 10 个名单）" options={alertListOptions} />
+                              </div>
+                            </Field>
+                            <Field label="预警人员" labelWidth="w-20">
+                              <div className="max-w-md">
+                                <MultiSelect placeholder="输入名字检索并选择" options={notifyPersonOptions} />
+                              </div>
+                            </Field>
+                          </>
+                        )}
+                        {levelTtGroup[cond.id] && (
+                          <>
+                            <Field label="Webhook地址TT群组" required labelWidth="w-20">
+                              <div className="max-w-md"><TextInput placeholder="请输入Webhook地址" /></div>
+                            </Field>
+                            <Field label="群组内提及人" labelWidth="w-20">
+                              <div className="max-w-md">
+                                <MultiSelect placeholder="请输入关键词搜索" options={notifyPersonOptions} />
+                              </div>
+                            </Field>
+                          </>
+                        )}
                         {levelPhoneNotify[cond.id] && (
                           <Field label="电话通知人员" required labelWidth="w-20">
                             <div className="max-w-md">
