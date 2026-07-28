@@ -93,7 +93,17 @@ const Index = () => {
   const [marketingSep, setMarketingSep] = useState(false);
   const [countrySep, setCountrySep] = useState(false);
   const [perLevelNotify, setPerLevelNotify] = useState(false);
+  const notifyPersonOptions = [
+    { label: "张三" },
+    { label: "李四" },
+    { label: "王五" },
+    { label: "赵六" },
+    { label: "钱七" },
+  ];
   const [adminUser, setAdminUser] = useState<string>("当前用户（我）");
+  const [phoneNotify, setPhoneNotify] = useState(false);
+  const [phonePeople, setPhonePeople] = useState<string[]>([]);
+  const [levelPhoneNotify, setLevelPhoneNotify] = useState<Record<string, boolean>>({});
   const [collaborators, setCollaborators] = useState<string[]>([]);
   const [monitorFreq, setMonitorFreq] = useState<string>("");
   const [freqPeriod, setFreqPeriod] = useState<string>("间隔");
@@ -651,11 +661,27 @@ const Index = () => {
                               <input type="checkbox" className="w-3.5 h-3.5 accent-primary" />
                               <span className="text-[13px] text-[hsl(var(--label-text))]">TT群组</span>
                             </label>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={!!levelPhoneNotify[cond.id]}
+                                onChange={(e) => setLevelPhoneNotify((m) => ({ ...m, [cond.id]: e.target.checked }))}
+                                className="w-3.5 h-3.5 accent-primary"
+                              />
+                              <span className="text-[13px] text-[hsl(var(--label-text))]">电话通知</span>
+                            </label>
                           </div>
                         </Field>
                         <Field label="通知人员" required labelWidth="w-20">
                           <div className="max-w-md"><SelectInput placeholder="请选择" /></div>
                         </Field>
+                        {levelPhoneNotify[cond.id] && (
+                          <Field label="电话通知人员" required labelWidth="w-20">
+                            <div className="max-w-md">
+                              <MultiSelect placeholder="请选择电话通知人员" options={notifyPersonOptions} />
+                            </div>
+                          </Field>
+                        )}
                       </div>
                     )}
                   </div>
@@ -802,11 +828,30 @@ const Index = () => {
                     <input type="checkbox" className="w-3.5 h-3.5 accent-primary" />
                     <span className="text-[13px] text-[hsl(var(--label-text))]">TT群组</span>
                   </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={phoneNotify}
+                      onChange={(e) => setPhoneNotify(e.target.checked)}
+                      className="w-3.5 h-3.5 accent-primary"
+                    />
+                    <span className="text-[13px] text-[hsl(var(--label-text))]">电话通知</span>
+                  </label>
                 </div>
               </Field>
               <Field label="通知人员" required>
                 <SelectInput placeholder="请选择" />
               </Field>
+              {phoneNotify && (
+                <Field label="电话通知人员" required>
+                  <MultiSelect
+                    placeholder="请选择电话通知人员"
+                    options={notifyPersonOptions}
+                    value={phonePeople}
+                    onChange={setPhonePeople}
+                  />
+                </Field>
+              )}
             </>
           )}
         </Section>
