@@ -120,6 +120,7 @@ const Index = () => {
   ]);
   const [levelTt, setLevelTt] = useState<Record<string, boolean>>({});
   const [levelTtGroup, setLevelTtGroup] = useState<Record<string, boolean>>({});
+  const [levelTtGroups, setLevelTtGroups] = useState<Record<string, { id: string; url: string; mentions: string[] }[]>>({});
   const [levelPhoneNotify, setLevelPhoneNotify] = useState<Record<string, boolean>>({});
   const [collaborators, setCollaborators] = useState<string[]>([]);
   const [monitorFreq, setMonitorFreq] = useState<string>("");
