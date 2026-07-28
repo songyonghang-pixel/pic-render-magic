@@ -682,24 +682,24 @@ const Index = () => {
                             <label className="flex items-center gap-2 cursor-pointer">
                               <input
                                 type="checkbox"
+                                checked={!!levelPhoneNotify[cond.id]}
+                                onChange={(e) => setLevelPhoneNotify((m) => ({ ...m, [cond.id]: e.target.checked }))}
+                                className="w-3.5 h-3.5 accent-primary"
+                              />
+                              <span className={`text-[13px] ${levelPhoneNotify[cond.id] ? "text-primary" : "text-[hsl(var(--label-text))]"}`}>电话通知</span>
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input
+                                type="checkbox"
                                 checked={!!levelTtGroup[cond.id]}
                                 onChange={(e) => setLevelTtGroup((m) => ({ ...m, [cond.id]: e.target.checked }))}
                                 className="w-3.5 h-3.5 accent-primary"
                               />
                               <span className={`text-[13px] ${levelTtGroup[cond.id] ? "text-primary" : "text-[hsl(var(--label-text))]"}`}>TT群组</span>
                             </label>
-                            <label className="flex items-center gap-2 cursor-pointer">
-                              <input
-                                type="checkbox"
-                                checked={!!levelPhoneNotify[cond.id]}
-                                onChange={(e) => setLevelPhoneNotify((m) => ({ ...m, [cond.id]: e.target.checked }))}
-                                className="w-3.5 h-3.5 accent-primary"
-                              />
-                              <span className="text-[13px] text-[hsl(var(--label-text))]">电话通知</span>
-                            </label>
                           </div>
                         </Field>
-                        {((levelTt[cond.id] ?? true) || levelTtGroup[cond.id]) && (
+                        {(levelTt[cond.id] ?? true) && (
                           <>
                             <Field label="预警名单" labelWidth="w-20">
                               <div className="max-w-md">
@@ -714,17 +714,67 @@ const Index = () => {
                           </>
                         )}
                         {levelTtGroup[cond.id] && (
-                          <>
-                            <Field label="Webhook地址TT群组" required labelWidth="w-20">
-                              <div className="max-w-md"><TextInput placeholder="请输入Webhook地址" /></div>
-                            </Field>
-                            <Field label="群组内提及人" labelWidth="w-20">
-                              <div className="max-w-md">
-                                <MultiSelect placeholder="请输入关键词搜索" options={notifyPersonOptions} />
-                              </div>
-                            </Field>
-                          </>
+                          <Field label="TT群组" required labelWidth="w-20">
+                            <div className="space-y-2">
+                              {(levelTtGroups[cond.id] ?? [{ id: "g1", url: "", mentions: [] }]).map((g, i, arr) => (
+                                <div key={g.id} className="flex items-start gap-2">
+                                  <div className="flex-1 min-w-0">
+                                    <TextInput placeholder="请输入Webhook地址TT群组" value={g.url} />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <MultiSelect
+                                      placeholder="群组内提及人"
+                                      options={notifyPersonOptions}
+                                      value={g.mentions}
+                                      onChange={(v) =>
+                                        setLevelTtGroups((m) => ({
+                                          ...m,
+                                          [cond.id]: arr.map((r) => (r.id === g.id ? { ...r, mentions: v } : r)),
+                                        }))
+                                      }
+                                    />
+                                  </div>
+                                  <div className="flex items-center gap-1 h-8 shrink-0">
+                                    {i === arr.length - 1 && (
+                                      <div className="relative group">
+                                        <button
+                                          type="button"
+                                          disabled={arr.length >= 10}
+                                          onClick={() =>
+                                            setLevelTtGroups((m) => ({
+                                              ...m,
+                                              [cond.id]: [...arr, { id: `g${Date.now()}`, url: "", mentions: [] }],
+                                            }))
+                                          }
+                                          className="w-7 h-7 rounded-sm border border-[hsl(var(--field-border))] text-[hsl(var(--label-text))] hover:border-primary hover:text-primary disabled:opacity-40 flex items-center justify-center"
+                                        >
+                                          +
+                                        </button>
+                                        {arr.length >= 10 && (
+                                          <div className="absolute right-0 bottom-full mb-1 hidden group-hover:block whitespace-nowrap bg-popover border border-border rounded-sm px-2 py-1 text-[12px] shadow-md z-50">
+                                            最多可添加10个TT群组地址
+                                          </div>
+                                        )}
+                                      </div>
+                                    )}
+                                    {arr.length > 1 && (
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          setLevelTtGroups((m) => ({ ...m, [cond.id]: arr.filter((r) => r.id !== g.id) }))
+                                        }
+                                        className="w-7 h-7 rounded-sm border border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground flex items-center justify-center"
+                                      >
+                                        −
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </Field>
                         )}
+
                         {levelPhoneNotify[cond.id] && (
                           <Field label="电话通知人员" required labelWidth="w-20">
                             <div className="max-w-md">
