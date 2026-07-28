@@ -963,24 +963,14 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                 </>
               )}
               {phoneNotify && (
-                <>
-                  <Field label="电话通知人员" required>
-                    <MultiSelect
-                      placeholder="请选择电话通知人员，将按照TT的电话号码进行通知，若无电话号码将无法通知。"
-                      options={notifyPersonOptions}
-                      value={phonePeople}
-                      onChange={setPhonePeople}
-                    />
-                  </Field>
-                  <Field label="电话号码" required>
-                    <TextInput
-                      placeholder="多个电话号码请以英文逗号隔开"
-                      value={phoneNumbers}
-                      className="max-w-xl"
-                      onChange={(v) => setPhoneNumbers(v)}
-                    />
-                  </Field>
-                </>
+                <Field label="电话通知人员" required>
+                  <MultiSelect
+                    placeholder="请选择电话通知人员，将按照TT的电话号码进行通知，若无电话号码将无法通知。"
+                    options={notifyPersonOptions}
+                    value={phonePeople}
+                    onChange={setPhonePeople}
+                  />
+                </Field>
               )}
               {ttGroupNotify && (
                 <>
