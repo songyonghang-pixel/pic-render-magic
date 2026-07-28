@@ -103,6 +103,13 @@ const Index = () => {
   const [adminUser, setAdminUser] = useState<string>("当前用户（我）");
   const [phoneNotify, setPhoneNotify] = useState(false);
   const [phonePeople, setPhonePeople] = useState<string[]>([]);
+  const [ttNotify, setTtNotify] = useState(true);
+  const [ttGroupNotify, setTtGroupNotify] = useState(false);
+  const [alertLists, setAlertLists] = useState<string[]>([]);
+  const [alertPeople, setAlertPeople] = useState<string[]>([]);
+  const [groupMentions, setGroupMentions] = useState<string[]>([]);
+  const [levelTt, setLevelTt] = useState<Record<string, boolean>>({});
+  const [levelTtGroup, setLevelTtGroup] = useState<Record<string, boolean>>({});
   const [levelPhoneNotify, setLevelPhoneNotify] = useState<Record<string, boolean>>({});
   const [collaborators, setCollaborators] = useState<string[]>([]);
   const [monitorFreq, setMonitorFreq] = useState<string>("");
