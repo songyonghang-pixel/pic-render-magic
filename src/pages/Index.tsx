@@ -115,8 +115,12 @@ const Index = () => {
   const [alertLists, setAlertLists] = useState<string[]>([]);
   const [alertPeople, setAlertPeople] = useState<string[]>([]);
   const [groupMentions, setGroupMentions] = useState<string[]>([]);
+  const [ttGroups, setTtGroups] = useState<{ id: string; url: string; mentions: string[] }[]>([
+    { id: "g1", url: "", mentions: [] },
+  ]);
   const [levelTt, setLevelTt] = useState<Record<string, boolean>>({});
   const [levelTtGroup, setLevelTtGroup] = useState<Record<string, boolean>>({});
+  const [levelTtGroups, setLevelTtGroups] = useState<Record<string, { id: string; url: string; mentions: string[] }[]>>({});
   const [levelPhoneNotify, setLevelPhoneNotify] = useState<Record<string, boolean>>({});
   const [collaborators, setCollaborators] = useState<string[]>([]);
   const [monitorFreq, setMonitorFreq] = useState<string>("");
@@ -679,24 +683,24 @@ const Index = () => {
                             <label className="flex items-center gap-2 cursor-pointer">
                               <input
                                 type="checkbox"
+                                checked={!!levelPhoneNotify[cond.id]}
+                                onChange={(e) => setLevelPhoneNotify((m) => ({ ...m, [cond.id]: e.target.checked }))}
+                                className="w-3.5 h-3.5 accent-primary"
+                              />
+                              <span className={`text-[13px] ${levelPhoneNotify[cond.id] ? "text-primary" : "text-[hsl(var(--label-text))]"}`}>电话通知</span>
+                            </label>
+                            <label className="flex items-center gap-2 cursor-pointer">
+                              <input
+                                type="checkbox"
                                 checked={!!levelTtGroup[cond.id]}
                                 onChange={(e) => setLevelTtGroup((m) => ({ ...m, [cond.id]: e.target.checked }))}
                                 className="w-3.5 h-3.5 accent-primary"
                               />
                               <span className={`text-[13px] ${levelTtGroup[cond.id] ? "text-primary" : "text-[hsl(var(--label-text))]"}`}>TT群组</span>
                             </label>
-                            <label className="flex items-center gap-2 cursor-pointer">
-                              <input
-                                type="checkbox"
-                                checked={!!levelPhoneNotify[cond.id]}
-                                onChange={(e) => setLevelPhoneNotify((m) => ({ ...m, [cond.id]: e.target.checked }))}
-                                className="w-3.5 h-3.5 accent-primary"
-                              />
-                              <span className="text-[13px] text-[hsl(var(--label-text))]">电话通知</span>
-                            </label>
                           </div>
                         </Field>
-                        {((levelTt[cond.id] ?? true) || levelTtGroup[cond.id]) && (
+                        {(levelTt[cond.id] ?? true) && (
                           <>
                             <Field label="预警名单" labelWidth="w-20">
                               <div className="max-w-md">
@@ -711,17 +715,67 @@ const Index = () => {
                           </>
                         )}
                         {levelTtGroup[cond.id] && (
-                          <>
-                            <Field label="Webhook地址TT群组" required labelWidth="w-20">
-                              <div className="max-w-md"><TextInput placeholder="请输入Webhook地址" /></div>
-                            </Field>
-                            <Field label="群组内提及人" labelWidth="w-20">
-                              <div className="max-w-md">
-                                <MultiSelect placeholder="请输入关键词搜索" options={notifyPersonOptions} />
-                              </div>
-                            </Field>
-                          </>
+                          <Field label="TT群组" required labelWidth="w-20">
+                            <div className="space-y-2">
+                              {(levelTtGroups[cond.id] ?? [{ id: "g1", url: "", mentions: [] }]).map((g, i, arr) => (
+                                <div key={g.id} className="flex items-start gap-2">
+                                  <div className="flex-1 min-w-0">
+                                    <TextInput placeholder="请输入Webhook地址TT群组" value={g.url} />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <MultiSelect
+                                      placeholder="群组内提及人"
+                                      options={notifyPersonOptions}
+                                      value={g.mentions}
+                                      onChange={(v) =>
+                                        setLevelTtGroups((m) => ({
+                                          ...m,
+                                          [cond.id]: arr.map((r) => (r.id === g.id ? { ...r, mentions: v } : r)),
+                                        }))
+                                      }
+                                    />
+                                  </div>
+                                  <div className="flex items-center gap-1 h-8 shrink-0">
+                                    {i === arr.length - 1 && (
+                                      <div className="relative group">
+                                        <button
+                                          type="button"
+                                          disabled={arr.length >= 10}
+                                          onClick={() =>
+                                            setLevelTtGroups((m) => ({
+                                              ...m,
+                                              [cond.id]: [...arr, { id: `g${Date.now()}`, url: "", mentions: [] }],
+                                            }))
+                                          }
+                                          className="w-7 h-7 rounded-sm border border-[hsl(var(--field-border))] text-[hsl(var(--label-text))] hover:border-primary hover:text-primary disabled:opacity-40 flex items-center justify-center"
+                                        >
+                                          +
+                                        </button>
+                                        {arr.length >= 10 && (
+                                          <div className="absolute right-0 bottom-full mb-1 hidden group-hover:block whitespace-nowrap bg-popover border border-border rounded-sm px-2 py-1 text-[12px] shadow-md z-50">
+                                            最多可添加10个TT群组地址
+                                          </div>
+                                        )}
+                                      </div>
+                                    )}
+                                    {arr.length > 1 && (
+                                      <button
+                                        type="button"
+                                        onClick={() =>
+                                          setLevelTtGroups((m) => ({ ...m, [cond.id]: arr.filter((r) => r.id !== g.id) }))
+                                        }
+                                        className="w-7 h-7 rounded-sm border border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground flex items-center justify-center"
+                                      >
+                                        −
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </Field>
                         )}
+
                         {levelPhoneNotify[cond.id] && (
                           <Field label="电话通知人员" required labelWidth="w-20">
                             <div className="max-w-md">
@@ -872,21 +926,21 @@ const Index = () => {
                     <span className={`text-[13px] ${ttNotify ? "text-primary" : "text-[hsl(var(--label-text))]"}`}>TT</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" checked={ttGroupNotify} onChange={(e) => setTtGroupNotify(e.target.checked)} className="w-3.5 h-3.5 accent-primary" />
-                    <span className={`text-[13px] ${ttGroupNotify ? "text-primary" : "text-[hsl(var(--label-text))]"}`}>TT群组</span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="checkbox"
                       checked={phoneNotify}
                       onChange={(e) => setPhoneNotify(e.target.checked)}
                       className="w-3.5 h-3.5 accent-primary"
                     />
-                    <span className="text-[13px] text-[hsl(var(--label-text))]">电话通知</span>
+                    <span className={`text-[13px] ${phoneNotify ? "text-primary" : "text-[hsl(var(--label-text))]"}`}>电话通知</span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input type="checkbox" checked={ttGroupNotify} onChange={(e) => setTtGroupNotify(e.target.checked)} className="w-3.5 h-3.5 accent-primary" />
+                    <span className={`text-[13px] ${ttGroupNotify ? "text-primary" : "text-[hsl(var(--label-text))]"}`}>TT群组</span>
                   </label>
                 </div>
               </Field>
-              {(ttNotify || ttGroupNotify) && (
+              {ttNotify && (
                 <>
                   <Field label="预警名单">
                     <MultiSelect
@@ -911,23 +965,71 @@ const Index = () => {
               )}
               {ttGroupNotify && (
                 <>
-                  <Field label="Webhook地址TT群组" required>
-                    <TextInput placeholder="请输入Webhook地址" />
+                  <Field label="TT群组" required>
+                    <div className="space-y-2">
+                      {ttGroups.map((g, i) => (
+                        <div key={g.id} className="flex items-start gap-2">
+                          <div className="flex-1 min-w-0">
+                            <TextInput
+                              placeholder="请输入Webhook地址TT群组"
+                              value={g.url}
+                            />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <MultiSelect
+                              placeholder="群组内提及人"
+                              options={notifyPersonOptions}
+                              value={g.mentions}
+                              onChange={(v) =>
+                                setTtGroups((rows) => rows.map((r) => (r.id === g.id ? { ...r, mentions: v } : r)))
+                              }
+                            />
+                          </div>
+                          <div className="flex items-center gap-1 h-8 shrink-0">
+                            {i === ttGroups.length - 1 && (
+                              <div className="relative group">
+                                <button
+                                  type="button"
+                                  disabled={ttGroups.length >= 10}
+                                  onClick={() =>
+                                    setTtGroups((rows) =>
+                                      rows.length >= 10
+                                        ? rows
+                                        : [...rows, { id: `g${Date.now()}`, url: "", mentions: [] }]
+                                    )
+                                  }
+                                  className="w-7 h-7 rounded-sm border border-[hsl(var(--field-border))] text-[hsl(var(--label-text))] hover:border-primary hover:text-primary disabled:opacity-40 disabled:hover:border-[hsl(var(--field-border))] disabled:hover:text-[hsl(var(--label-text))] flex items-center justify-center"
+                                >
+                                  +
+                                </button>
+                                {ttGroups.length >= 10 && (
+                                  <div className="absolute right-0 bottom-full mb-1 hidden group-hover:block whitespace-nowrap bg-popover border border-border rounded-sm px-2 py-1 text-[12px] shadow-md z-50">
+                                    最多可添加10个TT群组地址
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                            {ttGroups.length > 1 && (
+                              <button
+                                type="button"
+                                onClick={() => setTtGroups((rows) => rows.filter((r) => r.id !== g.id))}
+                                className="w-7 h-7 rounded-sm border border-destructive text-destructive hover:bg-destructive hover:text-destructive-foreground flex items-center justify-center"
+                              >
+                                −
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </Field>
-                  <div className="pl-[104px] -mt-2 text-[12px] text-primary">
+                  <div className="pl-[104px] -mt-1 text-[12px] text-primary">
                     如何为告警规则添加TT群机器人推送{" "}
                     <span className="underline cursor-pointer">点击跳转</span>
                   </div>
-                  <Field label="群组内提及人">
-                    <MultiSelect
-                      placeholder="请输入关键词搜索"
-                      options={notifyPersonOptions}
-                      value={groupMentions}
-                      onChange={setGroupMentions}
-                    />
-                  </Field>
                 </>
               )}
+
               {phoneNotify && (
                 <Field label="电话通知人员" required>
                   <MultiSelect
