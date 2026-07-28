@@ -714,6 +714,13 @@ const Index = () => {
                             </Field>
                           </>
                         )}
+                        {(levelPhoneNotify[cond.id] || false) && (
+                          <Field label="电话通知人员" required labelWidth="w-20">
+                            <div className="max-w-md">
+                              <MultiSelect placeholder="请选择电话通知人员" options={notifyPersonOptions} />
+                            </div>
+                          </Field>
+                        )}
                         {levelTtGroup[cond.id] && (
                           <Field label="TT群组" required labelWidth="w-20">
                             <div className="space-y-2">
@@ -772,14 +779,6 @@ const Index = () => {
                                   </div>
                                 </div>
                               ))}
-                            </div>
-                          </Field>
-                        )}
-
-                        {levelPhoneNotify[cond.id] && (
-                          <Field label="电话通知人员" required labelWidth="w-20">
-                            <div className="max-w-md">
-                              <MultiSelect placeholder="请选择电话通知人员" options={notifyPersonOptions} />
                             </div>
                           </Field>
                         )}
@@ -963,6 +962,16 @@ const Index = () => {
                   )}
                 </>
               )}
+              {phoneNotify && (
+                <Field label="电话通知人员" required>
+                  <MultiSelect
+                    placeholder="请选择电话通知人员"
+                    options={notifyPersonOptions}
+                    value={phonePeople}
+                    onChange={setPhonePeople}
+                  />
+                </Field>
+              )}
               {ttGroupNotify && (
                 <>
                   <Field label="TT群组" required>
@@ -1028,17 +1037,6 @@ const Index = () => {
                     <span className="underline cursor-pointer">点击跳转</span>
                   </div>
                 </>
-              )}
-
-              {phoneNotify && (
-                <Field label="电话通知人员" required>
-                  <MultiSelect
-                    placeholder="请选择电话通知人员"
-                    options={notifyPersonOptions}
-                    value={phonePeople}
-                    onChange={setPhonePeople}
-                  />
-                </Field>
               )}
             </>
           )}
