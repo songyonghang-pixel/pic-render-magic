@@ -93,6 +93,13 @@ const Index = () => {
   const [marketingSep, setMarketingSep] = useState(false);
   const [countrySep, setCountrySep] = useState(false);
   const [perLevelNotify, setPerLevelNotify] = useState(false);
+  const notifyPersonOptions = [
+    { label: "张三" },
+    { label: "李四" },
+    { label: "王五" },
+    { label: "赵六" },
+    { label: "钱七" },
+  ];
   const [adminUser, setAdminUser] = useState<string>("当前用户（我）");
   const [phoneNotify, setPhoneNotify] = useState(false);
   const [phonePeople, setPhonePeople] = useState<string[]>([]);
