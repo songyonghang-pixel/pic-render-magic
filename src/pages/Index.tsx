@@ -828,11 +828,30 @@ const Index = () => {
                     <input type="checkbox" className="w-3.5 h-3.5 accent-primary" />
                     <span className="text-[13px] text-[hsl(var(--label-text))]">TT群组</span>
                   </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={phoneNotify}
+                      onChange={(e) => setPhoneNotify(e.target.checked)}
+                      className="w-3.5 h-3.5 accent-primary"
+                    />
+                    <span className="text-[13px] text-[hsl(var(--label-text))]">电话通知</span>
+                  </label>
                 </div>
               </Field>
               <Field label="通知人员" required>
                 <SelectInput placeholder="请选择" />
               </Field>
+              {phoneNotify && (
+                <Field label="电话通知人员" required>
+                  <MultiSelect
+                    placeholder="请选择电话通知人员"
+                    options={notifyPersonOptions}
+                    value={phonePeople}
+                    onChange={setPhonePeople}
+                  />
+                </Field>
+              )}
             </>
           )}
         </Section>
