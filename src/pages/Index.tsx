@@ -121,10 +121,8 @@ const Index = () => {
   const [levelTt, setLevelTt] = useState<Record<string, boolean>>({});
   const [levelTtGroup, setLevelTtGroup] = useState<Record<string, boolean>>({});
   const [levelTtGroups, setLevelTtGroups] = useState<Record<string, { id: string; url: string; mentions: string[] }[]>>({});
-  const [levelPhoneNotify, setLevelPhoneNotify] = useState<Record<string, boolean>>({});
-  const [phoneNumbers, setPhoneNumbers] = useState<string>("");
-  const [levelPhoneNumbers, setLevelPhoneNumbers] = useState<Record<string, string>>({});
-  const [collaborators, setCollaborators] = useState<string[]>([]);
+const [levelPhoneNotify, setLevelPhoneNotify] = useState<Record<string, boolean>>({});
+const [collaborators, setCollaborators] = useState<string[]>([]);
   const [monitorFreq, setMonitorFreq] = useState<string>("");
   const [freqPeriod, setFreqPeriod] = useState<string>("间隔");
   const [freqTime, setFreqTime] = useState<string>("09:00");
@@ -717,23 +715,11 @@ const Index = () => {
                           </>
                         )}
                         {(levelPhoneNotify[cond.id] || false) && (
-                          <>
-                            <Field label="电话通知人员" required labelWidth="w-20">
-                              <div className="max-w-md">
-                                <MultiSelect placeholder="请选择电话通知人员，将按照TT的电话号码进行通知，若无电话号码将无法通知。" options={notifyPersonOptions} />
-                              </div>
-                            </Field>
-                            <Field label="电话号码" required labelWidth="w-20">
-                              <div className="max-w-md">
-                                <TextInput
-                                  placeholder="多个电话号码请以英文逗号隔开"
-                                  value={levelPhoneNumbers[cond.id] ?? ""}
-                                  className="max-w-md"
-                                  onChange={(v) => setLevelPhoneNumbers((m) => ({ ...m, [cond.id]: v }))}
-                                />
-                              </div>
-                            </Field>
-                          </>
+                          <Field label="电话通知人员" required labelWidth="w-20">
+                            <div className="max-w-md">
+                              <MultiSelect placeholder="请选择电话通知人员，将按照TT的电话号码进行通知，若无电话号码将无法通知。" options={notifyPersonOptions} />
+                            </div>
+                          </Field>
                         )}
                         {levelTtGroup[cond.id] && (
                           <Field label="TT群组" required labelWidth="w-20">
@@ -977,24 +963,14 @@ const Index = () => {
                 </>
               )}
               {phoneNotify && (
-                <>
-                  <Field label="电话通知人员" required>
-                    <MultiSelect
-                      placeholder="请选择电话通知人员，将按照TT的电话号码进行通知，若无电话号码将无法通知。"
-                      options={notifyPersonOptions}
-                      value={phonePeople}
-                      onChange={setPhonePeople}
-                    />
-                  </Field>
-                  <Field label="电话号码" required>
-                    <TextInput
-                      placeholder="多个电话号码请以英文逗号隔开"
-                      value={phoneNumbers}
-                      className="max-w-xl"
-                      onChange={(v) => setPhoneNumbers(v)}
-                    />
-                  </Field>
-                </>
+                <Field label="电话通知人员" required>
+                  <MultiSelect
+                    placeholder="请选择电话通知人员，将按照TT的电话号码进行通知，若无电话号码将无法通知。"
+                    options={notifyPersonOptions}
+                    value={phonePeople}
+                    onChange={setPhonePeople}
+                  />
+                </Field>
               )}
               {ttGroupNotify && (
                 <>
