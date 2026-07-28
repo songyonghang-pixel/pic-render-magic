@@ -23,13 +23,15 @@ interface InputProps {
   placeholder?: string;
   className?: string;
   value?: string;
+  onChange?: (value: string) => void;
 }
 
-export const TextInput = ({ placeholder, className = "", value }: InputProps) => (
+export const TextInput = ({ placeholder, className = "", value, onChange }: InputProps) => (
   <input
     type="text"
     placeholder={placeholder}
     defaultValue={value}
+    onChange={(e) => onChange?.(e.target.value)}
     className={`w-full h-8 px-3 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))] ${className}`}
   />
 );
