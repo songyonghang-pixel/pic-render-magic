@@ -94,6 +94,9 @@ const Index = () => {
   const [countrySep, setCountrySep] = useState(false);
   const [perLevelNotify, setPerLevelNotify] = useState(false);
   const [adminUser, setAdminUser] = useState<string>("当前用户（我）");
+  const [phoneNotify, setPhoneNotify] = useState(false);
+  const [phonePeople, setPhonePeople] = useState<string[]>([]);
+  const [levelPhoneNotify, setLevelPhoneNotify] = useState<Record<string, boolean>>({});
   const [collaborators, setCollaborators] = useState<string[]>([]);
   const [monitorFreq, setMonitorFreq] = useState<string>("");
   const [freqPeriod, setFreqPeriod] = useState<string>("间隔");
