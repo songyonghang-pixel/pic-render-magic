@@ -717,7 +717,7 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                         {(levelPhoneNotify[cond.id] || false) && (
                           <Field label="电话通知人员" required labelWidth="w-20">
                             <div className="max-w-md">
-                              <MultiSelect placeholder="请选择电话通知人员，将按照TT的电话号码进行通知，若无电话号码将无法通知。" options={notifyPersonOptions} />
+                              <MultiSelect placeholder="电话通知人员将默认为TT预警人员，将按照TT的电话号码进行通知，若无电话号码将无法通知。" options={notifyPersonOptions} />
                             </div>
                           </Field>
                         )}
@@ -965,7 +965,7 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
               {phoneNotify && (
                 <Field label="电话通知人员" required>
                   <MultiSelect
-                    placeholder="请选择电话通知人员，将按照TT的电话号码进行通知，若无电话号码将无法通知。"
+                    placeholder="电话通知人员将默认为TT预警人员，将按照TT的电话号码进行通知，若无电话号码将无法通知。"
                     options={notifyPersonOptions}
                     value={phonePeople}
                     onChange={setPhonePeople}
