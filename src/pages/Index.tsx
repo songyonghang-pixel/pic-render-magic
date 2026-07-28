@@ -122,6 +122,8 @@ const Index = () => {
   const [levelTtGroup, setLevelTtGroup] = useState<Record<string, boolean>>({});
   const [levelTtGroups, setLevelTtGroups] = useState<Record<string, { id: string; url: string; mentions: string[] }[]>>({});
   const [levelPhoneNotify, setLevelPhoneNotify] = useState<Record<string, boolean>>({});
+  const [phoneNumbers, setPhoneNumbers] = useState<string>("");
+  const [levelPhoneNumbers, setLevelPhoneNumbers] = useState<Record<string, string>>({});
   const [collaborators, setCollaborators] = useState<string[]>([]);
   const [monitorFreq, setMonitorFreq] = useState<string>("");
   const [freqPeriod, setFreqPeriod] = useState<string>("间隔");
