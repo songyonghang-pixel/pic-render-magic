@@ -11,6 +11,13 @@ import { AiCreateRuleDialog, AiMsg, AiRuleFilters } from "@/components/feedback/
 const aiTagLevels = ["一级标签", "二级标签", "三级标签", "四级标签", "五级标签"];
 
 const alertTypeOptions = [{ label: "实时" }, { label: "统计" }];
+const alertListOptions = [
+  { label: "核心体验预警名单" },
+  { label: "影像团队名单" },
+  { label: "系统性能名单" },
+  { label: "海外运营名单" },
+  { label: "研发值班名单" },
+];
 const feedbackTypeOptions = [{ label: "认知" }, { label: "需求" }, { label: "bug" }, { label: "其他" }];
 const sentimentOptions = [{ label: "正面" }, { label: "负面" }, { label: "无情感" }];
 const alertLevelOptions = [{ label: "S" }, { label: "A" }, { label: "B" }, { label: "C" }, { label: "D" }];
