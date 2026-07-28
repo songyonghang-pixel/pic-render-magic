@@ -991,6 +991,7 @@ const Index = () => {
                       placeholder="多个电话号码请以英文逗号隔开"
                       value={phoneNumbers}
                       className="max-w-xl"
+                      onChange={(v) => setPhoneNumbers(v)}
                     />
                   </Field>
                 </>
