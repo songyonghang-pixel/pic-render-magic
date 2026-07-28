@@ -828,12 +828,12 @@ const Index = () => {
               <Field label="推送方式" required>
                 <div className="flex items-center gap-6 h-8">
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" defaultChecked className="w-3.5 h-3.5 accent-primary" />
-                    <span className="text-[13px] text-primary">TT</span>
+                    <input type="checkbox" checked={ttNotify} onChange={(e) => setTtNotify(e.target.checked)} className="w-3.5 h-3.5 accent-primary" />
+                    <span className={`text-[13px] ${ttNotify ? "text-primary" : "text-[hsl(var(--label-text))]"}`}>TT</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="checkbox" className="w-3.5 h-3.5 accent-primary" />
-                    <span className="text-[13px] text-[hsl(var(--label-text))]">TT群组</span>
+                    <input type="checkbox" checked={ttGroupNotify} onChange={(e) => setTtGroupNotify(e.target.checked)} className="w-3.5 h-3.5 accent-primary" />
+                    <span className={`text-[13px] ${ttGroupNotify ? "text-primary" : "text-[hsl(var(--label-text))]"}`}>TT群组</span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
@@ -846,9 +846,48 @@ const Index = () => {
                   </label>
                 </div>
               </Field>
-              <Field label="通知人员" required>
-                <SelectInput placeholder="请选择" />
-              </Field>
+              {(ttNotify || ttGroupNotify) && (
+                <>
+                  <Field label="预警名单">
+                    <MultiSelect
+                      placeholder="请选择预警名单（可多选，最多 10 个名单）"
+                      options={alertListOptions}
+                      value={alertLists}
+                      onChange={(v) => setAlertLists(v.slice(0, 10))}
+                    />
+                  </Field>
+                  <Field label="预警人员">
+                    <MultiSelect
+                      placeholder="输入名字检索并选择"
+                      options={notifyPersonOptions}
+                      value={alertPeople}
+                      onChange={setAlertPeople}
+                    />
+                  </Field>
+                  {alertLists.length === 0 && alertPeople.length === 0 && (
+                    <div className="pl-[104px] -mt-2 text-[12px] text-destructive">请选择预警名单或预警人员</div>
+                  )}
+                </>
+              )}
+              {ttGroupNotify && (
+                <>
+                  <Field label="Webhook地址TT群组" required>
+                    <TextInput placeholder="请输入Webhook地址" />
+                  </Field>
+                  <div className="pl-[104px] -mt-2 text-[12px] text-primary">
+                    如何为告警规则添加TT群机器人推送{" "}
+                    <span className="underline cursor-pointer">点击跳转</span>
+                  </div>
+                  <Field label="群组内提及人">
+                    <MultiSelect
+                      placeholder="请输入关键词搜索"
+                      options={notifyPersonOptions}
+                      value={groupMentions}
+                      onChange={setGroupMentions}
+                    />
+                  </Field>
+                </>
+              )}
               {phoneNotify && (
                 <Field label="电话通知人员" required>
                   <MultiSelect
