@@ -715,23 +715,11 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                           </>
                         )}
                         {(levelPhoneNotify[cond.id] || false) && (
-                          <>
-                            <Field label="电话通知人员" required labelWidth="w-20">
-                              <div className="max-w-md">
-                                <MultiSelect placeholder="请选择电话通知人员，将按照TT的电话号码进行通知，若无电话号码将无法通知。" options={notifyPersonOptions} />
-                              </div>
-                            </Field>
-                            <Field label="电话号码" required labelWidth="w-20">
-                              <div className="max-w-md">
-                                <TextInput
-                                  placeholder="多个电话号码请以英文逗号隔开"
-                                  value={levelPhoneNumbers[cond.id] ?? ""}
-                                  className="max-w-md"
-                                  onChange={(v) => setLevelPhoneNumbers((m) => ({ ...m, [cond.id]: v }))}
-                                />
-                              </div>
-                            </Field>
-                          </>
+                          <Field label="电话通知人员" required labelWidth="w-20">
+                            <div className="max-w-md">
+                              <MultiSelect placeholder="请选择电话通知人员，将按照TT的电话号码进行通知，若无电话号码将无法通知。" options={notifyPersonOptions} />
+                            </div>
+                          </Field>
                         )}
                         {levelTtGroup[cond.id] && (
                           <Field label="TT群组" required labelWidth="w-20">
