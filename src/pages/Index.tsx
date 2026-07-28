@@ -115,6 +115,9 @@ const Index = () => {
   const [alertLists, setAlertLists] = useState<string[]>([]);
   const [alertPeople, setAlertPeople] = useState<string[]>([]);
   const [groupMentions, setGroupMentions] = useState<string[]>([]);
+  const [ttGroups, setTtGroups] = useState<{ id: string; url: string; mentions: string[] }[]>([
+    { id: "g1", url: "", mentions: [] },
+  ]);
   const [levelTt, setLevelTt] = useState<Record<string, boolean>>({});
   const [levelTtGroup, setLevelTtGroup] = useState<Record<string, boolean>>({});
   const [levelPhoneNotify, setLevelPhoneNotify] = useState<Record<string, boolean>>({});
