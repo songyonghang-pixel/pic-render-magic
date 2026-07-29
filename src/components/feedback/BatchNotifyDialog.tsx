@@ -53,7 +53,7 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
             <span>提示：若预警规则开启“按级别分别设置”时，批量修改通知设置将关闭分别设置选项。</span>
           </div>
           <div className="text-[12.5px] bg-[hsl(var(--primary)/0.06)] rounded-sm p-2.5 text-[hsl(var(--label-text))]">
-            {mode === "add" ? "备注：新增将在原通知设置中增加选中的推送方式与人员。" : "备注：编辑时将按下方已选择的项进行替换，未选择的项不调整。"}
+            {mode === "add" ? "备注：新增将在原通知设置中增加选中的推送方式与人员。" : "备注：编辑时会将已选择的预警规则的通知方式都调整为下方选择的方式，请核对后再确认。"}
           </div>
 
 
