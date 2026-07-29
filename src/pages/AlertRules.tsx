@@ -1,8 +1,10 @@
-import { ChevronRight, Plus, Sparkles } from "lucide-react";
-import { useState } from "react";
+import { ChevronRight, Plus, Sparkles, ChevronDown } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 import { toast } from "sonner";
 import { SingleSelect } from "@/components/feedback/SingleSelect";
 import { MultiSelect } from "@/components/feedback/MultiSelect";
+import { BatchFilterDialog, FILTER_FIELDS, RuleFilters } from "@/components/feedback/BatchFilterDialog";
+import { BatchNotifyDialog } from "@/components/feedback/BatchNotifyDialog";
 
 const productTeamOptions = [
   { label: "三方专项" }, { label: "通信与互联" }, { label: "小布记忆" },
@@ -11,22 +13,86 @@ const productTeamOptions = [
   { label: "平台安全" }, { label: "应用安全" },
 ];
 
-const rows = [
-  { id: 214, name: "测试ai预警2006", type: "实时", ct: "2026-04-29 20:08:12", cu: "彭海林(W9074737)", ut: "2026-04-29 20:21:33", uu: "宋永航(80261667)", team: "通信与互联", count: 5, enabled: false },
-  { id: 209, name: "16.1设置L3舆情预警", type: "统计", ct: "2026-04-29 15:39:24", cu: "叶春(80200542)", ut: "2026-04-29 15:39:37", uu: "叶春(80200542)", team: "系统安全", count: 0, enabled: true },
-  { id: 204, name: "UI动效_16.1多彩引擎舆情...", type: "统计", ct: "2026-04-29 10:40:58", cu: "游皓翔(80397472)", ut: "2026-04-29 16:03:29", uu: "游皓翔(80397472)", team: "媒体与游戏", count: 0, enabled: true },
-  { id: 203, name: "个性化16.1预警", type: "实时", ct: "2026-04-29 10:29:25", cu: "程丽洁(80264100)", ut: "2026-04-29 16:15:33", uu: "程丽洁(80264100)", team: "中国区", count: 5, enabled: true },
-  { id: 202, name: "UI动效_16.1无缝动画舆...", type: "实时", ct: "2026-04-29 10:29:24", cu: "游皓翔(80397472)", ut: "2026-04-29 16:04:07", uu: "游皓翔(80397472)", team: "媒体与游戏", count: 0, enabled: true },
-  { id: 199, name: "桌面快稳省严重问题预警", type: "实时", ct: "2026-04-29 00:35:52", cu: "杨柳(80341332)", ut: "2026-04-29 00:49:09", uu: "杨柳(80341332)", team: "DFX&底软", count: 2, enabled: true },
-  { id: 198, name: "桌面近期任务严重问题预警", type: "实时", ct: "2026-04-29 00:34:15", cu: "杨柳(80341332)", ut: "2026-04-29 00:49:10", uu: "杨柳(80341332)", team: "DFX&底软", count: 0, enabled: true },
-  { id: 190, name: "桌面布局严重问题预警", type: "实时", ct: "2026-04-28 12:15:45", cu: "杨柳(80341332)", ut: "2026-04-29 15:14:12", uu: "杨柳(80341332)", team: "平台安全", count: 3, enabled: true },
-  { id: 188, name: "桌面S级严重问题预警", type: "实时", ct: "2026-04-28 12:11:00", cu: "杨柳(80341332)", ut: "2026-04-28 16:18:11", uu: "杨柳(80341332)", team: "应用安全", count: 0, enabled: true },
-  { id: 182, name: "桌面舆情预警监控", type: "统计", ct: "2026-04-27 20:52:58", cu: "杨柳(80341332)", ut: "2026-04-29 11:41:46", uu: "杨柳(80341332)", team: "通信协议", count: 2, enabled: true },
+const initialRows = [
+  { id: 214, name: "测试ai预警2006", type: "实时", ct: "2026-04-29 20:08:12", cu: "彭海林(W9074737)", ut: "2026-04-29 20:21:33", uu: "宋永航(80261667)", team: "通信与互联", count: 5, enabled: false, filters: { brand: ["OPPO"], sentiment: ["负面"], os: ["16.1"] } as RuleFilters },
+  { id: 209, name: "16.1设置L3舆情预警", type: "统计", ct: "2026-04-29 15:39:24", cu: "叶春(80200542)", ut: "2026-04-29 15:39:37", uu: "叶春(80200542)", team: "系统安全", count: 0, enabled: true, filters: { brand: ["OPPO", "OnePlus"], sentiment: ["正面"] } as RuleFilters },
+  { id: 204, name: "UI动效_16.1多彩引擎舆情...", type: "统计", ct: "2026-04-29 10:40:58", cu: "游皓翔(80397472)", ut: "2026-04-29 16:03:29", uu: "游皓翔(80397472)", team: "媒体与游戏", count: 0, enabled: true, filters: { brand: ["realme"], sale: ["内销"] } as RuleFilters },
+  { id: 203, name: "个性化16.1预警", type: "实时", ct: "2026-04-29 10:29:25", cu: "程丽洁(80264100)", ut: "2026-04-29 16:15:33", uu: "程丽洁(80264100)", team: "中国区", count: 5, enabled: true, filters: { brand: ["OPPO"], feedbackType: ["投诉"] } as RuleFilters },
+  { id: 202, name: "UI动效_16.1无缝动画舆...", type: "实时", ct: "2026-04-29 10:29:24", cu: "游皓翔(80397472)", ut: "2026-04-29 16:04:07", uu: "游皓翔(80397472)", team: "媒体与游戏", count: 0, enabled: true, filters: { os: ["17.1"] } as RuleFilters },
+  { id: 199, name: "桌面快稳省严重问题预警", type: "实时", ct: "2026-04-29 00:35:52", cu: "杨柳(80341332)", ut: "2026-04-29 00:49:09", uu: "杨柳(80341332)", team: "DFX&底软", count: 2, enabled: true, filters: { brand: ["小米"], sentiment: ["负面"] } as RuleFilters },
+  { id: 198, name: "桌面近期任务严重问题预警", type: "实时", ct: "2026-04-29 00:34:15", cu: "杨柳(80341332)", ut: "2026-04-29 00:49:10", uu: "杨柳(80341332)", team: "DFX&底软", count: 0, enabled: true, filters: { sale: ["外销"] } as RuleFilters },
+  { id: 190, name: "桌面布局严重问题预警", type: "实时", ct: "2026-04-28 12:15:45", cu: "杨柳(80341332)", ut: "2026-04-29 15:14:12", uu: "杨柳(80341332)", team: "平台安全", count: 3, enabled: true, filters: { brand: ["荣耀"] } as RuleFilters },
+  { id: 188, name: "桌面S级严重问题预警", type: "实时", ct: "2026-04-28 12:11:00", cu: "杨柳(80341332)", ut: "2026-04-28 16:18:11", uu: "杨柳(80341332)", team: "应用安全", count: 0, enabled: true, filters: { sentiment: ["无情感"] } as RuleFilters },
+  { id: 182, name: "桌面舆情预警监控", type: "统计", ct: "2026-04-27 20:52:58", cu: "杨柳(80341332)", ut: "2026-04-29 11:41:46", uu: "杨柳(80341332)", team: "通信协议", count: 2, enabled: true, filters: { brand: ["华为"], os: ["15.1"] } as RuleFilters },
 ];
 
 export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: (type?: string) => void; onAiCreate?: (type?: string) => void; onCopy?: (name: string, type: string) => void }) => {
   const [subTab, setSubTab] = useState<"实时" | "统计">("实时");
+  const [rows, setRows] = useState(initialRows);
+  const [selected, setSelected] = useState<number[]>([]);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [filterDlg, setFilterDlg] = useState(false);
+  const [notifyDlg, setNotifyDlg] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const onDoc = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) setMenuOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, []);
+
+  useEffect(() => setSelected([]), [subTab]);
+
   const filteredRows = rows.filter((r) => r.type === subTab);
+  const selectedRows = filteredRows.filter((r) => selected.includes(r.id));
+  const allChecked = filteredRows.length > 0 && filteredRows.every((r) => selected.includes(r.id));
+
+  const toggleRow = (id: number) =>
+    setSelected((s) => (s.includes(id) ? s.filter((x) => x !== id) : [...s, id]));
+  const toggleAll = () => setSelected(allChecked ? [] : filteredRows.map((r) => r.id));
+
+  const requireSelection = () => {
+    if (selected.length === 0) {
+      toast("请先选择预警规则");
+      return false;
+    }
+    return true;
+  };
+
+  const batchAction = (action: string) => {
+    setMenuOpen(false);
+    if (!requireSelection()) return;
+    if (action === "enable" || action === "disable") {
+      setRows((rs) => rs.map((r) => (selected.includes(r.id) ? { ...r, enabled: action === "enable" } : r)));
+      toast(`已批量${action === "enable" ? "启用" : "禁用"} ${selected.length} 条规则`);
+      setSelected([]);
+    } else if (action === "delete") {
+      setRows((rs) => rs.filter((r) => !selected.includes(r.id)));
+      toast(`已批量删除 ${selected.length} 条规则`);
+      setSelected([]);
+    } else if (action === "filter") setFilterDlg(true);
+    else if (action === "notify") setNotifyDlg(true);
+  };
+
+  const applyFilters = (mode: "add" | "edit", values: RuleFilters) => {
+    setRows((rs) =>
+      rs.map((r) => {
+        if (!selected.includes(r.id)) return r;
+        const next: RuleFilters = { ...r.filters };
+        FILTER_FIELDS.forEach((f) => {
+          const picked = values[f.key] ?? [];
+          if (picked.length === 0) return;
+          next[f.key] = mode === "add" ? Array.from(new Set([...(next[f.key] ?? []), ...picked])) : picked;
+        });
+        return { ...r, filters: next };
+      })
+    );
+    setFilterDlg(false);
+    toast(`已${mode === "add" ? "新增" : "编辑"}更新 ${selected.length} 条规则的过滤条件`);
+  };
+
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))]">
       <div className="bg-card border-b border-border px-6 py-3 flex items-center text-[13px] text-[hsl(var(--breadcrumb))]">
@@ -78,7 +144,30 @@ export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: (type?:
       {/* Table */}
       <div className="px-6 mt-4 pb-10">
         <div className="bg-card rounded-md p-5">
-          <div className="flex justify-end gap-2 mb-3">
+          <div className="flex justify-end items-center gap-2 mb-3">
+            <div ref={menuRef} className="relative">
+              <button
+                onClick={() => setMenuOpen((o) => !o)}
+                className="h-8 px-4 rounded-md bg-card border border-[hsl(var(--field-border))] text-[13px] text-[hsl(var(--label-text))] inline-flex items-center gap-1 hover:border-primary hover:text-primary"
+              >
+                批量操作{selected.length > 0 ? `(${selected.length})` : ""} <ChevronDown className="w-3.5 h-3.5" />
+              </button>
+              {menuOpen && (
+                <div className="absolute right-0 mt-1 w-44 bg-popover border border-border rounded-sm shadow-lg z-40">
+                  {[
+                    { k: "enable", l: "批量启用" },
+                    { k: "disable", l: "批量禁用" },
+                    { k: "delete", l: "批量删除" },
+                    { k: "filter", l: "批量修改过滤条件" },
+                    { k: "notify", l: "批量修改通知设置" },
+                  ].map((m) => (
+                    <div key={m.k} onClick={() => batchAction(m.k)} className="px-3 py-2 text-[13px] text-[hsl(var(--label-text))] hover:bg-[hsl(var(--accent))] cursor-pointer">
+                      {m.l}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
             <button onClick={() => onCreate(subTab)} className="h-8 px-4 rounded-md bg-primary text-primary-foreground text-[13px] inline-flex items-center gap-1">
               <Plus className="w-3.5 h-3.5" /> 新增预警规则
             </button>
@@ -89,6 +178,9 @@ export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: (type?:
           <table className="w-full text-[13px]">
             <thead>
               <tr className="bg-[hsl(var(--accent))] text-[hsl(var(--label-text))]">
+                <th className="py-3 pl-4 pr-1 w-8">
+                  <input type="checkbox" checked={allChecked} onChange={toggleAll} className="w-3.5 h-3.5 accent-primary" />
+                </th>
                 {["规则ID", "规则名称", "预警类型", "创建时间", "创建人员", "规则更新时间", "规则更新人", "产品团队", "预警次数", "启用状态", "操作"].map((h) => (
                   <th key={h} className="text-left py-3 px-4 font-medium">{h}</th>
                 ))}
@@ -97,6 +189,9 @@ export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: (type?:
             <tbody>
               {filteredRows.map((r) => (
                 <tr key={r.id} className="border-b border-border">
+                  <td className="py-3 pl-4 pr-1">
+                    <input type="checkbox" checked={selected.includes(r.id)} onChange={() => toggleRow(r.id)} className="w-3.5 h-3.5 accent-primary" />
+                  </td>
                   <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.id}</td>
                   <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.name}</td>
                   <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.type}</td>
@@ -122,9 +217,27 @@ export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: (type?:
           <Pagination total={76} />
         </div>
       </div>
+
+      <BatchFilterDialog
+        key={filterDlg ? "open" : "closed"}
+        open={filterDlg}
+        rules={selectedRows}
+        onClose={() => setFilterDlg(false)}
+        onApply={applyFilters}
+      />
+      <BatchNotifyDialog
+        open={notifyDlg}
+        count={selected.length}
+        onClose={() => setNotifyDlg(false)}
+        onApply={(mode) => {
+          setNotifyDlg(false);
+          toast(`已${mode === "add" ? "新增" : "编辑"}更新 ${selected.length} 条规则的通知设置`);
+        }}
+      />
     </div>
   );
 };
+
 
 const Filter = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <div className="flex items-center gap-3">
