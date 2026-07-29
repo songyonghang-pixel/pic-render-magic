@@ -187,3 +187,13 @@ export const fanCountOperators: CascadeNode[] = [
   { label: "小于" },
   { label: "小于等于" },
 ];
+
+// OTA版本
+export const otaVersionOptions: CascadeNode[] = [
+  { label: "PJZ110_15.0.0.500(CN01)" },
+  { label: "PJZ110_15.0.0.420(CN01)" },
+  { label: "PHY110_14.0.1.700(CN01)" },
+  { label: "PHY110_14.0.1.620(CN01)" },
+  { label: "CPH2581_15.0.0.300(EX01)" },
+  { label: "CPH2581_15.0.0.210(EX01)" },
+];

@@ -56,6 +56,7 @@ import {
   brandOptions,
   marketingNameOptions,
   osVersionOptions,
+  otaVersionOptions,
   feedbackSourceOptions,
   countryOptions,
   defectTypeOptions,
@@ -382,7 +383,9 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                   <Field label="机型" labelWidth="w-20">
                     <TextInput placeholder="请输入机型,如PHY110,多个机型请用逗号隔开" />
                   </Field>
-                  <div />
+                  <Field label="OTA版本" labelWidth="w-16">
+                    <MultiSelect placeholder="请选择OTA版本号" options={otaVersionOptions} />
+                  </Field>
                 </div>
               </div>
             </div>
