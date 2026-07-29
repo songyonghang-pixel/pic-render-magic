@@ -182,7 +182,11 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
           if (s.id !== subId) return s;
           const next = { ...s, ...patch };
           const showCalc = next.indicator === "反馈量" && (dailyLikeRanges.includes(next.timeRange) || next.timeRange === "本周");
-          if (!showCalc) next.calcMethod = "";
+          if (!showCalc) {
+            next.calcMethod = "";
+          } else if (next.calcMethod === "平均值" && next.timeRange !== "近7日" && next.timeRange !== "近30日") {
+            next.calcMethod = "";
+          }
           return next;
         }),
       };
@@ -597,6 +601,7 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                         </Field>
                         {cond.subs.map((sub, subIdx) => {
                           const showCalcMethod = sub.indicator === "反馈量" && (dailyLikeRanges.includes(sub.timeRange) || sub.timeRange === "本周");
+                          const calcMethodOptionsForSub = ["近7日", "近30日"].includes(sub.timeRange) ? calcMethodOptions : calcMethodOptions.filter((o) => o.label !== "平均值");
                           const isPercent = showCalcMethod && percentCalcMethods.includes(sub.calcMethod);
                           const chartDisabled = !sub.indicator || !sub.timeRange;
                           return (
@@ -607,13 +612,13 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                                   <div className="w-[180px]"><SingleSelect placeholder="请选择时间范围" options={timeRangeOptionsStat} value={sub.timeRange} onChange={(v) => updateSub(cond.id, sub.id, { timeRange: v })} /></div>
                                   {showCalcMethod && (
                                     <>
-                                      <div className="w-[180px]"><SingleSelect placeholder="请选择计算方式" options={calcMethodOptions} value={sub.calcMethod} onChange={(v) => updateSub(cond.id, sub.id, { calcMethod: v })} /></div>
+                                      <div className="w-[180px]"><SingleSelect placeholder="请选择计算方式" options={calcMethodOptionsForSub} value={sub.calcMethod} onChange={(v) => updateSub(cond.id, sub.id, { calcMethod: v })} /></div>
                                       <div className="relative group flex items-center">
                                         <HelpCircle className="w-4 h-4 text-[hsl(var(--placeholder))] cursor-help" />
                                         <div className="absolute left-6 top-1/2 -translate-y-1/2 z-50 hidden group-hover:block w-[560px] max-h-[70vh] overflow-auto p-3 text-[12px] leading-relaxed bg-popover border border-border rounded-md shadow-lg text-[hsl(var(--label-text))]">
                                           <div className="mb-1">当预警指标为"反馈量"，时间范围为当日、本周、昨日、近7日、近30日时，可按反馈变化来设置预警触发条件，计算公式包含如下内容：</div>
                                           <div className="mt-2"><b>值：</b>符合过滤条件和时间范围的反馈量数值</div>
-                                          <div className="mt-2"><b>平均值：</b>当日与前29日的日平均值，本周与前6周的周平均值，昨日与往前29日的平均值，近7日与前63日的和/10，近30日与前30日的和/2</div>
+                                          <div className="mt-2"><b>平均值：</b>只有近7日和近30日才能选择平均值，选择后计算近7日每日的平均值，近30日每日的平均值。</div>
                                           <div className="mt-2"><b>环比：</b>当日较昨日、本周较上周、昨日较前日、近7日较前7日、近30日较前30日的增长数量/百分比。</div>
                                           <div className="mt-3"><b>较平均值：</b>当日较前30日的日平均值、本周较前7周的周平均值、昨日较往前30日的日平均值、近7日较往前70日反馈量/10的数据、近30日较往前60日反馈量/2的数据的增长数量/百分比</div>
                                           <img src={avgLegend.url} alt="反馈量预警较平均值口径图例" className="mt-2 w-full rounded border border-border" loading="lazy" />
