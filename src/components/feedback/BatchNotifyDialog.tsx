@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X } from "lucide-react";
+import { X, AlertTriangle } from "lucide-react";
 import { MultiSelect } from "@/components/feedback/MultiSelect";
 
 const alertListOptions = [
