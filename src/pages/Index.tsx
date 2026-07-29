@@ -182,7 +182,11 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
           if (s.id !== subId) return s;
           const next = { ...s, ...patch };
           const showCalc = next.indicator === "反馈量" && (dailyLikeRanges.includes(next.timeRange) || next.timeRange === "本周");
-          if (!showCalc) next.calcMethod = "";
+          if (!showCalc) {
+            next.calcMethod = "";
+          } else if (next.calcMethod === "平均值" && next.timeRange !== "近7日" && next.timeRange !== "近30日") {
+            next.calcMethod = "";
+          }
           return next;
         }),
       };
