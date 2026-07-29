@@ -70,6 +70,7 @@ const numOnly = (e: React.FormEvent<HTMLInputElement>) => {
 export const BatchFilterDialog = ({ open, rules, onClose, onApply }: Props) => {
   const [mode, setMode] = useState<"add" | "edit" | "delete">("add");
   const [values, setValues] = useState<RuleFilters>({});
+  const [delKeys, setDelKeys] = useState<string[]>([]);
 
   const [expanded, setExpanded] = useState<number[]>(rules.slice(0, 1).map((r) => r.id));
   const [fanOp, setFanOp] = useState<string[]>([]);
@@ -156,8 +157,31 @@ export const BatchFilterDialog = ({ open, rules, onClose, onApply }: Props) => {
                 : "备注：删除时即选择需要删除掉的过滤条件，有选择该条件的预警规则将去掉该条件。"}
             </div>
 
+            {mode === "delete" && (
+              <div>
+                <div className="text-[13px] font-medium text-[hsl(var(--label-text))] mb-2">选择需要删除的过滤项</div>
+                <div className="grid grid-cols-3 gap-2">
+                  {FILTER_FIELDS.map((f) => (
+                    <label key={f.key} className="flex items-center gap-2 text-[13px] text-[hsl(var(--label-text))] cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="accent-primary"
+                        checked={delKeys.includes(f.key)}
+                        onChange={() =>
+                          setDelKeys((k) => (k.includes(f.key) ? k.filter((x) => x !== f.key) : [...k, f.key]))
+                        }
+                      />
+                      <span>{f.label}</span>
+                    </label>
+                  ))}
+                </div>
+              </div>
+            )}
 
+            {mode !== "delete" && (
+            <>
             {/* 产品领域 */}
+
             <div className="flex items-start">
               <label className="w-20 shrink-0 text-right pr-3 text-[13px] font-medium text-[hsl(var(--label-text))] pt-1.5">产品领域</label>
               <div className="flex-1">
@@ -340,12 +364,27 @@ export const BatchFilterDialog = ({ open, rules, onClose, onApply }: Props) => {
                 </div>
               </div>
             </div>
+            </>
+            )}
+
           </div>
         </div>
 
         <div className="px-5 py-3 border-t border-border flex justify-end gap-2">
           <button onClick={onClose} className="h-8 px-5 rounded-md bg-card border border-[hsl(var(--field-border))] text-[13px] text-[hsl(var(--label-text))]">取消</button>
-          <button onClick={() => onApply(mode, values)} className="h-8 px-5 rounded-md bg-primary text-primary-foreground text-[13px]">确认</button>
+          <button
+            onClick={() =>
+              onApply(
+                mode,
+                mode === "delete"
+                  ? Object.fromEntries(delKeys.map((k) => [k, ["__ALL__"]]))
+                  : values
+              )
+            }
+            className="h-8 px-5 rounded-md bg-primary text-primary-foreground text-[13px]"
+          >
+            确认
+          </button>
         </div>
       </div>
     </div>
