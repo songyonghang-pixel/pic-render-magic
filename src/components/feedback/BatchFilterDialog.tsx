@@ -340,6 +340,9 @@ export const BatchFilterDialog = ({ open, rules, onClose, onApply }: Props) => {
                 </div>
               </div>
             </div>
+            </>
+            )}
+
           </div>
         </div>
 
