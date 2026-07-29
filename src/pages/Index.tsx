@@ -383,18 +383,19 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                   <Field label="机型" labelWidth="w-20">
                     <TextInput placeholder="请输入机型,如PHY110,多个机型请用逗号隔开" />
                   </Field>
-                  <Field label="OTA版本" labelWidth="w-16">
-                    <div className="flex items-center gap-2">
-                      <div className="flex-1 min-w-0">
-                        <MultiSelect placeholder="请选择OTA版本号" options={otaVersionOptions} />
-                      </div>
-                      <div className="relative group flex items-center shrink-0">
+                  <Field
+                    label="OTA版本"
+                    labelWidth="w-16"
+                    labelExtra={
+                      <div className="relative group inline-flex align-middle ml-1">
                         <HelpCircle className="w-3.5 h-3.5 text-[hsl(var(--placeholder))] cursor-help" />
                         <div className="absolute left-6 top-1/2 -translate-y-1/2 z-50 hidden group-hover:block w-[340px] p-3 text-[12px] leading-relaxed bg-popover border border-border rounded-md shadow-lg text-[hsl(var(--label-text))]">
                           目前仅有帮助与反馈、logkit、NPS等少数渠道有OTA版本，选择OTA版本将过滤没有OTA版本的数据。
                         </div>
                       </div>
-                    </div>
+                    }
+                  >
+                    <MultiSelect placeholder="请选择OTA版本号" options={otaVersionOptions} />
                   </Field>
                 </div>
               </div>
