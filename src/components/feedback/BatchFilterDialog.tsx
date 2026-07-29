@@ -9,6 +9,7 @@ import {
   brandOptions,
   marketingNameOptions,
   osVersionOptions,
+  otaVersionOptions,
   domesticExportOptions,
   feedbackSourceOptions,
   countryOptions,

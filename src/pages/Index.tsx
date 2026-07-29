@@ -56,6 +56,7 @@ import {
   brandOptions,
   marketingNameOptions,
   osVersionOptions,
+  otaVersionOptions,
   feedbackSourceOptions,
   countryOptions,
   defectTypeOptions,
