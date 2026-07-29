@@ -60,7 +60,7 @@ interface Props {
   open: boolean;
   rules: BatchRule[];
   onClose: () => void;
-  onApply: (mode: "add" | "edit", values: RuleFilters) => void;
+  onApply: (mode: "add" | "edit" | "delete", values: RuleFilters) => void;
 }
 
 const numOnly = (e: React.FormEvent<HTMLInputElement>) => {
@@ -68,8 +68,9 @@ const numOnly = (e: React.FormEvent<HTMLInputElement>) => {
 };
 
 export const BatchFilterDialog = ({ open, rules, onClose, onApply }: Props) => {
-  const [mode, setMode] = useState<"add" | "edit">("add");
+  const [mode, setMode] = useState<"add" | "edit" | "delete">("add");
   const [values, setValues] = useState<RuleFilters>({});
+
   const [expanded, setExpanded] = useState<number[]>(rules.slice(0, 1).map((r) => r.id));
   const [fanOp, setFanOp] = useState<string[]>([]);
   const [kwField, setKwField] = useState("反馈原声");
@@ -136,10 +137,12 @@ export const BatchFilterDialog = ({ open, rules, onClose, onApply }: Props) => {
           <div className="overflow-auto p-4 space-y-4">
             <div className="flex items-center gap-4 text-[13px]">
               <span className="text-[hsl(var(--label-text))]">编辑方式</span>
-              {(["add", "edit"] as const).map((m) => (
+              {(["add", "edit", "delete"] as const).map((m) => (
                 <label key={m} className="flex items-center gap-1.5 cursor-pointer">
                   <input type="radio" checked={mode === m} onChange={() => setMode(m)} className="accent-primary" />
-                  <span className={mode === m ? "text-primary" : "text-[hsl(var(--label-text))]"}>{m === "add" ? "新增" : "编辑"}</span>
+                  <span className={mode === m ? "text-primary" : "text-[hsl(var(--label-text))]"}>
+                    {m === "add" ? "新增" : m === "edit" ? "编辑" : "删除"}
+                  </span>
                 </label>
               ))}
             </div>
@@ -148,8 +151,11 @@ export const BatchFilterDialog = ({ open, rules, onClose, onApply }: Props) => {
               <Info className="w-3.5 h-3.5 shrink-0 mt-0.5 text-primary" />
               {mode === "add"
                 ? "备注：新增将在原过滤条件中增加选中的字段值（如原本选了品牌OPPO，新增选择了品牌realme，则新增确认后的品牌为OPPO、realme）。"
-                : "备注：编辑时将各规则中过滤项按下方有选择字段的过滤项中的字段进行替换，未选择的字段不调整（如原本选了品牌OPPO、情感选择正面；编辑选择品牌realme，则规则的品牌变更为realme，情感不变）。"}
+                : mode === "edit"
+                ? "备注：编辑时将各规则中过滤项按下方有选择字段的过滤项中的字段进行替换，未选择的字段不调整（如原本选了品牌OPPO、情感选择正面；编辑选择品牌realme，则规则的品牌变更为realme，情感不变）。"
+                : "备注：删除时即选择需要删除掉的过滤条件，有选择该条件的预警规则将去掉该条件。"}
             </div>
+
 
             {/* 产品领域 */}
             <div className="flex items-start">

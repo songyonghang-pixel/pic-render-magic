@@ -76,7 +76,7 @@ export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: (type?:
     else if (action === "notify") setNotifyDlg(true);
   };
 
-  const applyFilters = (mode: "add" | "edit", values: RuleFilters) => {
+  const applyFilters = (mode: "add" | "edit" | "delete", values: RuleFilters) => {
     setRows((rs) =>
       rs.map((r) => {
         if (!selected.includes(r.id)) return r;
@@ -84,14 +84,21 @@ export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: (type?:
         FILTER_FIELDS.forEach((f) => {
           const picked = values[f.key] ?? [];
           if (picked.length === 0) return;
-          next[f.key] = mode === "add" ? Array.from(new Set([...(next[f.key] ?? []), ...picked])) : picked;
+          if (mode === "add") next[f.key] = Array.from(new Set([...(next[f.key] ?? []), ...picked]));
+          else if (mode === "edit") next[f.key] = picked;
+          else {
+            const left = (next[f.key] ?? []).filter((v) => !picked.includes(v));
+            if (left.length === 0) delete next[f.key];
+            else next[f.key] = left;
+          }
         });
         return { ...r, filters: next };
       })
     );
     setFilterDlg(false);
-    toast(`已${mode === "add" ? "新增" : "编辑"}更新 ${selected.length} 条规则的过滤条件`);
+    toast(`已${mode === "add" ? "新增" : mode === "edit" ? "编辑" : "删除"}更新 ${selected.length} 条规则的过滤条件`);
   };
+
 
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))]">
