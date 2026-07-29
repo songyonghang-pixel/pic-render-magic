@@ -608,14 +608,15 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                                       <div className="w-[180px]"><SingleSelect placeholder="请选择计算方式" options={calcMethodOptions} value={sub.calcMethod} onChange={(v) => updateSub(cond.id, sub.id, { calcMethod: v })} /></div>
                                       <div className="relative group flex items-center">
                                         <HelpCircle className="w-4 h-4 text-[hsl(var(--placeholder))] cursor-help" />
-                                        <div className="absolute left-6 top-1/2 -translate-y-1/2 z-50 hidden group-hover:block w-[360px] p-3 text-[12px] leading-relaxed bg-popover border border-border rounded-md shadow-lg text-[hsl(var(--label-text))]">
+                                        <div className="absolute left-6 top-1/2 -translate-y-1/2 z-50 hidden group-hover:block w-[560px] max-h-[70vh] overflow-auto p-3 text-[12px] leading-relaxed bg-popover border border-border rounded-md shadow-lg text-[hsl(var(--label-text))]">
                                           <div className="mb-1">当预警指标为"反馈量"，时间范围为当日、本周、昨日、近7日、近30日时，可按反馈变化来设置预警触发条件，计算公式包含如下内容：</div>
                                           <div className="mt-2"><b>值：</b>符合过滤条件和时间范围的反馈量数值</div>
-                                          <div><b>环比增长率：</b>当日较昨日、本周较上周、昨日较前日、近7日较前7日、近30日较前30日的增长百分比</div>
-                                          <div><b>环比增量：</b>当日较昨日、本周较上周、昨日较前日、近7日较前7日、近30日较前30日的增长数量</div>
-                                          <div><b>较平均值的增量：</b>当日较前30日的日平均值、本周较前7周的周平均值、昨日较往前30日的日平均值、近7日较往前70日反馈量/10的数据、近30日较往前60日反馈量/2的数据的增长数量</div>
-                                          <div><b>较平均值的增长率：</b>当日较前30日的日平均值、本周较前7周的周平均值、昨日较往前30日的日平均值、近7日较往前70日反馈量/10的数据、近30日较往前60日反馈量/2的数据的增长率</div>
+                                          <div className="mt-2"><b>环比：</b>当日较昨日、本周较上周、昨日较前日、近7日较前7日、近30日较前30日的增长数量/百分比。</div>
+                                          <img src={momLegend.url} alt="反馈量预警环比口径图例" className="mt-2 w-full rounded border border-border" loading="lazy" />
+                                          <div className="mt-3"><b>较平均值：</b>当日较前30日的日平均值、本周较前7周的周平均值、昨日较往前30日的日平均值、近7日较往前70日反馈量/10的数据、近30日较往前60日反馈量/2的数据的增长数量/百分比</div>
+                                          <img src={avgLegend.url} alt="反馈量预警较平均值口径图例" className="mt-2 w-full rounded border border-border" loading="lazy" />
                                         </div>
+
                                       </div>
                                     </>
                                   )}
