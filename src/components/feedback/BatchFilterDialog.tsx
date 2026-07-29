@@ -70,6 +70,7 @@ const numOnly = (e: React.FormEvent<HTMLInputElement>) => {
 export const BatchFilterDialog = ({ open, rules, onClose, onApply }: Props) => {
   const [mode, setMode] = useState<"add" | "edit" | "delete">("add");
   const [values, setValues] = useState<RuleFilters>({});
+  const [delKeys, setDelKeys] = useState<string[]>([]);
 
   const [expanded, setExpanded] = useState<number[]>(rules.slice(0, 1).map((r) => r.id));
   const [fanOp, setFanOp] = useState<string[]>([]);
