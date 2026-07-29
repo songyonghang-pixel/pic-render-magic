@@ -372,7 +372,19 @@ export const BatchFilterDialog = ({ open, rules, onClose, onApply }: Props) => {
 
         <div className="px-5 py-3 border-t border-border flex justify-end gap-2">
           <button onClick={onClose} className="h-8 px-5 rounded-md bg-card border border-[hsl(var(--field-border))] text-[13px] text-[hsl(var(--label-text))]">取消</button>
-          <button onClick={() => onApply(mode, values)} className="h-8 px-5 rounded-md bg-primary text-primary-foreground text-[13px]">确认</button>
+          <button
+            onClick={() =>
+              onApply(
+                mode,
+                mode === "delete"
+                  ? Object.fromEntries(delKeys.map((k) => [k, ["__ALL__"]]))
+                  : values
+              )
+            }
+            className="h-8 px-5 rounded-md bg-primary text-primary-foreground text-[13px]"
+          >
+            确认
+          </button>
         </div>
       </div>
     </div>
