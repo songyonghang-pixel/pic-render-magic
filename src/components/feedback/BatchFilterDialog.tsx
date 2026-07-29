@@ -113,14 +113,18 @@ export const BatchFilterDialog = ({ open, rules, onClose, onApply }: Props) => {
                   </button>
                   {isOpen && (
                     <div className="px-4 pb-3 pt-1 space-y-1.5">
-                      {FILTER_FIELDS.map((f) => (
-                        <div key={f.key} className="flex text-[12.5px]">
-                          <span className="w-24 shrink-0 text-right pr-2 text-[hsl(var(--placeholder))]">{f.label}</span>
-                          <span className="flex-1 text-[hsl(var(--label-text))]">
-                            {r.filters[f.key]?.length ? r.filters[f.key].join("、") : "—"}
-                          </span>
-                        </div>
-                      ))}
+                      {FILTER_FIELDS.filter((f) => (r.filters[f.key] ?? []).length > 0).length === 0 ? (
+                        <div className="text-[12.5px] text-[hsl(var(--placeholder))]">未设置任何过滤条件</div>
+                      ) : (
+                        FILTER_FIELDS.filter((f) => (r.filters[f.key] ?? []).length > 0).map((f) => (
+                          <div key={f.key} className="flex text-[12.5px]">
+                            <span className="w-24 shrink-0 text-right pr-2 text-[hsl(var(--placeholder))]">{f.label}</span>
+                            <span className="flex-1 text-[hsl(var(--label-text))]">
+                              {r.filters[f.key].join("、")}
+                            </span>
+                          </div>
+                        ))
+                      )}
                     </div>
                   )}
                 </div>
