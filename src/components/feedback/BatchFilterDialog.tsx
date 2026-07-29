@@ -45,6 +45,7 @@ export const FILTER_FIELDS: { key: string; label: string; options: any[]; cascad
   { key: "os", label: "OS版本", options: osVersionOptions },
   { key: "sale", label: "内外销", options: domesticExportOptions },
   { key: "model", label: "机型", options: [] },
+  { key: "ota", label: "OTA版本", options: otaVersionOptions },
   { key: "source", label: "反馈来源", options: feedbackSourceOptions, cascade: true },
   { key: "country", label: "国家/地区", options: countryOptions },
   { key: "feedbackType", label: "反馈类型", options: feedbackTypeOptions },
@@ -224,6 +225,9 @@ export const BatchFilterDialog = ({ open, rules, onClose, onApply }: Props) => {
                     value={val("model")[0] ?? ""}
                     onChange={(v: string) => setField("model", v ? [v] : [])}
                   />
+                </Field>
+                <Field label="OTA版本" labelWidth="w-20">
+                  <MultiSelect placeholder="请选择OTA版本号" options={otaVersionOptions} value={val("ota")} onChange={(v) => setField("ota", v)} />
                 </Field>
               </div>
             </div>
