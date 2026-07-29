@@ -86,11 +86,8 @@ export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: (type?:
           if (picked.length === 0) return;
           if (mode === "add") next[f.key] = Array.from(new Set([...(next[f.key] ?? []), ...picked]));
           else if (mode === "edit") next[f.key] = picked;
-          else {
-            const left = (next[f.key] ?? []).filter((v) => !picked.includes(v));
-            if (left.length === 0) delete next[f.key];
-            else next[f.key] = left;
-          }
+          else delete next[f.key];
+
         });
         return { ...r, filters: next };
       })
