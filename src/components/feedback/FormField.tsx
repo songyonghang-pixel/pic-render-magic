@@ -7,17 +7,20 @@ interface FieldProps {
   children?: ReactNode;
   className?: string;
   labelWidth?: string;
+  labelExtra?: ReactNode;
 }
 
-export const Field = ({ label, required, children, className = "", labelWidth = "w-20" }: FieldProps) => (
+export const Field = ({ label, required, children, className = "", labelWidth = "w-20", labelExtra }: FieldProps) => (
   <div className={`flex items-center ${className}`}>
     <label className={`${labelWidth} shrink-0 text-right pr-3 text-[13px] text-[hsl(var(--label-text))]`}>
       {required && <span className="text-destructive mr-0.5">*</span>}
       {label}
+      {labelExtra}
     </label>
     <div className="flex-1 min-w-0">{children}</div>
   </div>
 );
+
 
 interface InputProps {
   placeholder?: string;
