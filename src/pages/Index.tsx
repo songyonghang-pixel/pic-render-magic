@@ -28,18 +28,19 @@ const timeRangeOptions = [
   { label: "4小时" }, { label: "5小时" }, { label: "6小时" },
   { label: "当日" }, { label: "本周" },
 ];
-const timeRangeOptionsStat = [...timeRangeOptions, { label: "昨日" }, { label: "近7日" }, { label: "本月" }];
-const dailyLikeRanges = ["当日", "近7日", "本月", "昨日"];
+const timeRangeOptionsStat = [...timeRangeOptions, { label: "昨日" }, { label: "近7日" }, { label: "近30日" }];
+const dailyLikeRanges = ["当日", "近7日", "近30日", "昨日"];
 const compareOperators = [{ label: "大于" }, { label: "大于等于" }, { label: "小于" }, { label: "小于等于" }];
 const calcMethodOptions = [
   { label: "值" },
+  { label: "平均值" },
   { label: "环比增长率" },
   { label: "环比增量" },
   { label: "较平均值的增量" },
   { label: "较平均值的增长率" },
 ];
 const percentCalcMethods = ["环比增长率", "较平均值的增长率"];
-const multiPushTimeRanges = ["当日", "本周", "昨日", "近7日", "本月"];
+const multiPushTimeRanges = ["当日", "本周", "昨日", "近7日", "近30日"];
 const monitorFreqOptions = [
   { label: "10分钟" }, { label: "20分钟" }, { label: "30分钟" },
   { label: "1小时" }, { label: "2小时" }, { label: "3小时" },
@@ -608,12 +609,12 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                                       <div className="relative group flex items-center">
                                         <HelpCircle className="w-4 h-4 text-[hsl(var(--placeholder))] cursor-help" />
                                         <div className="absolute left-6 top-1/2 -translate-y-1/2 z-50 hidden group-hover:block w-[360px] p-3 text-[12px] leading-relaxed bg-popover border border-border rounded-md shadow-lg text-[hsl(var(--label-text))]">
-                                          <div className="mb-1">当预警指标为"反馈量"，时间范围为当日、本周时，可按反馈变化来设置预警触发条件，计算公式包含如下内容：</div>
+                                          <div className="mb-1">当预警指标为"反馈量"，时间范围为当日、本周、昨日、近7日、近30日时，可按反馈变化来设置预警触发条件，计算公式包含如下内容：</div>
                                           <div className="mt-2"><b>值：</b>符合过滤条件和时间范围的反馈量数值</div>
-                                          <div><b>环比增长率：</b>当日较昨日的增长百分比，本周较上周的增长百分比</div>
-                                          <div><b>环比增量：</b>当日较昨日的增长数量，本周较上周的增长数量</div>
-                                          <div><b>较平均值的增量：</b>当日较前30日的日平均值的增长数量，本周较前7周的周平均值的增长数量</div>
-                                          <div><b>较平均值的增长率：</b>当日较前30日的日平均值的增长百分比，本周较前7周的周平均值的增长百分比</div>
+                                          <div><b>环比增长率：</b>当日较昨日、本周较上周、昨日较前日、近7日较前7日、近30日较前30日的增长百分比</div>
+                                          <div><b>环比增量：</b>当日较昨日、本周较上周、昨日较前日、近7日较前7日、近30日较前30日的增长数量</div>
+                                          <div><b>较平均值的增量：</b>当日较前30日的日平均值、本周较前7周的周平均值、昨日较往前30日的日平均值、近7日较往前70日反馈量/10的数据、近30日较往前60日反馈量/2的数据的增长数量</div>
+                                          <div><b>较平均值的增长率：</b>当日较前30日的日平均值、本周较前7周的周平均值、昨日较往前30日的日平均值、近7日较往前70日反馈量/10的数据、近30日较往前60日反馈量/2的数据的增长率</div>
                                         </div>
                                       </div>
                                     </>
