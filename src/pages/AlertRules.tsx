@@ -144,7 +144,30 @@ export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: (type?:
       {/* Table */}
       <div className="px-6 mt-4 pb-10">
         <div className="bg-card rounded-md p-5">
-          <div className="flex justify-end gap-2 mb-3">
+          <div className="flex justify-end items-center gap-2 mb-3">
+            <div ref={menuRef} className="relative">
+              <button
+                onClick={() => setMenuOpen((o) => !o)}
+                className="h-8 px-4 rounded-md bg-card border border-[hsl(var(--field-border))] text-[13px] text-[hsl(var(--label-text))] inline-flex items-center gap-1 hover:border-primary hover:text-primary"
+              >
+                批量操作{selected.length > 0 ? `(${selected.length})` : ""} <ChevronDown className="w-3.5 h-3.5" />
+              </button>
+              {menuOpen && (
+                <div className="absolute right-0 mt-1 w-44 bg-popover border border-border rounded-sm shadow-lg z-40">
+                  {[
+                    { k: "enable", l: "批量启用" },
+                    { k: "disable", l: "批量禁用" },
+                    { k: "delete", l: "批量删除" },
+                    { k: "filter", l: "批量修改过滤条件" },
+                    { k: "notify", l: "批量修改通知设置" },
+                  ].map((m) => (
+                    <div key={m.k} onClick={() => batchAction(m.k)} className="px-3 py-2 text-[13px] text-[hsl(var(--label-text))] hover:bg-[hsl(var(--accent))] cursor-pointer">
+                      {m.l}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
             <button onClick={() => onCreate(subTab)} className="h-8 px-4 rounded-md bg-primary text-primary-foreground text-[13px] inline-flex items-center gap-1">
               <Plus className="w-3.5 h-3.5" /> 新增预警规则
             </button>
@@ -155,6 +178,9 @@ export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: (type?:
           <table className="w-full text-[13px]">
             <thead>
               <tr className="bg-[hsl(var(--accent))] text-[hsl(var(--label-text))]">
+                <th className="py-3 pl-4 pr-1 w-8">
+                  <input type="checkbox" checked={allChecked} onChange={toggleAll} className="w-3.5 h-3.5 accent-primary" />
+                </th>
                 {["规则ID", "规则名称", "预警类型", "创建时间", "创建人员", "规则更新时间", "规则更新人", "产品团队", "预警次数", "启用状态", "操作"].map((h) => (
                   <th key={h} className="text-left py-3 px-4 font-medium">{h}</th>
                 ))}
@@ -163,6 +189,9 @@ export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: (type?:
             <tbody>
               {filteredRows.map((r) => (
                 <tr key={r.id} className="border-b border-border">
+                  <td className="py-3 pl-4 pr-1">
+                    <input type="checkbox" checked={selected.includes(r.id)} onChange={() => toggleRow(r.id)} className="w-3.5 h-3.5 accent-primary" />
+                  </td>
                   <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.id}</td>
                   <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.name}</td>
                   <td className="py-3 px-4 text-[hsl(var(--label-text))]">{r.type}</td>
@@ -188,9 +217,27 @@ export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: (type?:
           <Pagination total={76} />
         </div>
       </div>
+
+      <BatchFilterDialog
+        key={filterDlg ? "open" : "closed"}
+        open={filterDlg}
+        rules={selectedRows}
+        onClose={() => setFilterDlg(false)}
+        onApply={applyFilters}
+      />
+      <BatchNotifyDialog
+        open={notifyDlg}
+        count={selected.length}
+        onClose={() => setNotifyDlg(false)}
+        onApply={(mode) => {
+          setNotifyDlg(false);
+          toast(`已${mode === "add" ? "新增" : "编辑"}更新 ${selected.length} 条规则的通知设置`);
+        }}
+      />
     </div>
   );
 };
+
 
 const Filter = ({ label, children }: { label: string; children: React.ReactNode }) => (
   <div className="flex items-center gap-3">
