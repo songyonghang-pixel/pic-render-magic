@@ -95,7 +95,7 @@ export const BatchFilterDialog = ({ open, rules, onClose, onApply }: Props) => {
           <button onClick={onClose}><X className="w-4 h-4 text-[hsl(var(--placeholder))]" /></button>
         </div>
 
-        <div className="flex-1 grid grid-cols-2 min-h-0">
+        <div className="flex-1 grid grid-cols-[340px_1fr] min-h-0">
           {/* 左侧：已选规则的过滤条件 */}
           <div className="border-r border-border overflow-auto p-4 space-y-2">
             <div className="text-[13px] font-medium text-[hsl(var(--label-text))] mb-1">已选规则的预警数据过滤条件</div>
