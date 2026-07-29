@@ -7,7 +7,7 @@ import { SeparateMonitor } from "@/components/feedback/SeparateMonitor";
 import { RecentDataDialog } from "@/components/feedback/RecentDataDialog";
 import { AiClusterTagDialog } from "@/components/feedback/AiClusterTagDialog";
 import { AiCreateRuleDialog, AiMsg, AiRuleFilters } from "@/components/feedback/AiCreateRuleDialog";
-import momLegend from "@/assets/mom-legend.png.asset.json";
+
 import avgLegend from "@/assets/avg-legend.png.asset.json";
 
 const aiTagLevels = ["一级标签", "二级标签", "三级标签", "四级标签", "五级标签"];
