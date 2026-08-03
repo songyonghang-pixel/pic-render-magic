@@ -30,7 +30,7 @@ export const PhoneTimeWindow = ({ labelWidth = "w-20" }: Props) => {
 
   return (
     <>
-      <Field label="通知时间段" required labelWidth={labelWidth}>
+      <Field label="电话通知时间段" required labelWidth={labelWidth}>
         <div className="max-w-xs">
           <SingleSelect options={modeOptions} value={mode} onChange={setMode} />
         </div>
