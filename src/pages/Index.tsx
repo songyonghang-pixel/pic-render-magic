@@ -126,6 +126,7 @@ const Index = () => {
   const [levelTtGroup, setLevelTtGroup] = useState<Record<string, boolean>>({});
   const [levelTtGroups, setLevelTtGroups] = useState<Record<string, { id: string; url: string; mentions: string[] }[]>>({});
 const [levelPhoneNotify, setLevelPhoneNotify] = useState<Record<string, boolean>>({});
+const [levelAlertPeople, setLevelAlertPeople] = useState<Record<string, string[]>>({});
 const [collaborators, setCollaborators] = useState<string[]>([]);
   const [monitorFreq, setMonitorFreq] = useState<string>("");
   const [freqPeriod, setFreqPeriod] = useState<string>("间隔");
@@ -740,11 +741,19 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                                 <MultiSelect placeholder="请选择预警名单（可多选，最多 10 个名单）" options={alertListOptions} />
                               </div>
                             </Field>
-                            <Field label="预警人员" labelWidth="w-20">
+                            <Field label="预警人员" labelWidth="w-20" required={!!levelPhoneNotify[cond.id]}>
                               <div className="max-w-md">
-                                <MultiSelect placeholder="输入名字检索并选择" options={notifyPersonOptions} />
+                                <MultiSelect
+                                  placeholder="输入名字检索并选择"
+                                  options={notifyPersonOptions}
+                                  value={levelAlertPeople[cond.id] ?? []}
+                                  onChange={(v) => setLevelAlertPeople((m) => ({ ...m, [cond.id]: v }))}
+                                />
                               </div>
                             </Field>
+                            {!!levelPhoneNotify[cond.id] && (levelAlertPeople[cond.id] ?? []).length === 0 && (
+                              <div className="pl-[104px] -mt-1 text-[12px] text-destructive">选择电话通知后，预警人员必选</div>
+                            )}
                           </>
                         )}
                         {(levelPhoneNotify[cond.id] || false) && (
@@ -991,7 +1000,7 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                       onChange={(v) => setAlertLists(v.slice(0, 10))}
                     />
                   </Field>
-                  <Field label="预警人员">
+                  <Field label="预警人员" required={phoneNotify}>
                     <MultiSelect
                       placeholder="输入名字检索并选择"
                       options={notifyPersonOptions}
@@ -1000,7 +1009,12 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                     />
                   </Field>
                   {alertLists.length === 0 && alertPeople.length === 0 && (
-                    <div className="pl-[104px] -mt-2 text-[12px] text-destructive">请选择预警名单或预警人员</div>
+                    <div className="pl-[104px] -mt-2 text-[12px] text-destructive">
+                      {phoneNotify ? "选择电话通知后，预警人员必选" : "请选择预警名单或预警人员"}
+                    </div>
+                  )}
+                  {phoneNotify && alertLists.length > 0 && alertPeople.length === 0 && (
+                    <div className="pl-[104px] -mt-2 text-[12px] text-destructive">选择电话通知后，预警人员必选</div>
                   )}
                 </>
               )}
