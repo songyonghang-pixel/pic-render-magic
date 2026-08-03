@@ -741,11 +741,19 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                                 <MultiSelect placeholder="请选择预警名单（可多选，最多 10 个名单）" options={alertListOptions} />
                               </div>
                             </Field>
-                            <Field label="预警人员" labelWidth="w-20">
+                            <Field label="预警人员" labelWidth="w-20" required={!!levelPhoneNotify[cond.id]}>
                               <div className="max-w-md">
-                                <MultiSelect placeholder="输入名字检索并选择" options={notifyPersonOptions} />
+                                <MultiSelect
+                                  placeholder="输入名字检索并选择"
+                                  options={notifyPersonOptions}
+                                  value={levelAlertPeople[cond.id] ?? []}
+                                  onChange={(v) => setLevelAlertPeople((m) => ({ ...m, [cond.id]: v }))}
+                                />
                               </div>
                             </Field>
+                            {!!levelPhoneNotify[cond.id] && (levelAlertPeople[cond.id] ?? []).length === 0 && (
+                              <div className="pl-[104px] -mt-1 text-[12px] text-destructive">选择电话通知后，预警人员必选</div>
+                            )}
                           </>
                         )}
                         {(levelPhoneNotify[cond.id] || false) && (
