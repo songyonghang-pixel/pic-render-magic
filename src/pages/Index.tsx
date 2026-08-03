@@ -757,10 +757,14 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                           </>
                         )}
                         {(levelPhoneNotify[cond.id] || false) && (
-                          <div className="pl-[104px] text-[12px] text-[hsl(var(--muted-foreground))]">
-                            电话将默认按 TT 预警人员进行通知顺序拨打
-                          </div>
+                          <>
+                            <div className="pl-[104px] text-[12px] text-[hsl(var(--muted-foreground))]">
+                              电话将默认按 TT 预警人员进行通知顺序拨打
+                            </div>
+                            <PhoneTimeWindow labelWidth="w-20" />
+                          </>
                         )}
+
                         {levelTtGroup[cond.id] && (
                           <Field label="TT群组" required labelWidth="w-20">
                             <div className="space-y-2">
