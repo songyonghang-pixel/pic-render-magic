@@ -707,10 +707,20 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                               <input
                                 type="checkbox"
                                 checked={!!levelPhoneNotify[cond.id]}
-                                onChange={(e) => setLevelPhoneNotify((m) => ({ ...m, [cond.id]: e.target.checked }))}
+                                onChange={(e) => {
+                                  const checked = e.target.checked;
+                                  setLevelPhoneNotify((m) => ({ ...m, [cond.id]: checked }));
+                                  if (checked) setLevelTt((m) => ({ ...m, [cond.id]: true }));
+                                }}
                                 className="w-3.5 h-3.5 accent-primary"
                               />
                               <span className={`text-[13px] ${levelPhoneNotify[cond.id] ? "text-primary" : "text-[hsl(var(--label-text))]"}`}>电话通知</span>
+                              <span
+                                title="1. 电话将默认按TT预警人员进行通知顺序拨打，若连续无人接听或被挂断，则拨打下一位。&#10;2. 单人连续最多拨打2次，间隔2分钟，直到有人接听或挂断为止。"
+                                className="cursor-help inline-flex"
+                              >
+                                <HelpCircle className="w-3.5 h-3.5 text-[hsl(var(--placeholder))]" />
+                              </span>
                             </label>
                             <label className="flex items-center gap-2 cursor-pointer">
                               <input
