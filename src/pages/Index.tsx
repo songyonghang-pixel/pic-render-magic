@@ -951,12 +951,16 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                     <input
                       type="checkbox"
                       checked={phoneNotify}
-                      onChange={(e) => setPhoneNotify(e.target.checked)}
+                      onChange={(e) => {
+                        const checked = e.target.checked;
+                        setPhoneNotify(checked);
+                        if (checked) setTtNotify(true);
+                      }}
                       className="w-3.5 h-3.5 accent-primary"
                     />
                     <span className={`text-[13px] ${phoneNotify ? "text-primary" : "text-[hsl(var(--label-text))]"}`}>电话通知</span>
                     <span
-                      title="1. 将按照设置的电话通知人员顺序拨打，若连续无人接听或被挂断，则拨打下一位。&#10;2. 单人连续最多拨打2次，间隔2分钟，直到有人接听或挂断为止。"
+                      title="1. 电话将默认按TT预警人员进行通知顺序拨打，若连续无人接听或被挂断，则拨打下一位。&#10;2. 单人连续最多拨打2次，间隔2分钟，直到有人接听或挂断为止。"
                       className="cursor-help inline-flex"
                     >
                       <HelpCircle className="w-3.5 h-3.5 text-[hsl(var(--placeholder))]" />
