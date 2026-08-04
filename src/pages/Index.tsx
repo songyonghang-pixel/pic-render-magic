@@ -219,10 +219,12 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
   const aiDisabled = aiTagVals.length < 2;
   const marketingDisabled = marketingVals.length < 2;
   const countryDisabled = countryVals.length < 2;
+  const osDisabled = osVals.length < 2;
 
   useEffect(() => { if (aiDisabled) setAiTagSep(false); }, [aiDisabled]);
   useEffect(() => { if (marketingDisabled) setMarketingSep(false); }, [marketingDisabled]);
   useEffect(() => { if (countryDisabled) setCountrySep(false); }, [countryDisabled]);
+  useEffect(() => { if (osDisabled) setOsSep(false); }, [osDisabled]);
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))]">
       {/* Top tabs */}
