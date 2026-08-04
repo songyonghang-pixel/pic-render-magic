@@ -99,11 +99,13 @@ const Index = () => {
   const [aiTagVals, setAiTagVals] = useState<string[]>([]);
   const [marketingVals, setMarketingVals] = useState<string[]>([]);
   const [countryVals, setCountryVals] = useState<string[]>([]);
+  const [osVals, setOsVals] = useState<string[]>([]);
 
   const [aiTagSep, setAiTagSep] = useState(false);
   const [aiTagLevel, setAiTagLevel] = useState("二级标签");
   const [marketingSep, setMarketingSep] = useState(false);
   const [countrySep, setCountrySep] = useState(false);
+  const [osSep, setOsSep] = useState(false);
   const [perLevelNotify, setPerLevelNotify] = useState(false);
   const notifyPersonOptions = [
     { label: "张三" },
