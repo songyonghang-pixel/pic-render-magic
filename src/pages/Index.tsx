@@ -99,11 +99,13 @@ const Index = () => {
   const [aiTagVals, setAiTagVals] = useState<string[]>([]);
   const [marketingVals, setMarketingVals] = useState<string[]>([]);
   const [countryVals, setCountryVals] = useState<string[]>([]);
+  const [osVals, setOsVals] = useState<string[]>([]);
 
   const [aiTagSep, setAiTagSep] = useState(false);
   const [aiTagLevel, setAiTagLevel] = useState("二级标签");
   const [marketingSep, setMarketingSep] = useState(false);
   const [countrySep, setCountrySep] = useState(false);
+  const [osSep, setOsSep] = useState(false);
   const [perLevelNotify, setPerLevelNotify] = useState(false);
   const notifyPersonOptions = [
     { label: "张三" },
@@ -217,10 +219,12 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
   const aiDisabled = aiTagVals.length < 2;
   const marketingDisabled = marketingVals.length < 2;
   const countryDisabled = countryVals.length < 2;
+  const osDisabled = osVals.length < 2;
 
   useEffect(() => { if (aiDisabled) setAiTagSep(false); }, [aiDisabled]);
   useEffect(() => { if (marketingDisabled) setMarketingSep(false); }, [marketingDisabled]);
   useEffect(() => { if (countryDisabled) setCountrySep(false); }, [countryDisabled]);
+  useEffect(() => { if (osDisabled) setOsSep(false); }, [osDisabled]);
   return (
     <div className="min-h-screen bg-[hsl(var(--page-bg))]">
       {/* Top tabs */}
@@ -382,7 +386,20 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                     </div>
                   </Field>
                   <Field label="OS版本" labelWidth="w-16">
-                    <MultiSelect placeholder="请选择OS版本" options={osVersionOptions} />
+                    <div className="flex items-center">
+                      <MultiSelect
+                        placeholder="请选择OS版本"
+                        options={[{ label: "空" }, ...osVersionOptions]}
+                        value={osVals}
+                        onChange={setOsVals}
+                      />
+                      <SeparateMonitor
+                        disabled={osDisabled}
+                        checked={osSep}
+                        onCheckedChange={setOsSep}
+                        tooltip="勾选后将对你选择的OS版本单独进行统计，独立判断是否触发预警条件（相当于一个OS版本一条独立的预警规则）；不勾选则将选择的所有OS版本汇总统计，判断汇总后的数据是否达到触发条件。"
+                      />
+                    </div>
                   </Field>
                 </div>
                 <div className="grid grid-cols-3 gap-4">
