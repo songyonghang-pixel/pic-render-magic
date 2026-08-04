@@ -36,11 +36,11 @@ const dailyLikeRanges = ["当日", "近7日", "近30日", "昨日"];
 const compareOperators = [{ label: "大于" }, { label: "大于等于" }, { label: "小于" }, { label: "小于等于" }];
 const calcMethodOptions = [
   { label: "值" },
-  { label: "平均值" },
   { label: "环比增长率" },
   { label: "环比增量" },
   { label: "较平均值的增量" },
   { label: "较平均值的增长率" },
+  { label: "平均值" },
 ];
 const percentCalcMethods = ["环比增长率", "较平均值的增长率"];
 const multiPushTimeRanges = ["当日", "本周", "昨日", "近7日", "近30日"];
@@ -186,7 +186,7 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
           const showCalc = next.indicator === "反馈量" && (dailyLikeRanges.includes(next.timeRange) || next.timeRange === "本周");
           if (!showCalc) {
             next.calcMethod = "";
-          } else if (next.calcMethod === "平均值" && !["本周", "近7日", "近30日"].includes(next.timeRange)) {
+          } else if (next.calcMethod === "平均值" && !["当日", "本周", "昨日", "近7日", "近30日"].includes(next.timeRange)) {
             next.calcMethod = "";
           }
           return next;
@@ -603,7 +603,7 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                         </Field>
                         {cond.subs.map((sub, subIdx) => {
                           const showCalcMethod = sub.indicator === "反馈量" && (dailyLikeRanges.includes(sub.timeRange) || sub.timeRange === "本周");
-                          const calcMethodOptionsForSub = ["本周", "近7日", "近30日"].includes(sub.timeRange) ? calcMethodOptions : calcMethodOptions.filter((o) => o.label !== "平均值");
+                          const calcMethodOptionsForSub = ["当日", "本周", "昨日", "近7日", "近30日"].includes(sub.timeRange) ? calcMethodOptions : calcMethodOptions.filter((o) => o.label !== "平均值");
                           const isPercent = showCalcMethod && percentCalcMethods.includes(sub.calcMethod);
                           const chartDisabled = !sub.indicator || !sub.timeRange;
                           return (
@@ -620,7 +620,7 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                                         <div className="absolute left-6 top-1/2 -translate-y-1/2 z-50 hidden group-hover:block w-[560px] max-h-[70vh] overflow-auto p-3 text-[12px] leading-relaxed bg-popover border border-border rounded-md shadow-lg text-[hsl(var(--label-text))]">
                                           <div className="mb-1">当预警指标为"反馈量"，时间范围为当日、本周、昨日、近7日、近30日时，可按反馈变化来设置预警触发条件，计算公式包含如下内容：</div>
                                           <div className="mt-2"><b>值：</b>符合过滤条件和时间范围的反馈量数值</div>
-                                          <div className="mt-2"><b>平均值：</b>只有本周、近7日和近30日才能选择平均值，选择后计算本周每日的平均值、近7日每日的平均值、近30日每日的平均值。</div>
+                                          <div className="mt-2"><b>平均值：</b>只有当日、本周、昨日、近7日和近30日才能选择平均值，选择后计算当日每小时的平均值、本周每日的平均值、昨日每小时的平均值、近7日每日的平均值、近30日每日的平均值。</div>
                                           <div className="mt-2"><b>环比：</b>当日较昨日、本周较上周、昨日较前日、近7日较前7日、近30日较前30日的增长数量/百分比。</div>
                                           <div className="mt-3"><b>较平均值：</b>当日较前30日的日平均值、本周较前7周的周平均值、昨日较往前30日的日平均值、近7日较往前70日反馈量/10的数据、近30日较往前60日反馈量/2的数据的增长数量/百分比</div>
                                           <img src={avgLegend.url} alt="反馈量预警较平均值口径图例" className="mt-2 w-full rounded border border-border" loading="lazy" />
