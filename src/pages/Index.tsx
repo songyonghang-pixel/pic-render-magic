@@ -386,7 +386,20 @@ const [collaborators, setCollaborators] = useState<string[]>([]);
                     </div>
                   </Field>
                   <Field label="OS版本" labelWidth="w-16">
-                    <MultiSelect placeholder="请选择OS版本" options={osVersionOptions} />
+                    <div className="flex items-center">
+                      <MultiSelect
+                        placeholder="请选择OS版本"
+                        options={[{ label: "空" }, ...osVersionOptions]}
+                        value={osVals}
+                        onChange={setOsVals}
+                      />
+                      <SeparateMonitor
+                        disabled={osDisabled}
+                        checked={osSep}
+                        onCheckedChange={setOsSep}
+                        tooltip="勾选后将对你选择的OS版本单独进行统计，独立判断是否触发预警条件（相当于一个OS版本一条独立的预警规则）；不勾选则将选择的所有OS版本汇总统计，判断汇总后的数据是否达到触发条件。"
+                      />
+                    </div>
                   </Field>
                 </div>
                 <div className="grid grid-cols-3 gap-4">
