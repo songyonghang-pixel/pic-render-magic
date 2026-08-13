@@ -5,6 +5,7 @@ import { SingleSelect } from "@/components/feedback/SingleSelect";
 import { MultiSelect } from "@/components/feedback/MultiSelect";
 import { BatchFilterDialog, FILTER_FIELDS, RuleFilters } from "@/components/feedback/BatchFilterDialog";
 import { BatchNotifyDialog } from "@/components/feedback/BatchNotifyDialog";
+import { BatchTriggerDialog } from "@/components/feedback/BatchTriggerDialog";
 
 const productTeamOptions = [
   { label: "三方专项" }, { label: "通信与互联" }, { label: "小布记忆" },
@@ -33,6 +34,7 @@ export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: (type?:
   const [menuOpen, setMenuOpen] = useState(false);
   const [filterDlg, setFilterDlg] = useState(false);
   const [notifyDlg, setNotifyDlg] = useState(false);
+  const [triggerDlg, setTriggerDlg] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -74,6 +76,7 @@ export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: (type?:
       setSelected([]);
     } else if (action === "filter") setFilterDlg(true);
     else if (action === "notify") setNotifyDlg(true);
+    else if (action === "trigger") setTriggerDlg(true);
   };
 
   const applyFilters = (mode: "add" | "edit" | "delete", values: RuleFilters) => {
@@ -164,6 +167,7 @@ export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: (type?:
                     { k: "delete", l: "批量删除" },
                     { k: "filter", l: "批量修改过滤条件" },
                     { k: "notify", l: "批量修改通知设置" },
+                    ...(subTab === "统计" ? [{ k: "trigger", l: "批量修改触发条件" }] : []),
                   ].map((m) => (
                     <div key={m.k} onClick={() => batchAction(m.k)} className="px-3 py-2 text-[13px] text-[hsl(var(--label-text))] hover:bg-[hsl(var(--accent))] cursor-pointer">
                       {m.l}
@@ -228,6 +232,16 @@ export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: (type?:
         rules={selectedRows}
         onClose={() => setFilterDlg(false)}
         onApply={applyFilters}
+      />
+      <BatchTriggerDialog
+        key={triggerDlg ? "t-open" : "t-closed"}
+        open={triggerDlg}
+        count={selected.length}
+        onClose={() => setTriggerDlg(false)}
+        onApply={() => {
+          setTriggerDlg(false);
+          toast(`已替换更新 ${selected.length} 条规则的触发条件`);
+        }}
       />
       <BatchNotifyDialog
         open={notifyDlg}
