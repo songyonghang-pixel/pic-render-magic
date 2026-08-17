@@ -167,7 +167,7 @@ export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: (type?:
                     { k: "delete", l: "批量删除" },
                     { k: "filter", l: "批量修改过滤条件" },
                     { k: "notify", l: "批量修改通知设置" },
-                    ...(subTab === "统计" ? [{ k: "trigger", l: "批量修改触发条件" }] : []),
+                    { k: "trigger", l: "批量修改触发条件" },
                   ].map((m) => (
                     <div key={m.k} onClick={() => batchAction(m.k)} className="px-3 py-2 text-[13px] text-[hsl(var(--label-text))] hover:bg-[hsl(var(--accent))] cursor-pointer">
                       {m.l}
@@ -236,6 +236,7 @@ export const AlertRules = ({ onCreate, onAiCreate, onCopy }: { onCreate: (type?:
       <BatchTriggerDialog
         key={triggerDlg ? "t-open" : "t-closed"}
         open={triggerDlg}
+        mode={subTab}
         count={selected.length}
         onClose={() => setTriggerDlg(false)}
         onApply={() => {

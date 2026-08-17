@@ -47,6 +47,7 @@ export interface TriggerCondition {
 interface Props {
   open: boolean;
   count: number;
+  mode?: "实时" | "统计";
   onClose: () => void;
   onApply: (conds: TriggerCondition[]) => void;
 }
@@ -55,11 +56,47 @@ let uid = 1;
 const newSub = (): Sub => ({ id: uid++, indicator: "", timeRange: "", calcMethod: "值", op: "", value: "" });
 const newCond = (): Cond => ({ id: uid++, level: "", subs: [newSub()] });
 
-export const BatchTriggerDialog = ({ open, count, onClose, onApply }: Props) => {
+export const BatchTriggerDialog = ({ open, count, mode = "统计", onClose, onApply }: Props) => {
   const [conds, setConds] = useState<Cond[]>([newCond()]);
   const [chart, setChart] = useState<Sub | null>(null);
+  const [rtLevel, setRtLevel] = useState("");
 
   if (!open) return null;
+
+  if (mode === "实时") {
+    return (
+      <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-6">
+        <div className="bg-card rounded-md w-full max-w-xl shadow-xl">
+          <div className="flex items-center justify-between px-5 py-3 border-b border-border">
+            <div className="text-[15px] font-medium text-[hsl(var(--label-text))]">
+              批量修改触发条件（已选 {count} 条规则）
+            </div>
+            <button onClick={onClose}><X className="w-4 h-4 text-[hsl(var(--placeholder))]" /></button>
+          </div>
+          <div className="px-5 py-2 text-[12px] text-[hsl(var(--placeholder))] bg-[hsl(var(--primary)/0.05)]">
+            备注：将各规则中触发条件按下方设置的内容进行替换。
+          </div>
+          <div className="p-5">
+            <Field label="预警级别" required labelWidth="w-20">
+              <div className="max-w-md">
+                <SingleSelect placeholder="请选择预警级别" options={alertLevelOptions} value={rtLevel} onChange={setRtLevel} />
+              </div>
+            </Field>
+          </div>
+          <div className="px-5 py-3 border-t border-border flex justify-end gap-2">
+            <button onClick={onClose} className="h-8 px-5 rounded-md bg-card border border-[hsl(var(--field-border))] text-[13px] text-[hsl(var(--label-text))]">取消</button>
+            <button
+              disabled={!rtLevel}
+              onClick={() => onApply([{ level: rtLevel, subs: [] }])}
+              className={`h-8 px-5 rounded-md text-[13px] ${rtLevel ? "bg-primary text-primary-foreground" : "bg-muted text-[hsl(var(--placeholder))] cursor-not-allowed"}`}
+            >
+              确定
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const updateSub = (cid: number, sid: number, patch: Partial<Sub>) =>
     setConds((cs) =>
