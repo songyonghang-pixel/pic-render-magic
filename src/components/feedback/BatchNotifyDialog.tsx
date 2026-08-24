@@ -1,6 +1,14 @@
 import { useState } from "react";
 import { X, AlertTriangle } from "lucide-react";
 import { MultiSelect } from "@/components/feedback/MultiSelect";
+import { SingleSelect } from "@/components/feedback/SingleSelect";
+
+const monitorFreqOptions = [
+  { label: "10分钟" }, { label: "20分钟" }, { label: "30分钟" },
+  { label: "1小时" }, { label: "2小时" }, { label: "3小时" },
+  { label: "4小时" }, { label: "5小时" }, { label: "6小时" },
+];
+
 
 const alertListOptions = [
   { label: "通信与互联预警名单" }, { label: "系统安全预警名单" }, { label: "媒体与游戏预警名单" },
