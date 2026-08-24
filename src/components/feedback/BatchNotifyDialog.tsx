@@ -169,7 +169,7 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
           <>
               <div className="flex items-center gap-5 text-[13px]">
                 <span className="w-24 text-right text-[hsl(var(--label-text))]">推送方式</span>
-                {(mode === "add" ? ["TT", "启用电话通知", "TT群组"] : ["TT", "TT群组"]).map((l) => {
+                {["TT", "启用电话通知", "TT群组"].map((l) => {
                   const v = l === "TT" ? tt : l === "启用电话通知" ? phone : ttGroup;
                   const s = l === "TT" ? setTt : l === "启用电话通知" ? setPhone : setTtGroup;
                   return (
