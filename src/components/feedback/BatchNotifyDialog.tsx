@@ -191,10 +191,20 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
                 </>
               )}
               {mode === "add" && phone && (
-                <Row label="电话通知人员">
-                  <MultiSelect placeholder="电话通知人员将默认为TT预警人员，将按照TT的电话号码进行通知，若无电话号码将无法通知。" options={peopleOptions} value={phonePeople} onChange={setPhonePeople} />
-                </Row>
+                <>
+                  <Row label="电话通知人员">
+                    <MultiSelect placeholder="电话通知人员将默认为TT预警人员，将按照TT的电话号码进行通知，若无电话号码将无法通知。" options={peopleOptions} value={phonePeople} onChange={setPhonePeople} />
+                  </Row>
+                  <Row label="电话通知标签">
+                    <div className="relative">
+                      <input value={phoneTag} maxLength={15} onChange={(e) => setPhoneTag(e.target.value)} placeholder="请输入电话通知标签"
+                        className="w-full h-8 pl-3 pr-14 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]" />
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-[hsl(var(--placeholder))]">{phoneTag.length}/15</span>
+                    </div>
+                  </Row>
+                </>
               )}
+
 
               {ttGroup && (
                 <>
