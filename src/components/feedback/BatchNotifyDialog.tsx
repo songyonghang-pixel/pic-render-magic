@@ -43,6 +43,8 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
   const [lists, setLists] = useState<string[]>([]);
   const [people, setPeople] = useState<string[]>([]);
   const [phonePeople, setPhonePeople] = useState<string[]>([]);
+  const [phoneTag, setPhoneTag] = useState("");
+
   const [webhook, setWebhook] = useState("");
   const [mentions, setMentions] = useState<string[]>([]);
   const [aiSummary, setAiSummary] = useState(false);
