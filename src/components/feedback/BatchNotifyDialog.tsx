@@ -113,7 +113,7 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
 
           <div className="flex items-center gap-5 text-[13px]">
             <span className="w-24 text-right text-[hsl(var(--label-text))]">推送方式</span>
-            {[["TT", tt, setTt], ["电话通知", phone, setPhone], ["TT群组", ttGroup, setTtGroup]].map(([l, v, s]: any) => (
+            {[["TT", tt, setTt], ["启用电话通知", phone, setPhone], ["TT群组", ttGroup, setTtGroup]].map(([l, v, s]: any) => (
               <label key={l} className="flex items-center gap-1.5 cursor-pointer text-[hsl(var(--label-text))]">
                 <input type="checkbox" checked={v} onChange={(e) => s(e.target.checked)} className="accent-primary" />{l}
               </label>
