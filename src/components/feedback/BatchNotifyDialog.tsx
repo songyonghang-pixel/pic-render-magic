@@ -205,8 +205,8 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
                   <Row label="群组内提及人"><MultiSelect placeholder="请选择群组内提及人" options={peopleOptions} value={mentions} onChange={setMentions} /></Row>
                 </>
               )}
-            </>
-          )}
+          </>
+
         </div>
 
         <div className="px-5 py-3 border-t border-border flex justify-end gap-2">
