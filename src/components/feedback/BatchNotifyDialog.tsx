@@ -166,11 +166,10 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
             </div>
           )}
 
-          {mode === "add" && (
-            <>
+          <>
               <div className="flex items-center gap-5 text-[13px]">
                 <span className="w-24 text-right text-[hsl(var(--label-text))]">推送方式</span>
-                {["TT", "启用电话通知", "TT群组"].map((l) => {
+                {(mode === "add" ? ["TT", "启用电话通知", "TT群组"] : ["TT", "TT群组"]).map((l) => {
                   const v = l === "TT" ? tt : l === "启用电话通知" ? phone : ttGroup;
                   const s = l === "TT" ? setTt : l === "启用电话通知" ? setPhone : setTtGroup;
                   return (
@@ -191,11 +190,12 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
                   <Row label="预警人员"><MultiSelect placeholder="请选择预警人员" options={peopleOptions} value={people} onChange={setPeople} /></Row>
                 </>
               )}
-              {phone && (
+              {mode === "add" && phone && (
                 <Row label="电话通知人员">
                   <MultiSelect placeholder="电话通知人员将默认为TT预警人员，将按照TT的电话号码进行通知，若无电话号码将无法通知。" options={peopleOptions} value={phonePeople} onChange={setPhonePeople} />
                 </Row>
               )}
+
               {ttGroup && (
                 <>
                   <Row label="Webhook地址TT群组">
