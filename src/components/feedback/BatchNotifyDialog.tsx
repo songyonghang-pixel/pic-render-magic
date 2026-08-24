@@ -43,6 +43,8 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
   const [lists, setLists] = useState<string[]>([]);
   const [people, setPeople] = useState<string[]>([]);
   const [phonePeople, setPhonePeople] = useState<string[]>([]);
+  const [phoneTag, setPhoneTag] = useState("");
+
   const [webhook, setWebhook] = useState("");
   const [mentions, setMentions] = useState<string[]>([]);
   const [aiSummary, setAiSummary] = useState(false);
@@ -94,9 +96,24 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
               <ToggleRow
                 label="启用电话通知"
                 checked={phone}
-                onChange={setPhone}
+                onChange={(v) => { setPhone(v); if (v) setTt(true); }}
                 tip="启用后，TT通知成功时会同步发起电话通知"
               />
+              {phone && (
+                <Row label="电话通知标签">
+                  <div className="relative">
+                    <input
+                      value={phoneTag}
+                      maxLength={15}
+                      onChange={(e) => setPhoneTag(e.target.value)}
+                      placeholder="请输入电话通知标签"
+                      className="w-full h-8 pl-3 pr-14 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-[hsl(var(--placeholder))]">{phoneTag.length}/15</span>
+                  </div>
+                </Row>
+              )}
+
 
               <Row label="监控频次">
                 <div className="flex items-center gap-3 flex-wrap">
@@ -149,11 +166,10 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
             </div>
           )}
 
-          {mode === "add" && (
-            <>
+          <>
               <div className="flex items-center gap-5 text-[13px]">
                 <span className="w-24 text-right text-[hsl(var(--label-text))]">推送方式</span>
-                {["TT", "启用电话通知", "TT群组"].map((l) => {
+                {(mode === "add" ? ["TT", "启用电话通知", "TT群组"] : ["TT", "TT群组"]).map((l) => {
                   const v = l === "TT" ? tt : l === "启用电话通知" ? phone : ttGroup;
                   const s = l === "TT" ? setTt : l === "启用电话通知" ? setPhone : setTtGroup;
                   return (
@@ -174,11 +190,12 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
                   <Row label="预警人员"><MultiSelect placeholder="请选择预警人员" options={peopleOptions} value={people} onChange={setPeople} /></Row>
                 </>
               )}
-              {phone && (
+              {mode === "add" && phone && (
                 <Row label="电话通知人员">
                   <MultiSelect placeholder="电话通知人员将默认为TT预警人员，将按照TT的电话号码进行通知，若无电话号码将无法通知。" options={peopleOptions} value={phonePeople} onChange={setPhonePeople} />
                 </Row>
               )}
+
               {ttGroup && (
                 <>
                   <Row label="Webhook地址TT群组">
@@ -188,8 +205,8 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
                   <Row label="群组内提及人"><MultiSelect placeholder="请选择群组内提及人" options={peopleOptions} value={mentions} onChange={setMentions} /></Row>
                 </>
               )}
-            </>
-          )}
+          </>
+
         </div>
 
         <div className="px-5 py-3 border-t border-border flex justify-end gap-2">
