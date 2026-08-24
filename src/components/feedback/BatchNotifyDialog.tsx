@@ -64,6 +64,44 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
             {mode === "add" ? "备注：新增将在原通知设置中增加选中的推送方式与人员。" : "备注：编辑时会将已选择的预警规则的通知方式都调整为下方选择的方式，请核对后再确认。"}
           </div>
 
+          <Row label="监控频次">
+            <div className="flex items-center gap-3 flex-wrap">
+              <div className="w-[130px]">
+                <SingleSelect placeholder="请选择" options={[{ label: "间隔" }, { label: "每日" }, { label: "每周" }, { label: "每月" }]} value={freqPeriod} onChange={setFreqPeriod} />
+              </div>
+              {freqPeriod === "间隔" && (
+                <div className="w-[180px]">
+                  <SingleSelect placeholder="请选择监控频次" options={monitorFreqOptions} value={monitorFreq} onChange={setMonitorFreq} />
+                </div>
+              )}
+              {freqPeriod === "每周" && (
+                <div className="w-[220px]">
+                  <MultiSelect placeholder="请选择周几" options={["周一", "周二", "周三", "周四", "周五", "周六", "周日"].map((l) => ({ label: l }))} value={freqWeekdays} onChange={setFreqWeekdays} />
+                </div>
+              )}
+              {freqPeriod === "每月" && (
+                <div className="w-[220px]">
+                  <MultiSelect placeholder="请选择日期" options={Array.from({ length: 31 }, (_, i) => ({ label: `${i + 1}号` }))} value={freqMonthDays} onChange={setFreqMonthDays} />
+                </div>
+              )}
+              {freqPeriod !== "间隔" && (
+                <input type="time" value={freqTime} onChange={(e) => setFreqTime(e.target.value)}
+                  className="h-8 px-2 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm w-[130px]" />
+              )}
+            </div>
+          </Row>
+
+          <Row label="AI能力">
+            <div className="flex items-center gap-6 text-[13px] h-8">
+              <label className="flex items-center gap-1.5 cursor-pointer text-[hsl(var(--label-text))]">
+                <input type="checkbox" checked={aiSummary} onChange={(e) => setAiSummary(e.target.checked)} className="accent-primary" />启用AI总结
+              </label>
+              <label className="flex items-center gap-1.5 cursor-pointer text-[hsl(var(--label-text))]">
+                <input type="checkbox" checked={aiJudge} onChange={(e) => setAiJudge(e.target.checked)} className="accent-primary" />AI研判
+              </label>
+            </div>
+          </Row>
+
 
           <div className="flex items-center gap-5 text-[13px]">
             <span className="w-24 text-right text-[hsl(var(--label-text))]">推送方式</span>
