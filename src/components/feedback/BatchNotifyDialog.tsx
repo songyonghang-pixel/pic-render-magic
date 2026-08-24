@@ -169,20 +169,19 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
           <>
               <div className="flex items-center gap-5 text-[13px]">
                 <span className="w-24 text-right text-[hsl(var(--label-text))]">推送方式</span>
-                {["TT", "启用电话通知", "TT群组"].map((l) => {
-                  const v = l === "TT" ? tt : l === "启用电话通知" ? phone : ttGroup;
-                  const s = l === "TT" ? setTt : l === "启用电话通知" ? setPhone : setTtGroup;
-                  return (
-                    <label key={l} className="flex items-center gap-1.5 cursor-pointer text-[hsl(var(--label-text))]">
-                      <input type="checkbox" checked={v} onChange={(e) => {
-                        const checked = e.target.checked;
-                        s(checked);
-                        if (l === "启用电话通知" && checked) setTt(true);
-                      }} className="accent-primary" />{l}
-                    </label>
-                  );
-                })}
+                <label className="flex items-center gap-1.5 cursor-pointer text-[hsl(var(--label-text))]">
+                  <input type="checkbox" checked={tt} onChange={(e) => setTt(e.target.checked)} className="accent-primary" />TT
+                </label>
+                {mode === "add" && (
+                  <label className="flex items-center gap-1.5 cursor-pointer text-[hsl(var(--label-text))]">
+                    <input type="checkbox" checked={phone} onChange={(e) => { setPhone(e.target.checked); if (e.target.checked) setTt(true); }} className="accent-primary" />启用电话通知
+                  </label>
+                )}
+                <label className="flex items-center gap-1.5 cursor-pointer text-[hsl(var(--label-text))]">
+                  <input type="checkbox" checked={ttGroup} onChange={(e) => setTtGroup(e.target.checked)} className="accent-primary" />TT群组
+                </label>
               </div>
+
 
               {tt && (
                 <>
