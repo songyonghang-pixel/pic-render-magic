@@ -94,9 +94,24 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
               <ToggleRow
                 label="启用电话通知"
                 checked={phone}
-                onChange={setPhone}
+                onChange={(v) => { setPhone(v); if (v) setTt(true); }}
                 tip="启用后，TT通知成功时会同步发起电话通知"
               />
+              {phone && (
+                <Row label="电话通知标签">
+                  <div className="relative">
+                    <input
+                      value={phoneTag}
+                      maxLength={15}
+                      onChange={(e) => setPhoneTag(e.target.value)}
+                      placeholder="请输入电话通知标签"
+                      className="w-full h-8 pl-3 pr-14 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]"
+                    />
+                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-[hsl(var(--placeholder))]">{phoneTag.length}/15</span>
+                  </div>
+                </Row>
+              )}
+
 
               <Row label="监控频次">
                 <div className="flex items-center gap-3 flex-wrap">
