@@ -27,8 +27,16 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
   const [phonePeople, setPhonePeople] = useState<string[]>([]);
   const [webhook, setWebhook] = useState("");
   const [mentions, setMentions] = useState<string[]>([]);
+  const [aiSummary, setAiSummary] = useState(false);
+  const [aiJudge, setAiJudge] = useState(false);
+  const [freqPeriod, setFreqPeriod] = useState("间隔");
+  const [monitorFreq, setMonitorFreq] = useState("30分钟");
+  const [freqWeekdays, setFreqWeekdays] = useState<string[]>([]);
+  const [freqMonthDays, setFreqMonthDays] = useState<string[]>([]);
+  const [freqTime, setFreqTime] = useState("09:00");
 
   if (!open) return null;
+
 
   return (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-6">
