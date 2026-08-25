@@ -52,7 +52,6 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
   const [ttGroup, setTtGroup] = useState(false);
   const [lists, setLists] = useState<string[]>([]);
   const [people, setPeople] = useState<string[]>([]);
-  const [phonePeople, setPhonePeople] = useState<string[]>([]);
   const [phoneTag, setPhoneTag] = useState("");
 
   const [webhook, setWebhook] = useState("");
@@ -184,7 +183,7 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
                   <Row label="预警人员"><MultiSelect placeholder="请选择预警人员" options={peopleOptions} value={people} onChange={setPeople} /></Row>
                 </>
               )}
-              {phone && <PhoneTagInput value={phoneTag} onChange={setPhoneTag} />}
+              {phone && (mode === "add" || !editFields.includes("phone")) && <PhoneTagInput value={phoneTag} onChange={setPhoneTag} />}
 
 
               {ttGroup && (
