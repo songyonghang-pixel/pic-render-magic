@@ -35,6 +35,16 @@ interface Props {
   onApply: (mode: "add" | "edit") => void;
 }
 
+type EditField = "aiSummary" | "phone" | "frequency" | "aiJudge" | "pushMethods";
+
+const editFieldOptions: { value: EditField; label: string }[] = [
+  { value: "aiSummary", label: "AI总结" },
+  { value: "phone", label: "电话通知" },
+  { value: "frequency", label: "监控频次" },
+  { value: "aiJudge", label: "AI研判" },
+  { value: "pushMethods", label: "推送方式" },
+];
+
 export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
   const [mode, setMode] = useState<"add" | "edit">("add");
   const [tt, setTt] = useState(true);
@@ -42,7 +52,6 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
   const [ttGroup, setTtGroup] = useState(false);
   const [lists, setLists] = useState<string[]>([]);
   const [people, setPeople] = useState<string[]>([]);
-  const [phonePeople, setPhonePeople] = useState<string[]>([]);
   const [phoneTag, setPhoneTag] = useState("");
 
   const [webhook, setWebhook] = useState("");
@@ -55,6 +64,13 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
   const [freqMonthDays, setFreqMonthDays] = useState<string[]>([]);
   const [freqTime, setFreqTime] = useState("09:00");
   const [multiPush, setMultiPush] = useState(false);
+  const [editFields, setEditFields] = useState<EditField[]>([]);
+
+  const toggleEditField = (field: EditField) => {
+    setEditFields((current) => current.includes(field)
+      ? current.filter((item) => item !== field)
+      : [...current, field]);
+  };
 
   if (!open) return null;
 
@@ -82,101 +98,79 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
           <div className="text-[12.5px] bg-[hsl(var(--primary)/0.06)] rounded-sm p-2.5 text-[hsl(var(--label-text))]">
             {mode === "add"
               ? "备注：新增将在原通知设置中增加选中的推送方式与人员。"
-              : "备注：编辑时会将已选择规则的通知设置（AI总结、电话通知、监控频次、AI研判）都调整为下方配置，请核对后再确认。"}
+              : "备注：编辑时会将规则的通知设置都调整为下方选择的配置的选项，请核对后再确认。"}
           </div>
 
           {mode === "edit" && (
-            <div className="bg-[hsl(var(--primary)/0.04)] rounded-md p-4 space-y-4">
-              <ToggleRow
-                label="启用AI总结"
-                checked={aiSummary}
-                onChange={setAiSummary}
-                tip="启用后，会推送AI总结报告"
-              />
-              <ToggleRow
-                label="启用电话通知"
-                checked={phone}
-                onChange={(v) => { setPhone(v); if (v) setTt(true); }}
-                tip="启用后，TT通知成功时会同步发起电话通知"
-              />
-              {phone && (
-                <Row label="电话通知标签">
-                  <div className="relative">
-                    <input
-                      value={phoneTag}
-                      maxLength={15}
-                      onChange={(e) => setPhoneTag(e.target.value)}
-                      placeholder="请输入电话通知标签"
-                      className="w-full h-8 pl-3 pr-14 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]"
-                    />
-                    <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-[hsl(var(--placeholder))]">{phoneTag.length}/15</span>
-                  </div>
-                </Row>
-              )}
-
-
-              <Row label="监控频次">
-                <div className="flex items-center gap-3 flex-wrap">
-                  <div className="w-[130px]">
-                    <SingleSelect placeholder="请选择" options={[{ label: "间隔" }, { label: "每日" }, { label: "每周" }, { label: "每月" }]} value={freqPeriod} onChange={setFreqPeriod} />
-                  </div>
-                  {freqPeriod === "间隔" && (
-                    <div className="w-[180px]">
-                      <SingleSelect placeholder="请选择监控频次" options={monitorFreqOptions} value={monitorFreq} onChange={setMonitorFreq} />
-                    </div>
-                  )}
-                  {freqPeriod === "每周" && (
-                    <div className="w-[220px]">
-                      <MultiSelect placeholder="请选择周几" options={["周一", "周二", "周三", "周四", "周五", "周六", "周日"].map((l) => ({ label: l }))} value={freqWeekdays} onChange={setFreqWeekdays} />
-                    </div>
-                  )}
-                  {freqPeriod === "每月" && (
-                    <div className="w-[220px]">
-                      <MultiSelect placeholder="请选择日期" options={Array.from({ length: 31 }, (_, i) => ({ label: `${i + 1}号` }))} value={freqMonthDays} onChange={setFreqMonthDays} />
-                    </div>
-                  )}
-                  {freqPeriod !== "间隔" && (
-                    <input type="time" value={freqTime} onChange={(e) => setFreqTime(e.target.value)}
-                      className="h-8 px-2 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm w-[130px]" />
-                  )}
-                  {freqPeriod === "间隔" && (
-                    <label className="flex items-center gap-1.5 cursor-pointer text-[13px] text-[hsl(var(--label-text))]">
-                      <input type="checkbox" checked={multiPush} onChange={(e) => setMultiPush(e.target.checked)} className="accent-primary" />
-                      <span>多次推送</span>
-                      <span className="cursor-help inline-flex">
-                        <HoverCard openDelay={100}>
-                          <HoverCardTrigger asChild>
-                            <HelpCircle className="w-3.5 h-3.5 text-[hsl(var(--placeholder))]" />
-                          </HoverCardTrigger>
-                          <HoverCardContent side="top" className="w-auto max-w-xs text-[12px]">
-                            当日、本周、昨日、近7日、近30日情况下，若达到触发条件将会根据监控频次多次推送
-                          </HoverCardContent>
-                        </HoverCard>
-                      </span>
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <span className="w-24 shrink-0 pt-0.5 text-right text-[13px] text-[hsl(var(--label-text))]">选择修改项</span>
+                <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
+                  {editFieldOptions.map((item) => (
+                    <label key={item.value} className="flex items-center gap-1.5 cursor-pointer text-[13px] text-[hsl(var(--label-text))]">
+                      <input type="checkbox" checked={editFields.includes(item.value)} onChange={() => toggleEditField(item.value)} className="accent-primary" />
+                      {item.label}
                     </label>
+                  ))}
+                </div>
+              </div>
+
+              {editFields.some((field) => field !== "pushMethods") && (
+                <div className="bg-[hsl(var(--primary)/0.04)] rounded-md p-4 space-y-4">
+                  {editFields.includes("aiSummary") && (
+                    <ToggleRow label="启用AI总结" checked={aiSummary} onChange={setAiSummary} tip="启用后，会推送AI总结报告" />
+                  )}
+                  {editFields.includes("phone") && (
+                    <>
+                      <ToggleRow
+                        label="启用电话通知"
+                        checked={phone}
+                        onChange={(v) => { setPhone(v); if (v) setTt(true); }}
+                        tip="启用后，TT通知成功时会同步发起电话通知"
+                      />
+                      {phone && <PhoneTagInput value={phoneTag} onChange={setPhoneTag} />}
+                    </>
+                  )}
+                  {editFields.includes("frequency") && (
+                    <Row label="监控频次">
+                      <div className="flex items-center gap-3 flex-wrap">
+                        <div className="w-[130px]">
+                          <SingleSelect placeholder="请选择" options={[{ label: "间隔" }, { label: "每日" }, { label: "每周" }, { label: "每月" }]} value={freqPeriod} onChange={setFreqPeriod} />
+                        </div>
+                        {freqPeriod === "间隔" && <div className="w-[180px]"><SingleSelect placeholder="请选择监控频次" options={monitorFreqOptions} value={monitorFreq} onChange={setMonitorFreq} /></div>}
+                        {freqPeriod === "每周" && <div className="w-[220px]"><MultiSelect placeholder="请选择周几" options={["周一", "周二", "周三", "周四", "周五", "周六", "周日"].map((l) => ({ label: l }))} value={freqWeekdays} onChange={setFreqWeekdays} /></div>}
+                        {freqPeriod === "每月" && <div className="w-[220px]"><MultiSelect placeholder="请选择日期" options={Array.from({ length: 31 }, (_, i) => ({ label: `${i + 1}号` }))} value={freqMonthDays} onChange={setFreqMonthDays} /></div>}
+                        {freqPeriod !== "间隔" && <input type="time" value={freqTime} onChange={(e) => setFreqTime(e.target.value)} className="h-8 px-2 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm w-[130px]" />}
+                        {freqPeriod === "间隔" && (
+                          <label className="flex items-center gap-1.5 cursor-pointer text-[13px] text-[hsl(var(--label-text))]">
+                            <input type="checkbox" checked={multiPush} onChange={(e) => setMultiPush(e.target.checked)} className="accent-primary" />
+                            <span>多次推送</span>
+                            <HoverCard openDelay={100}>
+                              <HoverCardTrigger asChild><HelpCircle className="w-3.5 h-3.5 text-[hsl(var(--placeholder))] cursor-help" /></HoverCardTrigger>
+                              <HoverCardContent side="top" className="w-auto max-w-xs text-[12px]">当日、本周、昨日、近7日、近30日情况下，若达到触发条件将会根据监控频次多次推送</HoverCardContent>
+                            </HoverCard>
+                          </label>
+                        )}
+                      </div>
+                    </Row>
+                  )}
+                  {editFields.includes("aiJudge") && (
+                    <Row label="AI研判"><div className="w-[200px]"><SingleSelect placeholder="请选择" options={aiJudgeOptions} value={aiJudgeValue} onChange={setAiJudgeValue} /></div></Row>
                   )}
                 </div>
-              </Row>
-
-              <Row label="AI研判">
-                <div className="w-[200px]">
-                  <SingleSelect placeholder="请选择" options={aiJudgeOptions} value={aiJudgeValue} onChange={setAiJudgeValue} />
-                </div>
-              </Row>
+              )}
             </div>
           )}
 
-          <>
+          {(mode === "add" || editFields.includes("pushMethods")) && <>
               <div className="flex items-center gap-5 text-[13px]">
                 <span className="w-24 text-right text-[hsl(var(--label-text))]">推送方式</span>
                 <label className="flex items-center gap-1.5 cursor-pointer text-[hsl(var(--label-text))]">
                   <input type="checkbox" checked={tt} onChange={(e) => setTt(e.target.checked)} className="accent-primary" />TT
                 </label>
-                {mode === "add" && (
-                  <label className="flex items-center gap-1.5 cursor-pointer text-[hsl(var(--label-text))]">
-                    <input type="checkbox" checked={phone} onChange={(e) => { setPhone(e.target.checked); if (e.target.checked) setTt(true); }} className="accent-primary" />启用电话通知
-                  </label>
-                )}
+                <label className="flex items-center gap-1.5 cursor-pointer text-[hsl(var(--label-text))]">
+                  <input type="checkbox" checked={phone} onChange={(e) => { setPhone(e.target.checked); if (e.target.checked) setTt(true); }} className="accent-primary" />启用电话通知
+                </label>
                 <label className="flex items-center gap-1.5 cursor-pointer text-[hsl(var(--label-text))]">
                   <input type="checkbox" checked={ttGroup} onChange={(e) => setTtGroup(e.target.checked)} className="accent-primary" />TT群组
                 </label>
@@ -189,20 +183,7 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
                   <Row label="预警人员"><MultiSelect placeholder="请选择预警人员" options={peopleOptions} value={people} onChange={setPeople} /></Row>
                 </>
               )}
-              {mode === "add" && phone && (
-                <>
-                  <Row label="电话通知人员">
-                    <MultiSelect placeholder="电话通知人员将默认为TT预警人员，将按照TT的电话号码进行通知，若无电话号码将无法通知。" options={peopleOptions} value={phonePeople} onChange={setPhonePeople} />
-                  </Row>
-                  <Row label="电话通知标签">
-                    <div className="relative">
-                      <input value={phoneTag} maxLength={15} onChange={(e) => setPhoneTag(e.target.value)} placeholder="请输入电话通知标签"
-                        className="w-full h-8 pl-3 pr-14 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]" />
-                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-[hsl(var(--placeholder))]">{phoneTag.length}/15</span>
-                    </div>
-                  </Row>
-                </>
-              )}
+              {phone && (mode === "add" || !editFields.includes("phone")) && <PhoneTagInput value={phoneTag} onChange={setPhoneTag} />}
 
 
               {ttGroup && (
@@ -214,7 +195,7 @@ export const BatchNotifyDialog = ({ open, count, onClose, onApply }: Props) => {
                   <Row label="群组内提及人"><MultiSelect placeholder="请选择群组内提及人" options={peopleOptions} value={mentions} onChange={setMentions} /></Row>
                 </>
               )}
-          </>
+          </>}
 
         </div>
 
@@ -259,4 +240,19 @@ const ToggleRow = ({
       </HoverCardContent>
     </HoverCard>
   </div>
+);
+
+const PhoneTagInput = ({ value, onChange }: { value: string; onChange: (value: string) => void }) => (
+  <Row label="电话通知标签">
+    <div className="relative">
+      <input
+        value={value}
+        maxLength={15}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder="请输入电话通知标签"
+        className="w-full h-8 pl-3 pr-14 text-[13px] bg-card border border-[hsl(var(--field-border))] rounded-sm outline-none focus:border-primary placeholder:text-[hsl(var(--placeholder))]"
+      />
+      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[12px] text-[hsl(var(--placeholder))]">{value.length}/15</span>
+    </div>
+  </Row>
 );
